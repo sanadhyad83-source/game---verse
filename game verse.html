@@ -1,0 +1,3057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titan GameVerse - User Portal</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --bg-darkblue: #030712;
+            --panel-blue: #0b132b;
+            --border-blue: #1d4ed8;
+            --glow-blue: rgba(59, 130, 246, 0.4);
+            --accent-cyan: #38bdf8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-main: #f0f9ff;
+            --text-muted: #93c5fd;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at center, #0f172a 0%, var(--bg-darkblue) 100%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: linear-gradient(145deg, rgba(11, 19, 43, 0.95), rgba(3, 7, 18, 0.95));
+            backdrop-filter: blur(10px);
+            padding: 28px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 20px var(--glow-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            animation: containerFadeIn 0.45s ease;
+        }
+        @keyframes containerFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h3 {
+            margin: 0 0 14px 0;
+            color: var(--accent-cyan);
+            font-size: 17px;
+            letter-spacing: 0.4px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h3::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 42px; height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), transparent);
+        }
+        h4 { margin: 16px 0 8px 0; color: var(--accent-cyan); font-size: 14px; letter-spacing: 0.3px; }
+        h2 { 
+            margin-top: 0; 
+            text-align: center; 
+            color: var(--accent-cyan); 
+            letter-spacing: 1.5px; 
+            font-size: 22px;
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.5); 
+        }
+        p { text-align: center; color: var(--text-muted); font-size: 13px; }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 13px 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(29, 78, 216, 0.5);
+            background: rgba(2, 6, 23, 0.8);
+            color: var(--text-main);
+            box-sizing: border-box;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            background: rgba(2, 6, 23, 1);
+        }
+        button {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            cursor: pointer;
+            font-weight: 600;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s ease;
+        }
+        button:hover { 
+            background: linear-gradient(135deg, #1d4ed8, #1e40af); 
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); 
+            transform: translateY(-1px);
+        }
+        button:active { transform: translateY(1px); }
+        .btn-green { background: linear-gradient(135deg, #059669, #047857) !important; border-color: rgba(52, 211, 153, 0.5) !important; box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3) !important; }
+        .btn-green:hover { box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5) !important; }
+        .btn-red { background: linear-gradient(135deg, #dc2626, #b91c1c) !important; border-color: rgba(248, 113, 113, 0.5) !important; box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3) !important; }
+        .btn-red:hover { box-shadow: 0 6px 20px rgba(248, 113, 113, 0.5) !important; }
+        .btn-yellow { background: linear-gradient(135deg, #d97706, #b45309) !important; border-color: rgba(251, 191, 36, 0.5) !important; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3); }
+        .btn-gray { background: linear-gradient(135deg, #334155, #1e293b) !important; border-color: rgba(100, 116, 139, 0.5) !important; }
+        
+        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
+        .grid button { margin: 0; padding: 13px 12px; font-size: 14px; border-radius: 10px; }
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .hidden { display: none !important; }
+        .sync-banner {
+            background: rgba(2, 6, 23, 0.9);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border-left: 4px solid var(--accent-cyan);
+            border-top: 1px solid rgba(29, 78, 216, 0.2);
+            border-right: 1px solid rgba(29, 78, 216, 0.2);
+            border-bottom: 1px solid rgba(29, 78, 216, 0.2);
+            color: var(--accent-cyan);
+            text-align: left;
+            box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1);
+        }
+        .game-card, .tournament-card, .withdraw-history-item, .support-history-item, .deposit-history-item, .reward-card, .prediction-card, .membership-card, .income-history-item, .invest-history-item {
+            background: rgba(2, 6, 23, 0.7);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(29, 78, 216, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            font-size: 13px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .game-card:hover, .tournament-card:hover { border-color: var(--accent-cyan); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.25); }
+
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 14px 0; }
+        .mine-tile {
+            width: auto;
+            aspect-ratio: 1 / 1;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #0f2547, #0b1930) !important;
+            border: 1px solid rgba(56, 189, 248, 0.35) !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35) !important;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+        .mine-tile:hover:not(:disabled) { transform: translateY(-2px) scale(1.04); box-shadow: 0 6px 16px rgba(56, 189, 248, 0.35) !important; }
+        .mine-tile:disabled { cursor: default; }
+        .mine-tile.revealed-safe { background: linear-gradient(145deg, #065f46, #059669) !important; border-color: rgba(52, 211, 153, 0.7) !important; box-shadow: 0 0 14px rgba(52, 211, 153, 0.4) !important; }
+        .mine-tile.revealed-mine { background: linear-gradient(145deg, #7f1d1d, #b91c1c) !important; border-color: rgba(248, 113, 113, 0.7) !important; box-shadow: 0 0 14px rgba(248, 113, 113, 0.5) !important; animation: mineShake 0.4s ease; }
+        @keyframes mineShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+        .mines-info-row { display: flex; justify-content: space-between; align-items: center; background: rgba(2, 6, 23, 0.85); padding: 10px 14px; border-radius: 10px; margin: 10px 0; border: 1px solid rgba(29, 78, 216, 0.4); font-size: 13px; }
+        .mines-info-row b { font-size: 15px; }
+        .info-box {
+            background: rgba(2, 6, 23, 0.8);
+            padding: 16px;
+            border-radius: 14px;
+            margin: 12px 0;
+            border: 1px solid rgba(29, 78, 216, 0.4);
+            box-shadow: inset 0 0 15px rgba(29, 78, 216, 0.15);
+            text-align: left;
+        }
+        .info-box p { text-align: left; margin: 8px 0; font-size: 13px; word-wrap: break-word; }
+
+        .animation-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 150px; position: relative; }
+        .coin { width: 90px; height: 90px; background: radial-gradient(circle, #facc15 0%, #ca8a04 100%); border: 4px solid #fef08a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: bold; color: #0f172a; box-shadow: 0 0 20px rgba(250, 204, 21, 0.7); }
+        @keyframes flipCoinAnim { 0% { transform: rotateY(0deg) scale(1); } 50% { transform: rotateY(1080deg) scale(1.2); background: radial-gradient(circle, #fef08a 0%, #ca8a04 100%); box-shadow: 0 0 30px #facc15; } 100% { transform: rotateY(2160deg) scale(1); } }
+        .flipping { animation: flipCoinAnim 1.4s cubic-bezier(0.15, 0.9, 0.2, 1) forwards; }
+        .wheel-display-box { background: rgba(2, 6, 23, 0.9); border: 2px solid var(--accent-cyan); border-radius: 14px; padding: 12px; width: 160px; text-align: center; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+        .wheel-spinner { font-size: 28px; font-weight: bold; color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.6); margin: 5px 0; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        @keyframes prizeSpinAnim { 0% { transform: translateY(-10px); opacity: 0.2; } 50% { transform: translateY(0px); opacity: 1; text-shadow: 0 0 20px #facc15; } 100% { transform: translateY(10px); opacity: 0.2; } }
+        .spinning-text { animation: prizeSpinAnim 0.15s ease-in-out infinite alternate; }
+        .guess-box { background: rgba(2, 6, 23, 0.9); padding: 12px; border-radius: 10px; font-size: 14px; color: #facc15; min-height: 26px; margin-bottom: 10px; border: 1px solid rgba(29, 78, 216, 0.4); text-align: center; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(2, 6, 23, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(29, 78, 216, 0.6); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+        /* ===== New Dashboard UI ===== */
+        .app-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .app-title { font-size: 18px; font-weight: 800; letter-spacing: 0.6px; color: var(--text-main); text-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
+        .header-icons { display: flex; gap: 10px; }
+        .icon-btn {
+            position: relative;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px;
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            color: var(--text-main);
+            font-size: 17px;
+            padding: 0; margin: 0;
+            cursor: pointer;
+            box-shadow: none;
+        }
+        .icon-btn:hover { background: rgba(2, 6, 23, 0.9); box-shadow: 0 0 12px rgba(56, 189, 248, 0.3); transform: none; }
+        .notif-dot { position: absolute; top: 6px; right: 7px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 6px var(--accent-cyan); }
+
+        .wallet-card {
+            background: linear-gradient(150deg, rgba(11, 25, 55, 0.95), rgba(3, 7, 18, 0.95));
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.12), inset 0 0 20px rgba(29, 78, 216, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        .wallet-label { font-size: 11px; letter-spacing: 1.2px; color: var(--text-muted); text-transform: uppercase; }
+        .wallet-amount-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+        .wallet-amount { font-size: 30px; font-weight: 800; color: var(--text-main); }
+        .wallet-tagline { color: var(--accent-cyan); font-size: 12.5px; margin-top: 6px; font-weight: 600; }
+        .wallet-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; }
+        .wallet-action-btn {
+            margin: 0; padding: 10px 6px; font-size: 12px; border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+            background: rgba(37, 99, 235, 0.18); border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: none; font-weight: 600;
+        }
+        .wallet-action-btn:hover { background: rgba(37, 99, 235, 0.32); box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
+
+        .section-label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--accent-cyan); font-weight: 700; margin: 22px 0 10px 0;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(56, 189, 248, 0.35), transparent); }
+
+        .explore-list { display: flex; flex-direction: column; gap: 10px; }
+        .explore-item {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(29, 78, 216, 0.35);
+            border-radius: 14px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+        .explore-item:hover { border-color: var(--accent-cyan); transform: translateY(-1px); }
+        .explore-icon {
+            width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 19px;
+        }
+        .explore-text { flex: 1; min-width: 0; }
+        .explore-title { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .explore-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+        .explore-chevron {
+            width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--accent-cyan); font-size: 14px;
+        }
+
+        .quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .quick-action-card {
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(29, 78, 216, 0.35);
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+        .quick-action-card:hover { border-color: var(--accent-cyan); transform: translateY(-1px); }
+        .quick-action-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .quick-action-icon {
+            width: 34px; height: 34px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+        }
+        .quick-action-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .quick-action-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+
+        .logout-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-top: 22px;
+            cursor: pointer;
+        }
+        .logout-bar:hover { border-color: var(--accent-red); }
+        .logout-left { display: flex; align-items: center; gap: 12px; }
+        .logout-icon { font-size: 20px; color: var(--accent-red); }
+        .logout-title { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .logout-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        .notif-item {
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(29, 78, 216, 0.35);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .notif-item .notif-msg { font-size: 13px; color: var(--text-main); }
+        .notif-item .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="authLogin" class="container">
+        <h2>🎮 TITAN GAMEVERSE</h2>
+        <p>User Portal Login</p>
+        <input id="loginEmail" type="email" placeholder="User Email">
+        <input id="loginPassword" type="password" placeholder="Password">
+        <button onclick="loginUser()">Login</button>
+        <button onclick="showRegisterScreen()" class="btn-gray" style="margin-top: 15px;">New User? Register Here</button>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="authRegister" class="container hidden" style="border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.3);">
+        <h2 style="color: var(--accent-green); text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);">🚀 JOIN THE VERSE</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Create your profile & start playing</p>
+        
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent-green); padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: #34d399; text-align: center;">
+            ⚠️ <b>Mandatory Requirement:</b> You must enter another user's valid Referral UID to create your new account.
+        </div>
+
+        <input id="regEmail" type="email" placeholder="Enter Your Email Address" style="border-color: rgba(16, 185, 129, 0.4);">
+        <input id="regPassword" type="password" placeholder="Create Secure Password" style="border-color: rgba(16, 185, 129, 0.4);">
+        <input id="regReferUid" type="text" placeholder="Referrer's UID (Required)" style="border-color: rgba(16, 185, 129, 0.4);">
+        
+        <button onclick="registerUser()" class="btn-green" style="margin-top: 15px;">Complete Registration</button>
+        <button onclick="showLoginScreen()" class="btn-gray" style="margin-top: 10px;">Already have an account? Login</button>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="dash" class="container hidden" style="max-width: 440px;">
+        <div class="app-header-row">
+            <div class="app-title">TITAN GAME VERSE</div>
+            <div class="header-icons">
+                <button type="button" class="icon-btn" onclick="openNotifications()">
+                    🔔<span id="notifDot" class="notif-dot hidden"></span>
+                </button>
+            </div>
+        </div>
+        <div class="grid" id="mainMenu">
+            <!-- Wallet Card -->
+            <div class="wallet-card">
+                <div class="wallet-label">Total Wallet Balance</div>
+                <div class="wallet-amount-row">
+                    <span id="walletBalanceDisplay" class="wallet-amount">₹0</span>
+                </div>
+                <div class="wallet-tagline">Your Winning Journey Begins!</div>
+                <div class="wallet-actions">
+                    <button type="button" class="wallet-action-btn" onclick="openFeature('Deposit')">➕ Deposit</button>
+                    <button type="button" class="wallet-action-btn" onclick="openFeature('Withdraw')">⬆️ Withdraw</button>
+                    <button type="button" class="wallet-action-btn" onclick="openFeature('History')">🕐 History</button>
+                </div>
+            </div>
+
+            <div class="section-label">✦ Explore</div>
+            <div class="explore-list">
+                <div class="explore-item" onclick="openFeature('Play Games')">
+                    <div class="explore-icon" style="background:rgba(37,99,235,0.25);">🎮</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Play Games Hub</div>
+                        <div class="explore-sub">Play exciting games & win rewards</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+                <div class="explore-item" onclick="openFeature('Tournaments')">
+                    <div class="explore-icon" style="background:rgba(217,119,6,0.25);">🏆</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Tournaments</div>
+                        <div class="explore-sub">Join tournaments & compete</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+                <div class="explore-item" onclick="openFeature('Predictions')">
+                    <div class="explore-icon" style="background:rgba(56,189,248,0.2);">📊</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Predictions Hub</div>
+                        <div class="explore-sub">Predict & win big</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+                <div class="explore-item" onclick="openFeature('Invest')">
+                    <div class="explore-icon" style="background:rgba(16,185,129,0.22);">📈</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Invest & Earn</div>
+                        <div class="explore-sub">Invest smart & grow your money</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+                <div class="explore-item" onclick="openFeature('Membership')">
+                    <div class="explore-icon" style="background:rgba(217,119,6,0.25);">👑</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Membership</div>
+                        <div class="explore-sub">Exclusive membership benefits</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+                <div class="explore-item" onclick="openFeature('Income')">
+                    <div class="explore-icon" style="background:rgba(16,185,129,0.22);">💰</div>
+                    <div class="explore-text">
+                        <div class="explore-title">Income</div>
+                        <div class="explore-sub">Track your earnings</div>
+                    </div>
+                    <div class="explore-chevron">›</div>
+                </div>
+            </div>
+
+            <div class="section-label">⚡ Quick Actions</div>
+            <div class="quick-actions-grid">
+                <div class="quick-action-card" onclick="openFeature('Profile')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(37,99,235,0.25);">👤</div></div>
+                    <div class="quick-action-title">Profile</div>
+                    <div class="quick-action-sub">View & edit profile</div>
+                </div>
+                <div class="quick-action-card" onclick="openFeature('Refer & Earn')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(37,99,235,0.25);">👥</div></div>
+                    <div class="quick-action-title">Refer & Earn</div>
+                    <div class="quick-action-sub">Invite & earn more</div>
+                </div>
+                <div class="quick-action-card" onclick="openFeature('Deposit')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(56,189,248,0.2);">💳</div></div>
+                    <div class="quick-action-title">Deposit</div>
+                    <div class="quick-action-sub">Add money</div>
+                </div>
+                <div class="quick-action-card" onclick="openFeature('Withdraw')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(16,185,129,0.22);">💸</div></div>
+                    <div class="quick-action-title">Withdraw</div>
+                    <div class="quick-action-sub">Withdraw funds</div>
+                </div>
+                <div class="quick-action-card" onclick="openFeature('Daily Reward')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(217,119,6,0.25);">🎁</div></div>
+                    <div class="quick-action-title">Daily Reward</div>
+                    <div class="quick-action-sub">Claim your reward</div>
+                </div>
+                <div class="quick-action-card" onclick="openFeature('Support')">
+                    <div class="quick-action-top"><div class="quick-action-icon" style="background:rgba(148,163,184,0.2);">🎧</div></div>
+                    <div class="quick-action-title">Support</div>
+                    <div class="quick-action-sub">Help & support</div>
+                </div>
+            </div>
+
+            <div class="logout-bar" onclick="firebase.auth().signOut().then(() => location.reload())">
+                <div class="logout-left">
+                    <div class="logout-icon">⇒</div>
+                    <div>
+                        <div class="logout-title">Logout</div>
+                        <div class="logout-sub">See you again!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div id="notificationsArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">🔔 Notifications</h3>
+            <div id="userNotificationsList" style="max-height: 320px; overflow-y: auto;">Loading notifications...</div>
+            <button onclick="closeFeature('notificationsArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- History Section -->
+        <div id="historyArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">🕐 Transaction History</h3>
+            <div id="userHistoryList" style="max-height: 320px; overflow-y: auto;">Loading history...</div>
+            <button onclick="closeFeature('historyArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Invest Section -->
+        <div id="investArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">📈 Investment Plans</h3>
+            <div class="info-box">
+                <p style="color: var(--text-muted); font-size:12px; margin-top:0;">Invest funds to get daily returns directly to your wallet. You must manually claim your returns every day.</p>
+                <p><b>Minimum Investment:</b> <span id="displayMinInvest" style="color: var(--accent-green); font-weight: bold;">₹0</span></p>
+                <p><b>Daily Return:</b> <span id="displayInvestReturn" style="color: #facc15; font-weight: bold;">0% / day</span></p>
+                <input id="investAmount" type="number" placeholder="Enter Investment Amount (₹)" min="1">
+                <button onclick="submitInvestmentRequest()" class="btn-green" style="margin-top:8px;">Submit Investment Request</button>
+            </div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">📜 Your Investments</h4>
+            <div id="userInvestList" style="max-height: 250px; overflow-y: auto;">Loading investments...</div>
+            <button onclick="closeFeature('investArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Income Section -->
+        <div id="incomeArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">💰 Your Income Records</h3>
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">View all incomes, salaries, bonuses, and commissions assigned by the admin panel.</div>
+            <div id="userIncomeList" style="max-height: 280px; overflow-y: auto;">Loading income records...</div>
+            <button onclick="closeFeature('incomeArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Membership Section -->
+        <div id="membershipArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">⭐ VIP Memberships</h3>
+            
+            <!-- Membership Dashboard Stats -->
+            <div style="background: rgba(2, 6, 23, 0.7); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(29, 78, 216, 0.3);">
+                <h4 style="margin-top: 0; color: #facc15;">📊 Your Membership Stats</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="text-align: center; padding: 8px; background: rgba(52, 211, 153, 0.1); border-radius: 8px; border: 1px solid rgba(52, 211, 153, 0.3);">
+                        <p style="margin: 0; font-size: 12px; color: var(--text-muted);">Active Memberships</p>
+                        <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold; color: #34d399;" id="activeMembershipCount">0</p>
+                    </div>
+                    <div style="text-align: center; padding: 8px; background: rgba(250, 204, 21, 0.1); border-radius: 8px; border: 1px solid rgba(250, 204, 21, 0.3);">
+                        <p style="margin: 0; font-size: 12px; color: var(--text-muted);">Total Earned</p>
+                        <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold; color: #facc15;" id="membershipTotalEarned">₹0</p>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; padding: 8px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <p style="margin: 0; font-size: 12px; color: var(--accent-cyan); font-weight: bold;">💡 Next Daily Bonus</p>
+                    <p style="margin: 5px 0 0 0; font-size: 13px; color: var(--text-muted);" id="nextBonusTimer">Loading...</p>
+                </div>
+            </div>
+
+            <!-- View Toggle Buttons -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                <button onclick="showMembershipView('list')" id="viewListBtn" class="btn-green" style="padding: 8px; font-size: 12px; margin: 0;">📋 List View</button>
+                <button onclick="showMembershipView('compare')" id="viewCompareBtn" class="btn-yellow" style="padding: 8px; font-size: 12px; margin: 0;">⚖️ Compare Plans</button>
+            </div>
+
+            <!-- Membership List View -->
+            <div id="membershipListView" style="max-height: 320px; overflow-y: auto;">
+                <div id="userMembershipList">Loading memberships...</div>
+            </div>
+
+            <!-- Membership Comparison View -->
+            <div id="membershipCompareView" class="hidden" style="max-height: 320px; overflow-y: auto;">
+                <div id="membershipComparisonTable" style="font-size: 12px;">Loading...</div>
+            </div>
+
+            <button onclick="closeFeature('membershipArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profileArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">👤 User Profile</h3>
+            <div class="info-box">
+                <p><b>Unique UID:</b> <br><span id="profileUid" style="color: var(--accent-cyan); font-family: monospace; font-size: 16px; font-weight: bold;">Loading...</span></p>
+                <p><b>Registered Email:</b> <br><span id="profileEmail" style="color: var(--text-main);">Loading...</span></p>
+                <p><b>Password:</b> <br><span id="profilePassword" style="color: #facc15; font-family: monospace; font-size: 15px; font-weight: bold;">Loading...</span></p>
+            </div>
+            <button onclick="closeFeature('profileArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Refer & Earn Section -->
+        <div id="referArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">👥 Refer & Earn</h3>
+            <div class="info-box">
+                <p style="font-size: 12px; color: var(--accent-cyan); margin-bottom: 12px; border-bottom: 1px solid rgba(29, 78, 216, 0.3); padding-bottom: 8px;">
+                    ℹ️ <b>Rule:</b> Every new user must enter another user's UID during registration. You also earn a commission whenever your downline makes an approved deposit.
+                </p>
+                <p><b>Signup Reward Per Refer:</b> <br><span id="referBonusAmount" style="color: var(--accent-green); font-size: 16px; font-weight: bold;">₹0</span></p>
+                <p><b>Deposit Commission:</b> <br><span id="referDepositCommissionDisplay" style="color: var(--accent-green); font-size: 16px; font-weight: bold;">0%</span> of every approved downline deposit</p>
+                <p><b>Your Referral UID:</b> <br><span id="referMyUid" style="color: var(--accent-cyan); font-family: monospace; font-size: 16px; font-weight: bold;">Loading...</span></p>
+                <p><b>Referred Users Count:</b> <br><span id="referCount" style="color: #facc15; font-size: 16px; font-weight: bold;">0</span></p>
+                <p><b>Total Earned From Referrals:</b> <br><span id="referTotalEarned" style="color: #34d399; font-size: 18px; font-weight: bold;">₹0</span></p>
+            </div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">📋 Your Downline</h4>
+            <div id="userReferralDepositsList" style="max-height: 260px; overflow-y: auto;">Loading downline...</div>
+
+            <button onclick="closeFeature('referArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Daily Reward Section -->
+        <div id="dailyRewardArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">🎁 Daily Rewards</h3>
+            <div id="userRewardsList" style="max-height: 250px; overflow-y: auto;">Loading daily rewards...</div>
+            <button onclick="closeFeature('dailyRewardArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Deposit Section -->
+        <div id="depositArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">💳 Deposit Funds</h3>
+            <div class="info-box">
+                <p style="color: var(--text-muted); margin-top:0; font-size:13px;">Transfer funds to the Admin UPI ID below and submit your transaction details for verification.</p>
+                <p><b>Admin UPI ID:</b> <br><span id="displayAdminUpi" style="color: #facc15; font-family: monospace; font-size: 15px;">Loading...</span></p>
+                <div id="depositQrWrap" class="hidden" style="text-align:center; margin:12px 0;">
+                    <p style="margin:0 0 8px 0; color:var(--text-muted); font-size:12px;">Or scan the QR code to pay:</p>
+                    <img id="depositQrImage" src="" alt="Deposit QR Code" style="max-width:200px; width:100%; border-radius:12px; border:1px solid rgba(56, 189, 248, 0.4); background:#fff; padding:8px;" onerror="document.getElementById('depositQrWrap').classList.add('hidden');">
+                </div>
+                <p><b>Minimum Deposit:</b> <span id="displayMinDeposit" style="color: var(--accent-green);">₹0</span></p>
+                
+                <input id="depUid" type="text" placeholder="Your UID" readonly style="color:var(--accent-cyan); font-family:monospace;">
+                <input id="depPhone" type="number" placeholder="Phone Number">
+                <input id="depAmount" type="number" placeholder="Amount (₹)">
+                <input id="depUtr" type="text" placeholder="UTR / Transaction Reference Number">
+                
+                <button onclick="submitDepositRequest()" class="btn-green" style="margin-top:8px;">Submit Deposit Request</button>
+            </div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">📜 Your Deposit Statuses</h4>
+            <div id="userDepositList" style="max-height: 160px; overflow-y: auto;">Loading deposits...</div>
+            <button onclick="closeFeature('depositArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Withdraw Section -->
+        <div id="withdrawArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">💸 Withdraw Balance</h3>
+            <div class="info-box">
+                <p style="color: var(--text-muted); margin-top:0; font-size:13px;">Submit your payout details. Admin will manually pay via UPI.</p>
+                <p><b>Minimum Withdrawal:</b> <span id="displayMinWithdraw" style="color: var(--accent-green);">₹0</span></p>
+                <p><b>Withdrawal Tax Rate:</b> <span id="displayWithdrawTax" style="color: #f87171; font-weight: bold;">0%</span></p>
+                
+                <input id="withdrawAmount" type="number" placeholder="Enter Withdrawal Amount (₹)" min="1" oninput="calculateWithdrawBreakdown()">
+                
+                <div id="withdrawTaxBreakdown" class="hidden" style="background:rgba(2, 6, 23, 0.9); padding:10px; border-radius:8px; border:1px solid rgba(29, 78, 216, 0.4); margin:8px 0; font-size:12px;">
+                    <p style="margin:2px 0;">Gross Amount: <b id="calcGrossAmt" style="color:var(--text-main);">₹0</b></p>
+                    <p style="margin:2px 0; color:#f87171;">Tax Deducted (<span id="calcTaxPercent">0%</span>): <b id="calcTaxAmt">-₹0</b></p>
+                    <p style="margin:4px 0 0 0; color:#34d399; font-size:13px; font-weight:bold;">Amount You Get: <span id="calcNetAmt">₹0</span></p>
+                </div>
+
+                <input id="withdrawTg" type="text" placeholder="Telegram Username (e.g. @username)">
+                <input id="withdrawUpi" type="text" placeholder="UPI ID (e.g. name@paytm)">
+                <button onclick="submitWithdrawal()" class="btn-green" style="margin-top:8px;">Send Withdrawal Request</button>
+            </div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">📜 Your Withdrawal Statuses</h4>
+            <div id="userWithdrawList" style="max-height: 180px; overflow-y: auto;">Loading status...</div>
+            <button onclick="closeFeature('withdrawArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Tournaments Section -->
+        <div id="tournamentsArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">🏆 Active Tournaments</h3>
+            <div id="tournamentListContainer" style="max-height: 250px; overflow-y: auto;">Loading tournaments...</div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">🏁 Recently Ended</h4>
+            <div id="tournamentResultsContainer" style="max-height: 200px; overflow-y: auto;">Loading results...</div>
+
+            <button onclick="closeFeature('tournamentsArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Predictions Hub Section -->
+        <div id="predictionsArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">📊 Predictions Arena</h3>
+            <div id="userPredictionList" style="max-height: 280px; overflow-y: auto;">Loading predictions...</div>
+            <button onclick="closeFeature('predictionsArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Support Section -->
+        <div id="supportArea" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">📞 Customer Support</h3>
+            <div class="info-box">
+                <p style="color: var(--text-muted); margin-top:0; font-size:13px;">Submit your issue below. Our admin team will review and resolve it.</p>
+                <input id="supportUid" type="text" placeholder="Confirm Your UID" readonly style="color:var(--accent-cyan); font-family:monospace;">
+                <input id="supportTgUsername" type="text" placeholder="Your Telegram Username (e.g. @yourname)">
+                <input id="supportSubject" type="text" placeholder="Subject of your problem">
+                <textarea id="supportDesc" placeholder="Describe your problem in detail..." rows="3" style="width:100%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid rgba(29, 78, 216, 0.4); background:rgba(2, 6, 23, 0.8); color:var(--text-main); font-family:inherit; resize:none;"></textarea>
+                <button onclick="submitSupportRequest()" class="btn-green" style="margin-top:8px;">Submit Support Request</button>
+            </div>
+
+            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">📜 Your Support Request Statuses</h4>
+            <div id="userSupportList" style="max-height: 180px; overflow-y: auto;">Loading support requests...</div>
+            <button onclick="closeFeature('supportArea')" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Games Hub Section -->
+        <div id="gamesHub" class="hidden">
+            <h3 style="color:var(--accent-cyan); margin-top:0;">🎨 COLOUR CLASH</h3>
+            <div id="colourClashTopCard" class="game-card" style="border:1px solid rgba(56,189,248,0.55); background:linear-gradient(145deg,rgba(15,23,42,.96),rgba(3,7,18,.96)); box-shadow:0 0 22px rgba(56,189,248,.16); margin-bottom:12px;">
+                <div style="font-size:18px;font-weight:800;letter-spacing:.8px;">🔴 RED &nbsp; 🟢 GREEN &nbsp; 🔵 BLUE</div>
+                <div id="colourClashTopStatus" style="font-size:12px;color:var(--text-muted);margin:7px 0;">Loading round...</div>
+                <button onclick="tryPlayColourClash()" class="btn-green" style="margin-top:6px;padding:10px;">🎨 PLAY COLOUR CLASH</button>
+            </div>
+            <div id="gameList">Loading games...</div>
+            <button onclick="backToDashboard()" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
+        </div>
+
+        <!-- Active Game Play Area -->
+        <div id="activeGameArea" class="hidden">
+            <h3 id="activeGameTitle" style="color:var(--accent-cyan); margin-top:0;">Rocket Jump</h3>
+            <p id="activeGameInfo" style="color: var(--text-muted); margin-bottom: 10px;"></p>
+            <div id="gameContentBox" class="info-box" style="text-align: center;"></div>
+            <button id="activeGameBackBtn" onclick="closeActiveGame()" class="btn-gray" style="margin-top:10px;">⬅ Back to Games</button>
+        </div>
+
+        <button onclick="firebase.auth().signOut().then(() => location.reload())" class="btn-red" style="margin-top: 20px;">Logout</button>
+    </div>
+
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyBRx_xCZWITfSANdmBcQr7qmMQiPB7AUvc",
+            databaseURL: "https://titan-gameverse-default-rtdb.firebaseio.com",
+            projectId: "titan-gameverse"
+        });
+        const db = firebase.database();
+        let currentUid = null;
+        let currentBalance = 0;
+        let lastBroadcastTimestamp = 0;
+        let targetNumber = 0;
+        let remainingAttempts = 3;
+        let userCustomUid = '';
+        let referredCount = 0;
+        let globalReferBonus = 0;
+        let adminMinDeposit = 0;
+        let adminUpiValue = '';
+        let adminQrCodeUrl = '';
+        let adminMinWithdraw = 0;
+        let adminWithdrawTax = 0;
+        let adminMinInvest = 0;
+        let adminInvestReturn = 0;
+
+        let rocketInterval = null;
+        let currentRocketMultiplier = 1.00;
+        let rocketCrashPoint = 2.00;
+        let isRocketCashedOut = false;
+
+        let minesConfig = { enabled: true, minBet: 10, maxBet: 5000, minMines: 1, maxMines: 10, rtpPercent: 95 };
+        let minesState = null;
+
+        // Broadcast messages are shown via the bell icon (notifications panel),
+        // with an unread dot on the bell when there's a broadcast newer than
+        // the last one the user opened the panel to view.
+        db.ref('broadcasts').limitToLast(50).on('value', snap => {
+            let newest = 0;
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    const ts = Number(child.val().timestamp) || 0;
+                    if (ts > newest) newest = ts;
+                });
+            }
+            lastBroadcastTimestamp = newest;
+            const lastSeen = Number(localStorage.getItem('lastSeenBroadcastTs')) || 0;
+            const notifDot = document.getElementById('notifDot');
+            if (notifDot) {
+                if (newest > lastSeen) {
+                    notifDot.classList.remove('hidden');
+                } else {
+                    notifDot.classList.add('hidden');
+                }
+            }
+        });
+
+        db.ref('control/appStatus').on('value', snap => {
+            if(snap.val() === 'disabled') {
+                alert('⚠️ Application is currently under maintenance mode by the administrator.');
+                firebase.auth().signOut().then(() => location.reload());
+            }
+        });
+
+        db.ref('control/referBonus').on('value', snap => {
+            globalReferBonus = Number(snap.val()) || 0;
+            const referBonusEl = document.getElementById('referBonusAmount');
+            if(referBonusEl) referBonusEl.innerText = `₹${globalReferBonus}`;
+        });
+
+        db.ref('control/referDepositCommissionPercent').on('value', snap => {
+            const pct = Number(snap.val()) || 0;
+            const el = document.getElementById('referDepositCommissionDisplay');
+            if(el) el.innerText = `${pct}%`;
+        });
+
+        db.ref('control/investmentConfig').on('value', snap => {
+            const data = snap.val() || {};
+            adminMinInvest = Number(data.minInvestment) || 0;
+            adminInvestReturn = Number(data.dailyReturnPct) || 0;
+            const minEl = document.getElementById('displayMinInvest');
+            const retEl = document.getElementById('displayInvestReturn');
+            if(minEl) minEl.innerText = `₹${adminMinInvest}`;
+            if(retEl) retEl.innerText = `${adminInvestReturn}% / day`;
+        });
+
+        db.ref('control/minesConfig').on('value', snap => {
+            const data = snap.val() || {};
+            minesConfig.enabled = data.enabled !== false;
+            minesConfig.minBet = Number(data.minBet) || 10;
+            minesConfig.maxBet = Number(data.maxBet) || 5000;
+            minesConfig.minMines = Number(data.minMines) || 1;
+            minesConfig.maxMines = Number(data.maxMines) || 10;
+            minesConfig.rtpPercent = Number(data.rtpPercent) || 95;
+        });
+
+        db.ref('control/depositConfig').on('value', snap => {
+            const data = snap.val() || {};
+            adminMinDeposit = Number(data.minDeposit) || 0;
+            adminUpiValue = data.upiId || 'Not Set';
+            adminQrCodeUrl = data.qrCodeUrl || '';
+            
+            const minDepEl = document.getElementById('displayMinDeposit');
+            const upiEl = document.getElementById('displayAdminUpi');
+            if(minDepEl) minDepEl.innerText = `₹${adminMinDeposit}`;
+            if(upiEl) upiEl.innerText = adminUpiValue;
+
+            const qrWrap = document.getElementById('depositQrWrap');
+            const qrImg = document.getElementById('depositQrImage');
+            if (qrWrap && qrImg) {
+                if (adminQrCodeUrl) {
+                    qrImg.src = adminQrCodeUrl;
+                    qrWrap.classList.remove('hidden');
+                } else {
+                    qrImg.src = '';
+                    qrWrap.classList.add('hidden');
+                }
+            }
+        });
+
+        db.ref('control/withdrawConfig').on('value', snap => {
+            const data = snap.val() || {};
+            adminMinWithdraw = Number(data.minWithdraw) || 0;
+            adminWithdrawTax = Number(data.taxPercent) || 0;
+
+            const minWEl = document.getElementById('displayMinWithdraw');
+            const taxEl = document.getElementById('displayWithdrawTax');
+            if(minWEl) minWEl.innerText = `₹${adminMinWithdraw}`;
+            if(taxEl) taxEl.innerText = `${adminWithdrawTax}%`;
+            calculateWithdrawBreakdown();
+        });
+
+        function calculateWithdrawBreakdown() {
+            const amountInput = Number(document.getElementById('withdrawAmount').value) || 0;
+            const breakdownBox = document.getElementById('withdrawTaxBreakdown');
+
+            if (amountInput > 0) {
+                breakdownBox.classList.remove('hidden');
+                const taxAmt = (amountInput * adminWithdrawTax) / 100;
+                const netAmt = Math.max(0, amountInput - taxAmt);
+
+                document.getElementById('calcGrossAmt').innerText = `₹${amountInput.toFixed(2)}`;
+                document.getElementById('calcTaxPercent').innerText = `${adminWithdrawTax}%`;
+                document.getElementById('calcTaxAmt').innerText = `-₹${taxAmt.toFixed(2)}`;
+                document.getElementById('calcNetAmt').innerText = `₹${netAmt.toFixed(2)}`;
+            } else {
+                breakdownBox.classList.add('hidden');
+            }
+        }
+
+        function generateUnique6CharId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let res = '';
+            for(let i=0; i<6; i++) {
+                res += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return res;
+        }
+
+        function showRegisterScreen() {
+            document.getElementById('authLogin').classList.add('hidden');
+            document.getElementById('authRegister').classList.remove('hidden');
+        }
+
+        function showLoginScreen() {
+            document.getElementById('authRegister').classList.add('hidden');
+            document.getElementById('authLogin').classList.remove('hidden');
+        }
+
+        function registerUser() {
+            const e = document.getElementById('regEmail').value.trim();
+            const p = document.getElementById('regPassword').value;
+            const referUidInput = document.getElementById('regReferUid').value.trim();
+
+            if(!e || !p) return alert('Please enter email and password.');
+            if(!referUidInput) return alert('You must enter another user’s referral UID to create a new account.');
+
+            db.ref('users').orderByChild('customUid').equalTo(referUidInput).once('value')
+                .then(snap => {
+                    if (!snap.exists()) throw new Error('Invalid Referral UID. Please enter a valid user UID.');
+                    
+                    let referrerKey, referrerData;
+                    snap.forEach(child => { referrerKey = child.key; referrerData = child.val(); });
+
+                    return firebase.auth().createUserWithEmailAndPassword(e, p).then(res => {
+                        const newAuthUid = res.user.uid;
+                        const shortId = generateUnique6CharId();
+
+                        db.ref('users/' + newAuthUid).set({
+                            role: 'user', 
+                            balance: 0, 
+                            email: e,
+                            password: p,
+                            customUid: shortId,
+                            referredBy: referUidInput,
+                            status: 'active',
+                            referredCount: 0,
+                            joinedAt: Date.now()
+                        });
+
+                        const newCount = (Number(referrerData.referredCount) || 0) + 1;
+                        const currentReferrerBal = Number(referrerData.balance) || 0;
+                        const dynamicBonus = Number(globalReferBonus) || 0;
+                        const newBal = currentReferrerBal + dynamicBonus;
+
+                        db.ref('users/' + referrerKey).update({ 
+                            referredCount: newCount,
+                            balance: newBal
+                        });
+
+                        if (dynamicBonus > 0) {
+                            db.ref('referral_earnings').push({
+                                referrerUid: referrerKey,
+                                referrerCustomUid: referUidInput,
+                                fromCustomUid: shortId,
+                                type: 'signup',
+                                amount: dynamicBonus,
+                                timestamp: Date.now()
+                            });
+                        }
+
+                        alert('Registration successful! Reward issued to referrer.');
+                        loadUserDashboard(newAuthUid);
+                    });
+                })
+                .catch(err => alert(err.message));
+        }
+
+        function loginUser() {
+            const e = document.getElementById('loginEmail').value.trim();
+            const p = document.getElementById('loginPassword').value;
+            if(!e || !p) return alert('Please enter email and password.');
+
+            db.ref('control/appStatus').once('value', statusSnap => {
+                if(statusSnap.val() === 'disabled') {
+                    return alert('App is currently under maintenance. Login is temporarily disabled.');
+                }
+
+                firebase.auth().signInWithEmailAndPassword(e, p).then(res => {
+                    const uid = res.user.uid;
+                    
+                    db.ref('users/' + uid).once('value').then(snap => {
+                        const data = snap.val();
+                        
+                        if (!data) {
+                            firebase.auth().signOut();
+                            return alert('Access Denied: Your account has been permanently deleted by the administrator.');
+                        }
+
+                        if (data.status === 'blocked') {
+                            firebase.auth().signOut();
+                            return alert(`ACCOUNT BLOCKED\n\nReason: ${data.blockReason || 'Violation of terms'}`);
+                        }
+                        
+                        loadUserDashboard(uid);
+                    });
+                }).catch(err => alert(err.message));
+            });
+        }
+
+        function loadUserDashboard(uid) {
+            currentUid = uid;
+            document.getElementById('authLogin').classList.add('hidden');
+            document.getElementById('authRegister').classList.add('hidden');
+            document.getElementById('dash').classList.remove('hidden');
+            
+            db.ref('users/' + uid).on('value', snap => {
+                const data = snap.val();
+                if (!data) {
+                    alert('Your account has been deleted by the administrator.');
+                    firebase.auth().signOut().then(() => location.reload());
+                    return;
+                }
+
+                if (data.status === 'blocked') {
+                    alert(`Your account has been blocked by the admin.\nReason: ${data.blockReason || 'Violation of terms'}`);
+                    firebase.auth().signOut().then(() => location.reload());
+                    return;
+                }
+
+                currentBalance = Number(data.balance) || 0;
+                userCustomUid = data.customUid || '---';
+                referredCount = Number(data.referredCount) || 0;
+                
+                document.getElementById('walletBalanceDisplay').innerText = `₹${currentBalance}`;
+                document.getElementById('referMyUid').innerText = userCustomUid;
+                // referCount will be updated dynamically in loadUserReferralDeposits
+                document.getElementById('profileUid').innerText = userCustomUid;
+                document.getElementById('profileEmail').innerText = data.email;
+                document.getElementById('profilePassword').innerText = data.password || '********';
+                document.getElementById('supportUid').value = userCustomUid;
+                document.getElementById('depUid').value = userCustomUid;
+                const tgInput = document.getElementById('supportTgUsername');
+                if (tgInput && data.tgUsername) tgInput.value = data.tgUsername;
+
+                loadUserReferralDeposits(userCustomUid);
+                loadUserIncomes(userCustomUid);
+            });
+
+            loadUserWithdrawals(uid);
+            loadUserDeposits(uid);
+            loadUserSupportRequests(uid);
+            loadUserTournaments();
+            loadDailyRewardsForUser(uid);
+            loadUserPredictions(uid);
+            loadUserMemberships(uid);
+            loadUserInvestments(uid);
+            
+            db.ref('games').once('value', snap => {
+                if (snap.hasChild('rocket_crash')) {
+                    db.ref('games/rocket_crash').remove();
+                }
+                if(!snap.exists() || !snap.hasChild('rocket_jump')) {
+                    db.ref('games').update({
+                        'rocket_jump': { name: 'Rocket Jump', prize: 0, entryFee: 10, crashRange: '2.20 - 5.00', status: 'active', allowUserAmount: false },
+                        'spin_wheel': { name: 'Fortune Wheel', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
+                        'coin_flip': { name: 'Lucky Coin Flip', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
+                        'number_guess': { name: 'Number Master', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
+                        'colour_clash': { name: 'COLOUR CLASH', entryFee: 10, status: 'active', allowUserAmount: true }
+                    });
+                }
+            });
+        }
+
+        db.ref('games/colour_clash').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/colour_clash').set({name:'COLOUR CLASH',entryFee:10,status:'active',allowUserAmount:true}); });
+        db.ref('control/colourClashConfig').once('value').then(snap=>{ if(!snap.exists()) db.ref('control/colourClashConfig').set({enabled:true,entrySeconds:30,cooldownSeconds:5,minBet:10,maxBet:5000,multiplier:2,numberMultiplier:9,autoResult:true}); });
+
+        function submitInvestmentRequest() {
+            const amount = Number(document.getElementById('investAmount').value);
+            if (!amount || amount < adminMinInvest) return alert(`Minimum investment is ₹${adminMinInvest}.`);
+            if (amount > currentBalance) return alert('Insufficient balance in wallet.');
+            
+            const newBal = currentBalance - amount;
+            db.ref('users/' + currentUid).update({ balance: newBal }).then(() => {
+                const invRef = db.ref('investments').push();
+                invRef.set({
+                    id: invRef.key,
+                    userId: currentUid,
+                    customUid: userCustomUid,
+                    amount: amount,
+                    dailyReturnPct: adminInvestReturn,
+                    status: 'pending',
+                    timestamp: Date.now(),
+                    lastClaimDate: ''
+                }).then(() => {
+                    alert(`Investment request of ₹${amount} submitted! Awaiting admin approval.`);
+                    document.getElementById('investAmount').value = '';
+                });
+            });
+        }
+
+        function loadUserInvestments(uid) {
+            db.ref('investments').orderByChild('userId').equalTo(uid).on('value', snap => {
+                const container = document.getElementById('userInvestList');
+                container.innerHTML = '';
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No investments found.</p>';
+                    return;
+                }
+                
+                const todayStr = new Date().toISOString().split('T')[0];
+                snap.forEach(child => {
+                    const inv = child.val();
+                    const dailyReturnAmount = (inv.amount * inv.dailyReturnPct) / 100;
+                    
+                    let statusHtml = '';
+                    let actionHtml = '';
+                    
+                    if (inv.status === 'pending') statusHtml = '<span style="color:#facc15; font-weight:bold;">⏳ Pending Approval</span>';
+                    else if (inv.status === 'rejected') statusHtml = '<span style="color:#f87171; font-weight:bold;">❌ Rejected (Refunded)</span>';
+                    else if (inv.status === 'paused') statusHtml = '<span style="color:#facc15; font-weight:bold;">⏸️ Paused by Admin</span>';
+                    else if (inv.status === 'active') {
+                        statusHtml = '<span style="color:#34d399; font-weight:bold;">✅ Active</span>';
+                        if (inv.lastClaimDate === todayStr) {
+                            actionHtml = '<button class="btn-gray" disabled style="padding:8px; font-size:12px; margin-top:8px;">Claimed Today</button>';
+                        } else {
+                            actionHtml = `<button onclick="claimInvestmentReturn('${child.key}')" class="btn-green" style="padding:8px; font-size:12px; margin-top:8px;">Claim Daily Return (₹${dailyReturnAmount.toFixed(2)})</button>`;
+                        }
+                    }
+                    
+                    container.innerHTML += `
+                        <div class="invest-history-item">
+                            <b style="color:var(--accent-cyan);">Amount: ₹${inv.amount}</b><br>
+                            <p style="margin:4px 0; font-size:12px; color:var(--text-main);"><b>Return Rate:</b> ${inv.dailyReturnPct}% per day (₹${dailyReturnAmount.toFixed(2)})</p>
+                            <p style="margin:4px 0; font-size:12px;"><b>Status:</b> ${statusHtml}</p>
+                            ${actionHtml}
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function claimInvestmentReturn(invKey) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            db.ref('investments/' + invKey).once('value').then(snap => {
+                const inv = snap.val();
+                if (!inv) return alert('Investment record not found.');
+                if (inv.status !== 'active') return alert('Investment is not active.');
+                if (inv.lastClaimDate === todayStr) return alert('You have already claimed this today.');
+
+                const returnAmount = (Number(inv.amount) * Number(inv.dailyReturnPct)) / 100;
+                db.ref('users/' + currentUid + '/balance').once('value').then(bSnap => {
+                    const curBal = Number(bSnap.val()) || 0;
+                    db.ref('users/' + currentUid).update({ balance: curBal + returnAmount }).then(() => {
+                        db.ref('investments/' + invKey).update({ lastClaimDate: todayStr });
+                        alert(`🎉 Successfully claimed your daily investment return of ₹${returnAmount.toFixed(2)}!`);
+                    });
+                });
+            });
+        }
+
+        function loadUserIncomes(myCustomUid) {
+            const container = document.getElementById('userIncomeList');
+            if(!container || !myCustomUid) return;
+
+            db.ref('admin_transactions').on('value', snap => {
+                container.innerHTML = '';
+                if(!snap.exists()) {
+                    container.innerHTML = '<p>No income records assigned yet.</p>';
+                    return;
+                }
+
+                let foundCount = 0;
+                snap.forEach(child => {
+                    const tx = child.val();
+                    if(tx.userUid === myCustomUid && tx.status !== 'stopped') {
+                        foundCount++;
+                        let modeColor = tx.mode === 'automatic' ? '#34d399' : '#facc15';
+                        let freqDetails = tx.mode === 'automatic' ? ` | Freq: ${tx.frequency || 'every_day'} (${tx.weekendDay || 'all'}), Time: ${tx.time || '00:00'}` : '';
+                        container.innerHTML += `
+                            <div class="income-history-item">
+                                <b style="color:var(--accent-cyan); font-size:14px;">💼 Type: ${tx.incomeType.toUpperCase()}</b><br>
+                                <p style="margin:5px 0; font-size:15px; color:#facc15; font-weight:bold;">Amount: ₹${tx.amount}</p>
+                                <p style="margin:5px 0; font-size:13px; color:var(--text-main);"><b>Description:</b> ${tx.description || 'N/A'}</p>
+                                <p style="margin:3px 0; font-size:12px; color:${modeColor};"><b>Mode:</b> ${tx.mode.toUpperCase()}${freqDetails}</p>
+                                <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Assigned on: ${new Date(tx.timestamp).toLocaleString()}</p>
+                            </div>
+                        `;
+                    }
+                });
+
+                if(foundCount === 0) {
+                    container.innerHTML = '<p>No income records assigned to your UID yet.</p>';
+                }
+            });
+        }
+
+        function loadUserReferralDeposits(myCustomUid) {
+            const container = document.getElementById('userReferralDepositsList');
+            const totalEarnedEl = document.getElementById('referTotalEarned');
+            const referCountEl = document.getElementById('referCount');
+            if(!container || !myCustomUid) return;
+
+            db.ref('users').once('value', usersSnap => {
+                const downline = []; // { customUid, joinedAt, status }
+                if(usersSnap.exists()) {
+                    usersSnap.forEach(uChild => {
+                        const uVal = uChild.val();
+                        if(uVal.referredBy === myCustomUid && uVal.status !== 'deleted' && uVal.status !== 'blocked') {
+                            downline.push({
+                                customUid: uVal.customUid,
+                                joinedAt: uVal.joinedAt || 0,
+                                status: uVal.status || 'active'
+                            });
+                        }
+                    });
+                }
+
+                // Update referCount display with actual downline count
+                if(referCountEl) {
+                    referCountEl.innerText = downline.length;
+                }
+
+                if(downline.length === 0) {
+                    container.innerHTML = '<p>No users have registered with your referral UID yet.</p>';
+                    if(totalEarnedEl) totalEarnedEl.innerText = '₹0';
+                    return;
+                }
+
+                const downlineUids = downline.map(d => d.customUid);
+
+                Promise.all([
+                    db.ref('deposits').orderByChild('status').equalTo('approved').once('value'),
+                    db.ref('referral_earnings').once('value')
+                ]).then(([depSnap, earnSnap]) => {
+                    // Total deposited per downline user
+                    const depositTotals = {};
+                    if(depSnap.exists()) {
+                        depSnap.forEach(dChild => {
+                            const dVal = dChild.val();
+                            if(downlineUids.includes(dVal.customUid)) {
+                                depositTotals[dVal.customUid] = (depositTotals[dVal.customUid] || 0) + (Number(dVal.amount) || 0);
+                            }
+                        });
+                    }
+
+                    // Commission/bonus earnings per downline user, and grand total
+                    const earningsTotals = {};
+                    let grandTotalEarned = 0;
+                    if(earnSnap.exists()) {
+                        earnSnap.forEach(eChild => {
+                            const eVal = eChild.val();
+                            if(eVal.referrerCustomUid === myCustomUid) {
+                                earningsTotals[eVal.fromCustomUid] = (earningsTotals[eVal.fromCustomUid] || 0) + (Number(eVal.amount) || 0);
+                                grandTotalEarned += Number(eVal.amount) || 0;
+                            }
+                        });
+                    }
+
+                    if(totalEarnedEl) totalEarnedEl.innerText = `₹${grandTotalEarned}`;
+
+                    downline.sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
+
+                    container.innerHTML = downline.map(d => {
+                        const deposited = depositTotals[d.customUid] || 0;
+                        const earned = earningsTotals[d.customUid] || 0;
+                        const joined = d.joinedAt ? new Date(d.joinedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                        const activityBadge = deposited > 0
+                            ? `<span style="color:#34d399; font-weight:bold;">Active Depositor</span>`
+                            : `<span style="color:var(--text-muted);">No Deposits Yet</span>`;
+
+                        return `
+                            <div class="deposit-history-item">
+                                <b>UID:</b> <span class="uid-badge">${d.customUid}</span> &nbsp; ${activityBadge}<br>
+                                <b>Joined:</b> ${joined}<br>
+                                <b>Total Deposited:</b> <span style="color:#facc15; font-weight:bold;">₹${deposited}</span> |
+                                <b>You Earned:</b> <span style="color:#34d399; font-weight:bold;">₹${earned}</span>
+                            </div>
+                        `;
+                    }).join('');
+                });
+            });
+        }
+
+        let allMembershipsData = {}; // Cache for membership comparison
+        let membershipTimers = {}; // Track bonus timers
+
+        function loadUserMemberships(uid) {
+            const container = document.getElementById('userMembershipList');
+            if (!container || !uid) return;
+
+            // Keep both sources live. The old implementation attached one listener
+            // per membership while separately listening to the membership catalogue.
+            // This version renders from a single consistent snapshot of both trees.
+            let membershipPlans = {};
+            let userMemberships = {};
+            let renderScheduled = false;
+
+            const tierEmoji = {
+                basic: '🥉',
+                silver: '⚪',
+                gold: '🟡',
+                platinum: '💎',
+                elite: '👑'
+            };
+            const tierColors = {
+                basic: '#93c5fd',
+                silver: '#cbd5e1',
+                gold: '#facc15',
+                platinum: '#c084fc',
+                elite: '#f97316'
+            };
+
+            const normalizeTier = (value) => {
+                const t = String(value || 'basic').trim().toLowerCase();
+                return tierEmoji[t] ? t : 'basic';
+            };
+
+            const isApprovedStatus = (status) => {
+                const s = String(status || '').trim().toLowerCase();
+                // Support both the current admin value ('approved') and the
+                // legacy/alternate value ('active') so old records remain usable.
+                return s === 'approved' || s === 'active';
+            };
+
+            const render = () => {
+                if (renderScheduled) return;
+                renderScheduled = true;
+                setTimeout(() => {
+                    renderScheduled = false;
+
+                    container.innerHTML = '';
+                    allMembershipsData = {};
+                    let activeMemberCount = 0;
+                    let totalEarned = 0;
+
+                    const planEntries = Object.keys(membershipPlans);
+                    if (planEntries.length === 0) {
+                        container.innerHTML = '<p>No VIP memberships available right now.</p>';
+                        const countEl = document.getElementById('activeMembershipCount');
+                        const earnedEl = document.getElementById('membershipTotalEarned');
+                        if (countEl) countEl.innerText = '0';
+                        if (earnedEl) earnedEl.innerText = '₹0';
+                        return;
+                    }
+
+                    planEntries.forEach(mKey => {
+                        const m = membershipPlans[mKey] || {};
+                        allMembershipsData[mKey] = m;
+
+                        const subData = userMemberships[mKey] || null;
+                        const tier = normalizeTier((subData && subData.tier) || m.tier);
+                        const tierLabel = `${tierEmoji[tier]} ${tier.toUpperCase()}`;
+                        const tierColor = tierColors[tier];
+
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        const endDate = (subData && subData.endDate) || m.endDate || '';
+                        const isExpired = !!endDate && todayStr > endDate;
+                        const approved = subData && isApprovedStatus(subData.status);
+
+                        let statusHtml = '';
+                        let actionButtonHtml = '';
+                        let benefitsHtml = '';
+                        let expiryDaysHtml = '';
+
+                        if (approved && !isExpired) {
+                            activeMemberCount++;
+                            totalEarned += Number((subData && subData.dailyBonus) ?? m.dailyBonus) || 0;
+
+                            statusHtml = `<p style="margin:7px 0; color:#34d399; font-weight:800; font-size:13px;">✅ ACTIVE VIP MEMBERSHIP</p>`;
+                            const claimState = getDailyBonusClaimState(subData, approved, isExpired);
+                            actionButtonHtml = claimState.available
+                                ? `<button onclick="claimDailyMembershipBonus('${mKey}')" class="btn-green" style="margin-top:8px; width:100%; padding:8px; font-size:12px; font-weight:800;">🎁 Claim Daily Bonus ₹${Number((subData && subData.dailyBonus) ?? m.dailyBonus) || 0}</button><p style="margin:5px 0 0; color:#34d399; font-size:10px; font-weight:700;">${claimState.text}</p><p style="color:#34d399; font-style:italic; margin-top:6px; font-size:10px;">Active until ${endDate || 'N/A'}</p>`
+                                : `<p style="margin:8px 0 0; color:#facc15; font-size:11px; font-weight:800;">${claimState.text}</p><p style="color:#34d399; font-style:italic; margin-top:4px; font-size:10px;">Active until ${endDate || 'N/A'}</p>`;
+                            benefitsHtml = `<div style="background:rgba(52,211,153,0.1); padding:7px; border-radius:6px; margin:5px 0; border-left:3px solid #34d399;">
+                                <p style="margin:2px 0; font-size:11px; color:#34d399;">✓ ${(subData && subData.benefits) || m.benefits || 'Premium benefits active'}</p>
+                            </div>`;
+
+                            if (endDate) {
+                                const today = new Date(todayStr);
+                                const expiry = new Date(endDate);
+                                const daysLeft = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+                                if (daysLeft <= 7) {
+                                    expiryDaysHtml = `<p style="margin:5px 0; color:#f87171; font-weight:bold;">⚠️ Expires in ${Math.max(0, daysLeft)} days</p>`;
+                                }
+                            }
+                        } else if (approved && isExpired) {
+                            statusHtml = `<p style="margin:5px 0; color:#f87171; font-weight:bold;">🔒 MEMBERSHIP EXPIRED</p>`;
+                            actionButtonHtml = `<button onclick="buyMembership('${mKey}', ${Number(m.price) || 0})" class="btn-green" style="margin-top:6px; padding:6px; font-size:12px;">Renew Membership (₹${Number(m.price) || 0})</button>`;
+                        } else if (subData && String(subData.status || '').toLowerCase() === 'rejected') {
+                            statusHtml = `<p style="margin:5px 0; color:#f87171; font-weight:bold;">❌ Membership Request Rejected</p>`;
+                            actionButtonHtml = `<button onclick="buyMembership('${mKey}', ${Number(m.price) || 0})" class="btn-yellow" style="margin-top:6px; padding:6px; font-size:12px;">Re-apply (₹${Number(m.price) || 0})</button>`;
+                        } else if (subData) {
+                            statusHtml = `<p style="margin:5px 0; color:#facc15; font-weight:bold;">⏳ REQUEST PENDING ADMIN APPROVAL</p>`;
+                            actionButtonHtml = `<p style="color:var(--text-muted); font-style:italic; margin-top:8px;">Awaiting review...</p>`;
+                        } else {
+                            actionButtonHtml = `<button onclick="buyMembership('${mKey}', ${Number(m.price) || 0})" class="btn-green" style="margin-top:6px; padding:6px; font-size:12px;">Buy Membership (₹${Number(m.price) || 0})</button>`;
+                        }
+
+                        const card = document.createElement('div');
+                        card.id = 'user_m_card_' + mKey;
+                        card.className = 'membership-card';
+                        card.innerHTML = `
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                <b style="color:${tierColor}; font-size:15px;">${tierLabel}</b>
+                                ${approved && !isExpired ? '<span style="background:rgba(52,211,153,.14); border:1px solid rgba(52,211,153,.4); color:#34d399; padding:3px 7px; border-radius:999px; font-size:10px; font-weight:800;">ACTIVE</span>' : ''}
+                            </div>
+                            <b style="display:block; color:var(--accent-cyan); font-size:15px; margin-top:5px;">⭐ ${m.name || 'VIP Membership'}</b>
+                            <p style="margin:6px 0; font-size:12px; color:${tierColor}; font-weight:800;">Tier Level: ${tierLabel}</p>
+                            <p style="margin:5px 0; font-size:14px; color:#facc15; font-weight:bold;">Price: ₹${Number(m.price) || 0}</p>
+                            <p style="margin:5px 0; font-size:13px; color:var(--text-main);"><b>Benefits:</b> ${m.benefits || 'Fast approval, daily wallet bonus & deposit bonus.'}</p>
+                            <p style="margin:3px 0; font-size:12px; color:var(--accent-green);"><b>💰 Daily Bonus:</b> ₹${Number(m.dailyBonus) || 0} / day</p>
+                            <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Duration: ${m.startDate || 'N/A'} to ${m.endDate || 'N/A'}</p>
+                            ${expiryDaysHtml}
+                            ${benefitsHtml}
+                            ${statusHtml}
+                            ${actionButtonHtml}
+                        `;
+                        container.appendChild(card);
+                    });
+
+                    const countEl = document.getElementById('activeMembershipCount');
+                    const earnedEl = document.getElementById('membershipTotalEarned');
+                    if (countEl) countEl.innerText = String(activeMemberCount);
+                    if (earnedEl) earnedEl.innerText = `₹${totalEarned}/day`;
+                    updateNextBonusTimer();
+                }, 0);
+            };
+
+            db.ref('memberships').on('value', snap => {
+                membershipPlans = snap.val() || {};
+                render();
+            });
+
+            // Important: listen to the whole user's subscription tree. When the
+            // admin changes pending -> approved, this listener fires immediately.
+            db.ref('user_memberships').on('value', snap => {
+                const all = snap.val() || {};
+                userMemberships = {};
+                Object.keys(all).forEach(mKey => {
+                    const planSubs = all[mKey] || {};
+                    if (planSubs && planSubs[uid]) userMemberships[mKey] = planSubs[uid];
+                });
+                render();
+            });
+
+            loadMembershipComparison();
+        }
+
+        function showMembershipView(view) {
+            const listView = document.getElementById('membershipListView');
+            const compareView = document.getElementById('membershipCompareView');
+            const listBtn = document.getElementById('viewListBtn');
+            const compareBtn = document.getElementById('viewCompareBtn');
+
+            if (view === 'list') {
+                listView.classList.remove('hidden');
+                compareView.classList.add('hidden');
+                listBtn.style.background = 'linear-gradient(135deg, #059669, #047857)';
+                compareBtn.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
+            } else {
+                listView.classList.add('hidden');
+                compareView.classList.remove('hidden');
+                listBtn.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
+                compareBtn.style.background = 'linear-gradient(135deg, #059669, #047857)';
+            }
+        }
+
+        function loadMembershipComparison() {
+            const container = document.getElementById('membershipComparisonTable');
+            db.ref('memberships').once('value', snap => {
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No memberships to compare.</p>';
+                    return;
+                }
+
+                let html = `<table style="width:100%; border-collapse:collapse;">
+                    <tr style="background: rgba(29, 78, 216, 0.3); border-bottom: 1px solid rgba(29, 78, 216, 0.5);">
+                        <th style="padding:8px; text-align:left; color:var(--accent-cyan); font-weight:bold;">Plan</th>
+                        <th style="padding:8px; text-align:center; color:#c084fc; font-weight:bold;">Tier</th>
+                        <th style="padding:8px; text-align:center; color:#facc15; font-weight:bold;">Price</th>
+                        <th style="padding:8px; text-align:center; color:#34d399; font-weight:bold;">Daily Bonus</th>
+                    </tr>`;
+
+                snap.forEach(child => {
+                    const m = child.val();
+                    html += `<tr style="border-bottom: 1px solid rgba(29, 78, 216, 0.2);">
+                        <td style="padding:8px; color:var(--accent-cyan); font-weight:bold;">${m.name}</td>
+                        <td style="padding:8px; text-align:center; color:#c084fc; font-weight:bold;">${String(m.tier || 'basic').toUpperCase()}</td>
+                        <td style="padding:8px; text-align:center; color:#facc15;">₹${m.price}</td>
+                        <td style="padding:8px; text-align:center; color:#34d399;">₹${m.dailyBonus}/day</td>
+                    </tr>`;
+                });
+
+                html += `</table>`;
+                container.innerHTML = html;
+            });
+        }
+
+        function updateNextBonusTimer() {
+            const timerEl = document.getElementById('nextBonusTimer');
+            const updateTimer = () => {
+                const now = new Date();
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+
+                const diff = tomorrow - now;
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                if (timerEl) timerEl.innerText = `Next daily claim window in ${hours}h ${minutes}m`;
+            };
+
+            updateTimer();
+            setInterval(updateTimer, 60000); // Update every minute
+        }
+
+        function buyMembership(mKey, price) {
+            db.ref('memberships/' + mKey).once('value').then(snap => {
+                if (!snap.exists()) return alert('This membership is no longer available.');
+                const m = snap.val() || {};
+                const actualPrice = Number(m.price) || 0;
+
+                // Always use the current plan price from Firebase.
+                if (currentBalance < actualPrice) {
+                    return alert(`Insufficient wallet balance! Price is ₹${actualPrice}. Please deposit funds.`);
+                }
+
+                return db.ref('user_memberships/' + mKey + '/' + currentUid).once('value').then(existingSnap => {
+                    const existing = existingSnap.val();
+                    if (existing && (String(existing.status).toLowerCase() === 'pending' ||
+                                     String(existing.status).toLowerCase() === 'approved' ||
+                                     String(existing.status).toLowerCase() === 'active')) {
+                        return alert('You already have a pending or active request for this membership.');
+                    }
+
+                    const newBal = currentBalance - actualPrice;
+                    return db.ref('users/' + currentUid).update({ balance: newBal }).then(() => {
+                        return db.ref('user_memberships/' + mKey + '/' + currentUid).set({
+                            userId: currentUid,
+                            customUid: userCustomUid,
+                            membershipId: mKey,
+                            name: m.name || 'VIP Membership',
+                            pricePaid: actualPrice,
+                            dailyBonus: Number(m.dailyBonus) || 0,
+                            benefits: m.benefits || '',
+                            tier: m.tier || 'basic',
+                            startDate: m.startDate || '',
+                            endDate: m.endDate || '',
+                            status: 'pending',
+                            timestamp: Date.now()
+                        }).then(() => {
+                            currentBalance = newBal;
+                            alert(`Successfully requested membership "${m.name || 'VIP Membership'}"! ₹${actualPrice} deducted. Awaiting admin approval.`);
+                        });
+                    });
+                });
+            }).catch(err => alert('Membership purchase error: ' + err.message));
+        }
+
+        // Daily membership bonus is now MANUAL CLAIM only.
+        // Approval makes the bonus claimable; opening the app never credits money automatically.
+        function claimDailyMembershipBonus(mKey) {
+            if (!currentUid || !mKey) return alert('Invalid membership.');
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const subRef = db.ref('user_memberships/' + mKey + '/' + currentUid);
+            const balanceRef = db.ref('users/' + currentUid + '/balance');
+
+            Promise.all([
+                db.ref('memberships/' + mKey).once('value'),
+                subRef.once('value')
+            ]).then(([mSnap, subSnap]) => {
+                if (!mSnap.exists() || !subSnap.exists()) throw new Error('Membership not found.');
+
+                const m = mSnap.val() || {};
+                const sub = subSnap.val() || {};
+                const status = String(sub.status || '').toLowerCase();
+                const endDate = sub.endDate || m.endDate || '';
+                const dailyBonusAmt = Number(sub.dailyBonus ?? m.dailyBonus ?? 0) || 0;
+
+                if (status !== 'approved' && status !== 'active') {
+                    throw new Error('Your membership is not active yet.');
+                }
+                if (endDate && todayStr > endDate) {
+                    throw new Error('This membership has expired.');
+                }
+                if (dailyBonusAmt <= 0) {
+                    throw new Error('This membership has no daily bonus.');
+                }
+
+                // Transaction makes the claim date atomic, preventing two clicks/tabs
+                // from claiming the same day's membership bonus twice.
+                return subRef.transaction(current => {
+                    if (!current) return;
+                    const currentStatus = String(current.status || '').toLowerCase();
+                    if (currentStatus !== 'approved' && currentStatus !== 'active') return;
+                    if ((current.lastDailyBonusDate || '') === todayStr) return;
+                    return { ...current, lastDailyBonusDate: todayStr, lastDailyBonusClaimAt: Date.now() };
+                }).then(result => {
+                    if (!result.committed) {
+                        throw new Error('Daily bonus already claimed today.');
+                    }
+
+                    return balanceRef.transaction(balance => (Number(balance) || 0) + dailyBonusAmt)
+                        .then(balanceResult => {
+                            if (!balanceResult.committed) throw new Error('Could not update wallet balance.');
+
+                            const claimKey = todayStr + '_' + mKey;
+                            return db.ref('daily_bonus_claims/' + currentUid + '/' + claimKey).set({
+                                userId: currentUid,
+                                membershipId: mKey,
+                                membershipName: sub.name || m.name || 'VIP Membership',
+                                tier: sub.tier || m.tier || 'basic',
+                                amount: dailyBonusAmt,
+                                claimDate: todayStr,
+                                timestamp: Date.now()
+                            }).then(() => {
+                                alert(`🎉 ₹${dailyBonusAmt} Daily Membership Bonus claimed successfully!`);
+                                loadUserMemberships(currentUid);
+                            });
+                        });
+                });
+            }).catch(err => alert(err.message || 'Unable to claim daily membership bonus.'));
+        }
+
+        function getDailyBonusClaimState(subData, approved, isExpired) {
+            if (!approved || isExpired) return { available: false, text: '' };
+            const todayStr = new Date().toISOString().split('T')[0];
+            if ((subData?.lastDailyBonusDate || '') === todayStr) {
+                return { available: false, text: '✅ Claimed today • Next bonus available tomorrow' };
+            }
+            return { available: true, text: '🎁 Daily bonus is ready to claim!' };
+        }
+
+        function openFeature(featureName) {
+            if (featureName === 'Play Games') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('gamesHub').classList.remove('hidden');
+                loadMiniGames();
+            } else if (featureName === 'Tournaments') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('tournamentsArea').classList.remove('hidden');
+            } else if (featureName === 'Predictions') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('predictionsArea').classList.remove('hidden');
+            } else if (featureName === 'Membership') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('membershipArea').classList.remove('hidden');
+            } else if (featureName === 'Income') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('incomeArea').classList.remove('hidden');
+            } else if (featureName === 'Invest') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('investArea').classList.remove('hidden');
+            } else if (featureName === 'Profile') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('profileArea').classList.remove('hidden');
+            } else if (featureName === 'Refer & Earn') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('referArea').classList.remove('hidden');
+            } else if (featureName === 'Deposit') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('depositArea').classList.remove('hidden');
+            } else if (featureName === 'Withdraw') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('withdrawArea').classList.remove('hidden');
+            } else if (featureName === 'Daily Reward') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('dailyRewardArea').classList.remove('hidden');
+            } else if (featureName === 'Support') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('supportArea').classList.remove('hidden');
+            } else if (featureName === 'History') {
+                document.getElementById('mainMenu').classList.add('hidden');
+                document.getElementById('historyArea').classList.remove('hidden');
+                loadUserHistory(currentUid);
+            }
+        }
+
+        function closeFeature(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
+
+        function openNotifications() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('notificationsArea').classList.remove('hidden');
+            loadUserNotifications();
+            // Mark broadcasts as seen and hide the unread dot.
+            localStorage.setItem('lastSeenBroadcastTs', String(lastBroadcastTimestamp));
+            const notifDot = document.getElementById('notifDot');
+            if (notifDot) notifDot.classList.add('hidden');
+        }
+
+        function loadUserNotifications() {
+            const container = document.getElementById('userNotificationsList');
+            db.ref('broadcasts').limitToLast(50).once('value', snap => {
+                container.innerHTML = '';
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No notifications yet.</p>';
+                    return;
+                }
+                const items = [];
+                snap.forEach(child => { items.push(child.val()); });
+                items.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                console.log('[Notifications] loaded', items.length, 'broadcast(s) from Firebase:', items);
+                container.innerHTML = `<p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0;">Showing ${items.length} notification(s)</p>`;
+                items.forEach(n => {
+                    const when = n.timestamp ? new Date(n.timestamp).toLocaleString() : '';
+                    container.innerHTML += `
+                        <div class="notif-item">
+                            <div class="notif-msg">📢 ${escapeHtml(n.message || '')}</div>
+                            <div class="notif-time">${when}</div>
+                        </div>
+                    `;
+                });
+            }, err => {
+                console.error('[Notifications] Firebase error:', err);
+                container.innerHTML = `<p style="color:#f87171;">⚠️ Could not load notifications: ${escapeHtml(err.message)}</p>`;
+            });
+        }
+
+        function loadUserHistory(uid) {
+            if (!uid) return;
+            const container = document.getElementById('userHistoryList');
+            container.innerHTML = 'Loading history...';
+
+            Promise.all([
+                db.ref('deposits').orderByChild('userId').equalTo(uid).once('value'),
+                db.ref('withdrawals').orderByChild('userId').equalTo(uid).once('value')
+            ]).then(([depSnap, wdSnap]) => {
+                const items = [];
+                if (depSnap.exists()) {
+                    depSnap.forEach(child => {
+                        const d = child.val();
+                        items.push({
+                            type: 'Deposit',
+                            icon: '💳',
+                            amount: Number(d.amount) || 0,
+                            status: d.status || 'pending',
+                            timestamp: Number(d.timestamp) || 0
+                        });
+                    });
+                }
+                if (wdSnap.exists()) {
+                    wdSnap.forEach(child => {
+                        const w = child.val();
+                        items.push({
+                            type: 'Withdrawal',
+                            icon: '💸',
+                            amount: Number(w.amount) || 0,
+                            status: w.status || 'pending',
+                            timestamp: Number(w.timestamp) || 0
+                        });
+                    });
+                }
+
+                if (items.length === 0) {
+                    container.innerHTML = '<p>No transactions yet.</p>';
+                    return;
+                }
+
+                items.sort((a, b) => b.timestamp - a.timestamp);
+
+                let statusColor = (s) => s === 'approved' ? '#34d399' : (s === 'rejected' ? '#f87171' : '#facc15');
+
+                container.innerHTML = items.map(it => `
+                    <div class="deposit-history-item">
+                        <b>${it.icon} ${it.type}</b><br>
+                        <b>Amount:</b> ₹${it.amount}<br>
+                        <b>Status:</b> <span style="color:${statusColor(it.status)}; font-weight:bold;">${it.status.toUpperCase()}</span><br>
+                        <span style="font-size:11px; color:var(--text-muted);">${it.timestamp ? new Date(it.timestamp).toLocaleString() : ''}</span>
+                    </div>
+                `).join('');
+            }).catch(err => {
+                container.innerHTML = `<p>Failed to load history: ${escapeHtml(err.message)}</p>`;
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.innerText = String(str == null ? '' : str);
+            return div.innerHTML;
+        }
+
+        function backToDashboard() {
+            if (rocketInterval) clearInterval(rocketInterval);
+            document.getElementById('gamesHub').classList.add('hidden');
+            document.getElementById('activeGameArea').classList.add('hidden');
+            document.getElementById('mainMenu').classList.remove('hidden');
+        }
+
+        function closeActiveGame() {
+            if (rocketInterval) clearInterval(rocketInterval);
+            if (colourClashTimer) clearInterval(colourClashTimer);
+            minesState = null;
+            document.getElementById('activeGameArea').classList.add('hidden');
+            document.getElementById('gamesHub').classList.remove('hidden');
+        }
+
+        function loadUserPredictions(uid) {
+            const container = document.getElementById('userPredictionList');
+            if(!container) return;
+
+            db.ref('predictions').on('value', snap => {
+                container.innerHTML = '';
+                if(!snap.exists()) {
+                    container.innerHTML = '<p>No prediction questions available right now.</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const p = child.val();
+                    const pKey = child.key;
+
+                    db.ref('user_predictions/' + pKey + '/' + uid).once('value', userPredSnap => {
+                        const userPredData = userPredSnap.val();
+                        let statusHtml = '';
+
+                        if(userPredData) {
+                            if(userPredData.status === 'won') {
+                                statusHtml = `<p style="margin:5px 0; color:#34d399; font-weight:bold;">🎉 You predicted ${userPredData.choice.toUpperCase()} and WON ₹${userPredData.potentialReward}!</p>`;
+                            } else if(userPredData.status === 'lost') {
+                                statusHtml = `<p style="margin:5px 0; color:#f87171; font-weight:bold;">❌ You predicted ${userPredData.choice.toUpperCase()} and lost.</p>`;
+                            } else {
+                                statusHtml = `<p style="margin:5px 0; color:#facc15; font-weight:bold;">⏳ Prediction submitted for: ${userPredData.choice.toUpperCase()} (Pending Result)</p>`;
+                            }
+                        }
+
+                        const linkHtml = p.link ? `<a href="${p.link}" target="_blank" style="color:var(--accent-cyan); display:block; margin:4px 0; font-size:12px;">🔗 Reference Link</a>` : '';
+                        const isEnded = p.status === 'ended';
+
+                        let buttonsHtml = '';
+                        if(userPredData || isEnded) {
+                            buttonsHtml = `<p style="color:var(--text-muted); font-style:italic; margin-top:8px;">${isEnded ? '🔒 Prediction Ended' : '✅ Already Participated'}</p>`;
+                        } else {
+                            buttonsHtml = `
+                                <div style="display:flex; gap:10px; margin-top:10px;">
+                                    <button onclick="submitPrediction('${pKey}', 'yes', ${p.fee || 0})" class="btn-green" style="margin:0; padding:8px; font-size:12px;">Yes (Win ₹${p.yesReward || 0})</button>
+                                    <button onclick="submitPrediction('${pKey}', 'no', ${p.fee || 0})" class="btn-red" style="margin:0; padding:8px; font-size:12px;">No (Win ₹${p.noReward || 0})</button>
+                                </div>
+                            `;
+                        }
+
+                        let card = document.getElementById('pred_user_card_' + pKey);
+                        if(!card) {
+                            card = document.createElement('div');
+                            card.id = 'pred_user_card_' + pKey;
+                            card.className = 'prediction-card';
+                            container.appendChild(card);
+                        }
+
+                        card.innerHTML = `
+                            <b style="color:var(--accent-cyan); font-size:14px;">📊 ${p.title}</b><br>
+                            <p style="margin:5px 0; font-size:13px; color:var(--text-main);">${p.description || ''}</p>
+                            ${linkHtml}
+                            <p style="margin:5px 0; font-size:12px; color:#facc15;">Entry Fee: ₹${p.fee || 0} | Yes Win: ₹${p.yesReward || 0} | No Win: ₹${p.noReward || 0}</p>
+                            ${statusHtml}
+                            ${buttonsHtml}
+                        `;
+                    });
+                });
+            });
+        }
+
+        function submitPrediction(pKey, choice, fee) {
+            if(currentBalance < fee) {
+                return alert(`Insufficient balance! Entry fee is ₹${fee}. Please deposit funds.`);
+            }
+
+            db.ref('predictions/' + pKey).once('value').then(snap => {
+                if(!snap.exists()) return alert('This prediction question no longer exists.');
+                const p = snap.val();
+                if(p.status === 'ended') return alert('This prediction has already ended.');
+
+                const newBal = currentBalance - fee;
+                db.ref('users/' + currentUid).update({ balance: newBal }).then(() => {
+                    const rewardAmt = choice === 'yes' ? (Number(p.yesReward) || 0) : (Number(p.noReward) || 0);
+                    db.ref('user_predictions/' + pKey + '/' + currentUid).set({
+                        userId: currentUid,
+                        customUid: userCustomUid,
+                        choice: choice,
+                        feePaid: fee,
+                        potentialReward: rewardAmt,
+                        status: 'pending',
+                        timestamp: Date.now()
+                    }).then(() => alert(`Successfully placed prediction on ${choice.toUpperCase()}! Fee of ₹${fee} deducted.`));
+                });
+            });
+        }
+
+        function loadDailyRewardsForUser(uid) {
+            const container = document.getElementById('userRewardsList');
+            if(!container) return;
+            
+            db.ref('daily_rewards').on('value', snap => {
+                container.innerHTML = '';
+                if(!snap.exists()) {
+                    container.innerHTML = '<p>No daily rewards available right now.</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const r = child.val();
+                    const rKey = child.key;
+                    const maxClaims = Number(r.maxClaims) || 0;
+
+                    db.ref('claimed_rewards/' + rKey).once('value', claimsSnap => {
+                        const claimsCount = claimsSnap.numChildren();
+                        db.ref('claimed_rewards/' + rKey + '/' + uid).once('value', claimSnap => {
+                            const isClaimed = claimSnap.exists();
+                            const isLimitReached = maxClaims > 0 && claimsCount >= maxClaims;
+                            
+                            let cardElem = document.getElementById('reward_card_' + rKey);
+                            if(!cardElem) {
+                                cardElem = document.createElement('div');
+                                cardElem.id = 'reward_card_' + rKey;
+                                cardElem.className = 'reward-card';
+                                container.appendChild(cardElem);
+                            }
+
+                            let btnText = 'Claim Reward';
+                            let btnClass = 'btn-green';
+                            let isDisabled = false;
+
+                            if (isClaimed) {
+                                btnText = 'Already Claimed';
+                                btnClass = 'btn-gray';
+                                isDisabled = true;
+                            } else if (isLimitReached) {
+                                btnText = 'Limit Reached';
+                                btnClass = 'btn-gray';
+                                isDisabled = true;
+                            }
+
+                            cardElem.innerHTML = `
+                                <b style="color:var(--accent-cyan); font-size:14px;">🎁 Daily Reward</b><br>
+                                <p style="margin:5px 0; font-size:15px; color:#facc15; font-weight:bold;">Amount: ₹${r.amount}</p>
+                                <p style="margin:5px 0; font-size:12px; color:var(--text-muted);">${r.description || 'No description provided.'}</p>
+                                <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Claims: ${claimsCount} / ${maxClaims === 0 ? 'Unlimited' : maxClaims}</p>
+                                <button onclick="claimDailyReward('${rKey}', ${r.amount}, ${maxClaims})" class="${btnClass}" ${isDisabled ? 'disabled' : ''} style="margin-top:6px; padding:6px; font-size:12px;">
+                                    ${btnText}
+                                </button>
+                            `;
+                        });
+                    });
+                });
+            });
+        }
+
+        function claimDailyReward(rKey, amount, maxClaims) {
+            db.ref('daily_rewards/' + rKey).once('value').then(rSnap => {
+                if(!rSnap.exists()) return alert('This reward has been deleted by the admin.');
+                
+                db.ref('claimed_rewards/' + rKey).once('value', claimsSnap => {
+                    const currentClaimsCount = claimsSnap.numChildren();
+                    if(maxClaims > 0 && currentClaimsCount >= maxClaims) {
+                        return alert('Sorry, the claim limit for this reward has been reached!');
+                    }
+
+                    if(claimsSnap.hasChild(currentUid)) {
+                        return alert('You have already claimed this reward!');
+                    }
+
+                    db.ref('claimed_rewards/' + rKey + '/' + currentUid).set(true).then(() => {
+                        db.ref('users/' + currentUid + '/balance').once('value', bSnap => {
+                            const currentBal = Number(bSnap.val()) || 0;
+                            db.ref('users/' + currentUid).update({ balance: currentBal + amount }).then(() => {
+                                alert(`Successfully claimed ₹${amount} daily reward!`);
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        function loadUserTournaments() {
+            db.ref('tournaments').on('value', snap => {
+                const container = document.getElementById('tournamentListContainer');
+                const resultsContainer = document.getElementById('tournamentResultsContainer');
+                if(!container) return;
+                container.innerHTML = '';
+                if(resultsContainer) resultsContainer.innerHTML = '';
+
+                if(!snap.exists()) {
+                    container.innerHTML = '<p>No active tournaments available right now.</p>';
+                    if(resultsContainer) resultsContainer.innerHTML = '<p>No tournaments have ended yet.</p>';
+                    return;
+                }
+
+                const openTournaments = [];
+                const endedTournaments = [];
+
+                snap.forEach(child => {
+                    const t = child.val();
+                    const tKey = child.key;
+                    const status = t.status || 'open';
+                    if (status === 'open') {
+                        openTournaments.push({ tKey, t });
+                    } else if (status === 'closed') {
+                        endedTournaments.push({ tKey, t });
+                    }
+                    // Cancelled tournaments are simply not shown to users.
+                });
+
+                if (openTournaments.length === 0) {
+                    container.innerHTML = '<p>No active tournaments available right now.</p>';
+                } else {
+                    openTournaments.forEach(({ tKey, t }) => {
+                        const entryFee = Number(t.entryFee) || 0;
+                        const feeText = entryFee === 0 ? '<span style="color:#34d399; font-weight:bold;">Free</span>' : `<span style="color:#facc15; font-weight:bold;">₹${entryFee}</span>`;
+
+                        container.innerHTML += `
+                            <div class="tournament-card">
+                                <b style="color:var(--accent-cyan); font-size:14px;">🏆 ${t.title}</b><br>
+                                <p style="margin:5px 0;">Prize Pool: <span style="color:#facc15; font-weight:bold;">₹${t.prize}</span> | Entry Fee: ${feeText}</p>
+                                <p style="margin:5px 0; font-size:12px; color:var(--text-muted);">${t.description || ''}</p>
+                                <button onclick="joinTournament('${tKey}', '${t.title}', ${entryFee})" class="btn-green" style="margin-top:6px; padding:6px; font-size:12px;">Join Tournament</button>
+                            </div>
+                        `;
+                    });
+                }
+
+                if (resultsContainer) {
+                    if (endedTournaments.length === 0) {
+                        resultsContainer.innerHTML = '<p>No tournaments have ended yet.</p>';
+                    } else {
+                        endedTournaments.sort((a, b) => (b.t.declaredAt || 0) - (a.t.declaredAt || 0));
+                        resultsContainer.innerHTML = endedTournaments.map(({ t }) => `
+                            <div class="tournament-card">
+                                <b style="color:var(--accent-cyan); font-size:14px;">🏆 ${t.title}</b><br>
+                                <p style="margin:5px 0; font-size:13px;">Winner: <span class="uid-badge">${t.winnerCustomUid || '—'}</span> won <span style="color:#34d399; font-weight:bold;">₹${t.prizeAwarded || 0}</span></p>
+                            </div>
+                        `).join('');
+                    }
+                }
+            });
+        }
+
+        function joinTournament(tKey, tTitle, entryFee) {
+            db.ref('tournaments/' + tKey).once('value').then(tSnap => {
+                const t = tSnap.val();
+                if (!t || (t.status && t.status !== 'open')) {
+                    return alert('This tournament is no longer accepting participants.');
+                }
+
+                db.ref('tournament_participants/' + tKey + '/' + currentUid).once('value').then(snap => {
+                    if(snap.exists()) {
+                        return alert('You have already joined this tournament!');
+                    }
+
+                    if(entryFee > 0) {
+                        if(currentBalance < entryFee) {
+                            return alert('Insufficient balance! Please deposit funds to join this paid tournament.');
+                        }
+                        const newBal = currentBalance - entryFee;
+                        db.ref('users/' + currentUid).update({ balance: newBal });
+                    }
+
+                    db.ref('tournament_participants/' + tKey + '/' + currentUid).set({
+                        uid: userCustomUid,
+                        joinedAt: Date.now()
+                    }).then(() => alert(`Successfully registered for tournament: ${tTitle}!`));
+                });
+            });
+        }
+
+        function submitDepositRequest() {
+            const phone = document.getElementById('depPhone').value.trim();
+            const amount = Number(document.getElementById('depAmount').value);
+            const utr = document.getElementById('depUtr').value.trim();
+
+            if(!phone) return alert('Please enter your phone number.');
+            if(!amount || amount <= 0) return alert('Please enter a valid amount.');
+            if(amount < adminMinDeposit) return alert(`Deposit amount cannot be less than the minimum limit of ₹${adminMinDeposit}.`);
+            if(!utr) return alert('Please enter the transaction UTR number.');
+
+            const depRef = db.ref('deposits').push();
+            depRef.set({
+                reqId: depRef.key,
+                userId: currentUid,
+                customUid: userCustomUid,
+                phoneNumber: phone,
+                amount: amount,
+                utr: utr,
+                status: 'pending',
+                timestamp: Date.now()
+            }).then(() => {
+                alert('Deposit request submitted successfully! Awaiting verification.');
+                document.getElementById('depPhone').value = '';
+                document.getElementById('depAmount').value = '';
+                document.getElementById('depUtr').value = '';
+            });
+        }
+
+        function loadUserDeposits(uid) {
+            db.ref('deposits').orderByChild('userId').equalTo(uid).on('value', snap => {
+                const container = document.getElementById('userDepositList');
+                if(!container) return;
+                container.innerHTML = '';
+
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No deposit requests submitted yet.</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const r = child.val();
+                    let statusColor = '#38bdf8';
+                    if (r.status === 'approved') statusColor = '#34d399';
+                    if (r.status === 'rejected') statusColor = '#f87171';
+
+                    container.innerHTML += `
+                        <div class="deposit-history-item">
+                            <b>Amount:</b> ₹${r.amount}<br>
+                            <b>UTR:</b> ${r.utr}<br>
+                            <b>Status:</b> <span style="color:${statusColor}; font-weight:bold;">${r.status.toUpperCase()}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function submitWithdrawal() {
+            const amount = Number(document.getElementById('withdrawAmount').value);
+            const tgUsername = document.getElementById('withdrawTg').value.trim();
+            const upiId = document.getElementById('withdrawUpi').value.trim();
+
+            if (!amount || amount <= 0) return alert('Please enter a valid withdrawal amount.');
+            if (amount < adminMinWithdraw) return alert(`Withdrawal amount cannot be less than the minimum limit of ₹${adminMinWithdraw}.`);
+            if (amount > currentBalance) return alert('Insufficient balance for this withdrawal.');
+            if (!tgUsername) return alert('Please enter your Telegram username.');
+            if (!upiId) return alert('Please enter your UPI ID.');
+
+            const taxAmount = (amount * adminWithdrawTax) / 100;
+            const netAmount = amount - taxAmount;
+            const newBalance = currentBalance - amount;
+
+            db.ref('users/' + currentUid).update({ balance: newBalance }).then(() => {
+                const withdrawRef = db.ref('withdrawals').push();
+                withdrawRef.set({
+                    reqId: withdrawRef.key,
+                    userId: currentUid,
+                    customUid: userCustomUid,
+                    amount: amount,
+                    taxPercent: adminWithdrawTax,
+                    taxAmount: taxAmount,
+                    netAmount: netAmount,
+                    tgUsername: tgUsername,
+                    upiId: upiId,
+                    status: 'pending',
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert(`Withdrawal request sent successfully!\n\nGross Amount: ₹${amount}\nTax (${adminWithdrawTax}%): ₹${taxAmount.toFixed(2)}\nYou Will Receive: ₹${netAmount.toFixed(2)}`);
+                    document.getElementById('withdrawAmount').value = '';
+                    document.getElementById('withdrawTg').value = '';
+                    document.getElementById('withdrawUpi').value = '';
+                    calculateWithdrawBreakdown();
+                });
+            });
+        }
+
+        function loadUserWithdrawals(uid) {
+            db.ref('withdrawals').orderByChild('userId').equalTo(uid).on('value', snap => {
+                const container = document.getElementById('userWithdrawList');
+                if(!container) return;
+                container.innerHTML = '';
+
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No withdrawal requests made yet.</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const r = child.val();
+                    let statusColor = '#38bdf8';
+                    if (r.status === 'approved') statusColor = '#34d399';
+                    if (r.status === 'rejected') statusColor = '#f87171';
+
+                    const grossAmt = r.amount || 0;
+                    const taxAmt = r.taxAmount !== undefined ? r.taxAmount : ((grossAmt * (r.taxPercent || 0)) / 100);
+                    const netAmt = r.netAmount !== undefined ? r.netAmount : (grossAmt - taxAmt);
+
+                    container.innerHTML += `
+                        <div class="withdraw-history-item">
+                            <b>Requested Amount:</b> ₹${grossAmt}<br>
+                            <b>Tax Cut (${r.taxPercent || 0}%):</b> -₹${taxAmt.toFixed(2)}<br>
+                            <b style="color:#34d399;">Net Payout:</b> ₹${netAmt.toFixed(2)}<br>
+                            <b>UPI ID:</b> ${r.upiId}<br>
+                            <b>Telegram:</b> ${r.tgUsername}<br>
+                            <b>Status:</b> <span style="color:${statusColor}; font-weight:bold;">${r.status.toUpperCase()}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function submitSupportRequest() {
+            const tgUsername = document.getElementById('supportTgUsername').value.trim();
+            const subject = document.getElementById('supportSubject').value.trim();
+            const description = document.getElementById('supportDesc').value.trim();
+
+            if (!tgUsername) return alert('Please enter your Telegram username so support can reach you.');
+            if (!subject) return alert('Please enter the subject of your problem.');
+            if (!description) return alert('Please describe your problem.');
+
+            const supportRef = db.ref('support_requests').push();
+            supportRef.set({
+                reqId: supportRef.key,
+                userId: currentUid,
+                customUid: userCustomUid,
+                tgUsername: tgUsername,
+                subject: subject,
+                description: description,
+                status: 'pending',
+                timestamp: Date.now()
+            }).then(() => {
+                db.ref('users/' + currentUid).update({ tgUsername: tgUsername });
+                alert('Support request submitted successfully! You can track its status below.');
+                document.getElementById('supportSubject').value = '';
+                document.getElementById('supportDesc').value = '';
+            }).catch(err => alert('Failed to submit support request: ' + err.message));
+        }
+
+        function loadUserSupportRequests(uid) {
+            db.ref('support_requests').orderByChild('userId').equalTo(uid).on('value', snap => {
+                const container = document.getElementById('userSupportList');
+                if(!container) return;
+                container.innerHTML = '';
+
+                if (!snap.exists()) {
+                    container.innerHTML = '<p>No support requests submitted yet.</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const r = child.val();
+                    let statusColor = '#38bdf8';
+                    if (r.status === 'approved') statusColor = '#34d399';
+                    if (r.status === 'rejected') statusColor = '#f87171';
+
+                    container.innerHTML += `
+                        <div class="support-history-item">
+                            <b>Subject:</b> ${r.subject}<br>
+                            <b>Description:</b> ${r.description}<br>
+                            <b>Status:</b> <span style="color:${statusColor}; font-weight:bold;">${r.status.toUpperCase()}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        /* --- COLOUR CLASH --- */
+        let colourClashTimer = null;
+        let colourClashCurrentRoundId = '';
+        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, multiplier:2, numberMultiplier:9, autoResult:true };
+        let colourClashSelected = '';
+        let colourClashAmount = 0;
+        let colourClashSelectedNumber = null;
+
+        db.ref('control/colourClashConfig').on('value', snap => {
+            const d = snap.val() || {};
+            colourClashConfig = {
+                enabled: d.enabled !== false,
+                entrySeconds: Math.max(5, Number(d.entrySeconds) || 30),
+                cooldownSeconds: Math.max(2, Number(d.cooldownSeconds) || 5),
+                minBet: Math.max(1, Number(d.minBet) || 10),
+                maxBet: Math.max(1, Number(d.maxBet) || 5000),
+                multiplier: Math.max(1, Number(d.multiplier) || 2),
+                numberMultiplier: Math.max(1, Number(d.numberMultiplier) || 9),
+                autoResult: d.autoResult !== false
+            };
+            updateColourClashTopCard();
+        });
+
+        function colourClashCycleMs(){ return (colourClashConfig.entrySeconds + colourClashConfig.cooldownSeconds) * 1000; }
+        function getColourClashRoundState(now=Date.now()){
+            const cycle = colourClashCycleMs();
+            const roundIndex = Math.floor(now / cycle);
+            const roundId = String(roundIndex + 1);
+            const cycleStart = roundIndex * cycle;
+            const elapsed = now - cycleStart;
+            const phase = elapsed < colourClashConfig.entrySeconds * 1000 ? 'open' : 'cooldown';
+            const phaseEnd = phase === 'open' ? cycleStart + colourClashConfig.entrySeconds*1000 : cycleStart + cycle;
+            return { roundId, phase, phaseEnd, cycleStart };
+        }
+        function updateColourClashTopCard(){
+            const el=document.getElementById('colourClashTopStatus'); if(!el) return;
+            if(!colourClashConfig.enabled){ el.innerText='🔒 Game currently unavailable'; return; }
+            const r=getColourClashRoundState();
+            el.innerText=`Round #${r.roundId} • ${r.phase==='open'?'Entries OPEN':'COOLDOWN'} • ${Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000))}s`;
+        }
+        function tryPlayColourClash(){
+            if(!colourClashConfig.enabled) return alert('Colour Clash is currently unavailable.');
+            document.getElementById('gamesHub').classList.add('hidden');
+            document.getElementById('activeGameArea').classList.remove('hidden');
+            document.getElementById('activeGameTitle').innerText='COLOUR CLASH';
+            document.getElementById('activeGameInfo').innerText=`Pick a colour or a number • ₹${colourClashConfig.minBet} - ₹${colourClashConfig.maxBet}`;
+            renderColourClash();
+        }
+        function renderColourClash(){
+            const box=document.getElementById('gameContentBox');
+            if(!box) return;
+            if(!colourClashConfig.enabled){ box.innerHTML='<p style="color:#f87171;">🔒 Colour Clash is currently locked.</p>'; return; }
+            const r=getColourClashRoundState(); colourClashCurrentRoundId=r.roundId;
+            const remaining=Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000));
+            box.innerHTML=`
+                <div style="font-size:13px;color:var(--text-muted);">ROUND #${r.roundId}</div>
+                <div id="ccTimer" style="font-size:30px;font-weight:900;color:#38bdf8;margin:4px 0 12px;">${remaining}s</div>
+                <div id="ccPhase" style="font-size:12px;color:${r.phase==='open'?'#34d399':'#facc15'};font-weight:800;margin-bottom:12px;">${r.phase==='open'?'ENTRIES OPEN':'COOLDOWN — RESULT SOON'}</div>
+
+                <div style="font-size:14px;font-weight:900;color:#f0f9ff;text-align:left;margin-bottom:6px;">🎨 PICK A COLOUR</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                  <button id="ccRed" onclick="selectColourClash('RED')" style="padding:16px 6px;background:linear-gradient(145deg,#991b1b,#dc2626);border:2px solid transparent;border-radius:12px;font-weight:900;">🔴 RED</button>
+                  <button id="ccGreen" onclick="selectColourClash('GREEN')" style="padding:16px 6px;background:linear-gradient(145deg,#047857,#10b981);border:2px solid transparent;border-radius:12px;font-weight:900;">🟢 GREEN</button>
+                  <button id="ccBlue" onclick="selectColourClash('BLUE')" style="padding:16px 6px;background:linear-gradient(145deg,#1d4ed8,#38bdf8);border:2px solid transparent;border-radius:12px;font-weight:900;">🔵 BLUE</button>
+                </div>
+                <input id="ccAmount" type="number" min="${colourClashConfig.minBet}" max="${colourClashConfig.maxBet}" placeholder="Enter amount ₹" style="margin-top:12px;">
+                <button id="ccPlaceBtn" onclick="placeColourClashEntry()" class="btn-green" style="margin-top:8px;">PLACE ENTRY</button>
+                <div id="ccResult" style="margin-top:14px;font-size:22px;font-weight:900;"></div>
+
+                <div style="font-size:14px;font-weight:900;color:#f0f9ff;text-align:left;margin:20px 0 6px;">🔢 PICK A NUMBER (0-9) • Pays ${colourClashConfig.numberMultiplier}x</div>
+                <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;">
+                  ${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button id="ccNum${n}" onclick="selectColourClashNumber(${n})" style="padding:14px 4px;background:linear-gradient(145deg,#1e293b,#0f172a);border:2px solid transparent;border-radius:12px;font-weight:900;color:#f0f9ff;">${n}</button>`).join('')}
+                </div>
+                <input id="ccNumberAmount" type="number" min="${colourClashConfig.minBet}" max="${colourClashConfig.maxBet}" placeholder="Enter amount ₹" style="margin-top:12px;">
+                <button id="ccNumberPlaceBtn" onclick="placeColourClashNumberEntry()" class="btn-green" style="margin-top:8px;">PLACE NUMBER ENTRY</button>
+                <div id="ccNumberResult" style="margin-top:14px;font-size:22px;font-weight:900;"></div>
+
+                <div id="ccMyEntries" style="margin-top:12px;text-align:left;color:var(--text-muted);font-size:12px;">Loading your entries...</div>
+                <div style="margin-top:18px;text-align:left;">
+                  <div style="font-size:16px;font-weight:900;color:#f0f9ff;margin-bottom:8px;">📜 ROUND HISTORY</div>
+                  <div id="ccRoundHistory" style="font-size:12px;">Loading history...</div>
+                </div>`;
+            startColourClashTimer(); loadColourClashMyEntries(r.roundId); loadColourClashHistory(); listenColourClashResult(r.roundId);
+        }
+        function selectColourClash(c){
+            if(getColourClashRoundState().phase!=='open') return alert('Entries are closed for this round.');
+            colourClashSelected=c;
+            ['RED','GREEN','BLUE'].forEach(x=>{ const e=document.getElementById('cc'+x[0]+x.slice(1).toLowerCase()); if(e) e.style.borderColor=x===c?'#fff':'transparent'; });
+        }
+        function selectColourClashNumber(n){
+            if(getColourClashRoundState().phase!=='open') return alert('Entries are closed for this round.');
+            colourClashSelectedNumber=n;
+            for(let i=0;i<=9;i++){ const e=document.getElementById('ccNum'+i); if(e) e.style.borderColor=i===n?'#fff':'transparent'; }
+        }
+        function placeColourClashEntry(){
+            const r=getColourClashRoundState(); if(r.phase!=='open') return alert('Round is in cooldown.');
+            if(!colourClashSelected) return alert('Please select RED, GREEN or BLUE.');
+            const amount=Number(document.getElementById('ccAmount').value);
+            if(!amount || amount<colourClashConfig.minBet || amount>colourClashConfig.maxBet) return alert(`Amount must be between ₹${colourClashConfig.minBet} and ₹${colourClashConfig.maxBet}.`);
+            if(currentBalance<amount) return alert('Insufficient wallet balance.');
+            const newBal=currentBalance-amount;
+            db.ref('users/'+currentUid).update({balance:newBal}).then(()=>{
+                currentBalance=newBal;
+                const ref=db.ref('colour_clash/entries').push();
+                return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,colour:colourClashSelected,betType:'colour',status:'pending',timestamp:Date.now()});
+            }).then(()=>{ alert(`Entry placed: ${colourClashSelected} • ₹${amount}`); loadColourClashMyEntries(r.roundId); document.getElementById('ccAmount').value=''; })
+              .catch(err=>alert('Could not place entry: '+err.message));
+        }
+        function placeColourClashNumberEntry(){
+            const r=getColourClashRoundState(); if(r.phase!=='open') return alert('Round is in cooldown.');
+            if(colourClashSelectedNumber===null || colourClashSelectedNumber===undefined) return alert('Please select a number from 0 to 9.');
+            const amount=Number(document.getElementById('ccNumberAmount').value);
+            if(!amount || amount<colourClashConfig.minBet || amount>colourClashConfig.maxBet) return alert(`Amount must be between ₹${colourClashConfig.minBet} and ₹${colourClashConfig.maxBet}.`);
+            if(currentBalance<amount) return alert('Insufficient wallet balance.');
+            const newBal=currentBalance-amount;
+            db.ref('users/'+currentUid).update({balance:newBal}).then(()=>{
+                currentBalance=newBal;
+                const ref=db.ref('colour_clash/entries').push();
+                return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,number:colourClashSelectedNumber,betType:'number',status:'pending',timestamp:Date.now()});
+            }).then(()=>{ alert(`Entry placed: Number ${colourClashSelectedNumber} • ₹${amount}`); loadColourClashMyEntries(r.roundId); document.getElementById('ccNumberAmount').value=''; })
+              .catch(err=>alert('Could not place entry: '+err.message));
+        }
+        function loadColourClashMyEntries(roundId){
+            const el=document.getElementById('ccMyEntries'); if(!el) return;
+            db.ref('colour_clash/entries').orderByChild('roundId').equalTo(roundId).on('value',snap=>{
+                if(!document.getElementById('ccMyEntries')) return;
+                const rows=[]; snap.forEach(ch=>{const e=ch.val(); if(e.userId===currentUid) rows.push(e);});
+                el.innerHTML=rows.length?'<b style="color:#f0f9ff;">Your entries</b><br>'+rows.map(e=>{
+                    if(e.betType==='number'){
+                        return `₹${e.amount} → <span style="font-weight:800;color:#facc15;">Number ${e.number}</span>`;
+                    }
+                    return `₹${e.amount} → <span style="font-weight:800;color:${e.colour==='RED'?'#f87171':e.colour==='GREEN'?'#34d399':'#38bdf8'}">${e.colour}</span>`;
+                }).join('<br>'):'No entries in this round.';
+            });
+        }
+        function startColourClashTimer(){
+            if(colourClashTimer) clearInterval(colourClashTimer);
+            colourClashTimer=setInterval(()=>{
+                const box=document.getElementById('ccTimer'); if(!box){clearInterval(colourClashTimer);return;}
+                const r=getColourClashRoundState();
+                box.innerText=Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000))+'s';
+                const phase=document.getElementById('ccPhase'); if(phase) phase.innerText=r.phase==='open'?'ENTRIES OPEN':'COOLDOWN — RESULT SOON';
+                const ids=['ccRed','ccGreen','ccBlue','ccPlaceBtn','ccAmount','ccNumberPlaceBtn','ccNumberAmount'];
+                for(let i=0;i<=9;i++) ids.push('ccNum'+i);
+                ids.forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=r.phase!=='open';});
+                if(r.roundId!==colourClashCurrentRoundId){ renderColourClash(); return; }
+                if(r.phase==='cooldown' && colourClashConfig.autoResult && Math.ceil((r.phaseEnd-Date.now())/1000) <= 1){
+                    resolveColourClashRoundColour(r.roundId);
+                    resolveColourClashRoundNumber(r.roundId);
+                }
+                listenColourClashResult(r.roundId);
+            },500);
+        }
+        function displayColourClashResult(d){
+            if(!d) return;
+            if(d.result){
+                const el=document.getElementById('ccResult');
+                const result=String(d.result).toUpperCase();
+                if(el){
+                    el.innerText='🏆 RESULT: '+result;
+                    el.style.color=result==='RED'?'#f87171':result==='GREEN'?'#34d399':'#38bdf8';
+                }
+            }
+            if(d.resultNumber!==undefined && d.resultNumber!==null){
+                const nEl=document.getElementById('ccNumberResult');
+                if(nEl){
+                    nEl.innerText='🏆 NUMBER RESULT: '+d.resultNumber;
+                    nEl.style.color='#facc15';
+                }
+            }
+        }
+
+        function listenColourClashResult(roundId){
+            db.ref('colour_clash/rounds/'+roundId).on('value',snap=>{
+                const d=snap.val();
+                if(!d || (!d.result && d.resultNumber===undefined)) return;
+                displayColourClashResult(d);
+                loadColourClashHistory();
+            });
+        }
+
+        function loadColourClashHistory(){
+            const el=document.getElementById('ccRoundHistory'); if(!el) return;
+            db.ref('colour_clash/rounds').limitToLast(30).once('value').then(snap=>{
+                const rows=[];
+                snap.forEach(ch=>{
+                    const d=ch.val()||{};
+                    if(!d.result && d.resultNumber===undefined) return;
+                    rows.push({id:ch.key,d});
+                });
+                rows.reverse();
+                if(!rows.length){ el.innerHTML='<div style="color:var(--text-muted);">No completed rounds yet.</div>'; return; }
+                el.innerHTML=rows.map(x=>{
+                    const when=x.d.resolvedAt ? new Date(x.d.resolvedAt).toLocaleString() : (x.d.resolvedNumberAt ? new Date(x.d.resolvedNumberAt).toLocaleString() : '—');
+                    const colourPart = x.d.result ? `<span style="color:${x.d.result==='RED'?'#f87171':x.d.result==='GREEN'?'#34d399':'#38bdf8'};font-weight:900;">${x.d.result}</span>` : '<span style="color:var(--text-muted);">—</span>';
+                    const numberPart = (x.d.resultNumber!==undefined && x.d.resultNumber!==null) ? `<span style="color:#facc15;font-weight:900;">${x.d.resultNumber}</span>` : '<span style="color:var(--text-muted);">—</span>';
+                    return `<div style="padding:10px;margin-bottom:7px;border:1px solid rgba(148,163,184,.18);border-radius:10px;background:rgba(15,23,42,.55);">
+                        <b>Round #${x.d.roundId || x.id}</b> — Colour: ${colourPart} &nbsp; Number: ${numberPart}
+                        <span style="color:var(--text-muted);"> • ${when}</span>
+                    </div>`;
+                }).join('');
+            });
+        }
+        function resolveColourClashRoundColour(roundId){
+            const ref=db.ref('colour_clash/rounds/'+roundId);
+            ref.transaction(cur=>{
+                if(cur && cur.result) return cur;
+                return Object.assign({}, cur, {roundId,status:'resolved',result:['RED','GREEN','BLUE'][Math.floor(Math.random()*3)],resolvedAt:Date.now(),mode:'auto'});
+            }).then(res=>{
+                if(res.committed && res.snapshot.val() && res.snapshot.val().result) settleColourClashRoundColour(roundId,res.snapshot.val().result);
+            });
+        }
+        function resolveColourClashRoundNumber(roundId){
+            const ref=db.ref('colour_clash/rounds/'+roundId);
+            ref.transaction(cur=>{
+                if(cur && cur.resultNumber!==undefined && cur.resultNumber!==null) return cur;
+                return Object.assign({}, cur, {roundId,status:'resolved',resultNumber:Math.floor(Math.random()*10),resolvedNumberAt:Date.now(),modeNumber:'auto'});
+            }).then(res=>{
+                const v=res.snapshot.val();
+                if(res.committed && v && v.resultNumber!==undefined && v.resultNumber!==null) settleColourClashRoundNumber(roundId,v.resultNumber);
+            });
+        }
+        function settleColourClashRoundColour(roundId,result){
+            const resultRef=db.ref('colour_clash/settled/'+roundId);
+            resultRef.transaction(v=>v?undefined:{at:Date.now(),result}).then(res=>{
+                if(!res.committed) return;
+                db.ref('colour_clash/entries').orderByChild('roundId').equalTo(roundId).once('value').then(snap=>{
+                    const jobs=[]; snap.forEach(ch=>{ const e=ch.val();
+                        if(e.betType==='number') return;
+                        if(e.status==='settled'||e.status==='win'||e.status==='loss') return;
+                        const win=e.colour===result; const payout=win?Math.floor(Number(e.amount)*colourClashConfig.multiplier):0;
+                        jobs.push(db.ref('users/'+e.userId+'/balance').transaction(b=>Number(b||0)+payout).then(()=>ch.ref.update({status:win?'win':'loss',winAmount:payout,result,timestampResolved:Date.now()})));
+                    });
+                    return Promise.all(jobs);
+                });
+            });
+        }
+        function settleColourClashRoundNumber(roundId,resultNumber){
+            const resultRef=db.ref('colour_clash/settled_number/'+roundId);
+            resultRef.transaction(v=>v?undefined:{at:Date.now(),resultNumber}).then(res=>{
+                if(!res.committed) return;
+                db.ref('colour_clash/entries').orderByChild('roundId').equalTo(roundId).once('value').then(snap=>{
+                    const jobs=[]; snap.forEach(ch=>{ const e=ch.val();
+                        if(e.betType!=='number') return;
+                        if(e.status==='settled'||e.status==='win'||e.status==='loss') return;
+                        const win=Number(e.number)===Number(resultNumber); const payout=win?Math.floor(Number(e.amount)*colourClashConfig.numberMultiplier):0;
+                        jobs.push(db.ref('users/'+e.userId+'/balance').transaction(b=>Number(b||0)+payout).then(()=>ch.ref.update({status:win?'win':'loss',winAmount:payout,resultNumber,timestampResolved:Date.now()})));
+                    });
+                    return Promise.all(jobs);
+                });
+            });
+        }
+
+        function loadMiniGames() {
+            db.ref('games').on('value', snap => {
+                const games = snap.val();
+                const container = document.getElementById('gameList');
+                if(!container) return;
+                container.innerHTML = '';
+
+                // Mines — config-driven via control/minesConfig, not stored in the games node
+                const minesActive = minesConfig.enabled;
+                container.innerHTML += `
+                    <div class="game-card">
+                        <b style="font-size:15px; color:#f0f9ff;">💣 Mines</b><br>
+                        <span style="font-size: 13px; color: var(--accent-cyan);">Reward: Multiplied Payout | Bet: ₹${minesConfig.minBet} - ₹${minesConfig.maxBet}</span><br>
+                        <button onclick="tryPlayGame('mines', '${minesActive ? 'active' : 'locked'}', 'Mines', 0, 0, false)" class="${minesActive ? 'btn-green' : 'btn-gray'}" style="margin-top: 8px; padding: 8px;">${minesActive ? 'Play Now' : 'Locked'}</button>
+                    </div>
+                `;
+
+                if (!games) { return; }
+
+                for (let gameId in games) {
+                    if (gameId === 'colour_clash') continue;
+                    const g = games[gameId];
+                    const isActive = g.status === 'active';
+                    const feeVal = Number(g.entryFee) || 0;
+                    const feeDisplay = g.allowUserAmount ? 'Custom Amount' : (feeVal === 0 ? 'Free' : `₹${feeVal}`);
+                    const isDoubleOrNothing = (gameId === 'coin_flip' || gameId === 'number_guess' || gameId === 'spin_wheel');
+                    const prizeDisplay = gameId === 'rocket_jump' ? 'Multiplied Multiplier' : (isDoubleOrNothing ? '2x Your Bet' : `₹${g.prize || 0}`);
+                    const gameTitleName = g.name || (gameId === 'rocket_jump' ? 'Rocket Jump' : gameId);
+                    const winChanceVal = Number(g.winChancePercent);
+                    const winChance = isNaN(winChanceVal) ? 50 : winChanceVal;
+                    const betScalingVal = Number(g.betScalingPercent);
+                    const betScaling = isNaN(betScalingVal) ? 0 : betScalingVal;
+                    
+                    container.innerHTML += `
+                        <div class="game-card">
+                            <b style="font-size:15px; color:#f0f9ff;">🎮 ${gameTitleName}</b><br>
+                            <span style="font-size: 13px; color: var(--accent-cyan);">Reward: ${prizeDisplay} | Entry Fee: <span style="color: ${feeVal === 0 && !g.allowUserAmount ? '#34d399' : '#facc15'};">${feeDisplay}</span></span><br>
+                            <button onclick="tryPlayGame('${gameId}', '${g.status}', '${gameTitleName}', ${g.prize || 0}, ${feeVal}, ${g.allowUserAmount ? true : false}, ${winChance}, ${betScaling})" class="${isActive ? 'btn-green' : 'btn-gray'}" style="margin-top: 8px; padding: 8px;">${isActive ? 'Play Now' : 'Locked'}</button>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function tryPlayGame(gameId, status, gameName, prize, entryFee, allowUserAmount, winChance, betScaling) {
+            if (status !== 'active') return alert('Access Denied: Game locked.');
+
+            document.getElementById('gamesHub').classList.add('hidden');
+            document.getElementById('activeGameArea').classList.remove('hidden');
+            
+            const backBtn = document.getElementById('activeGameBackBtn');
+            if (backBtn) backBtn.classList.remove('hidden');
+
+            const resolvedGameName = (gameName && gameName !== 'undefined') ? gameName : 'Rocket Jump';
+            document.getElementById('activeGameTitle').innerText = resolvedGameName;
+            document.getElementById('activeGameInfo').innerText = allowUserAmount ? `Mode: Set Your Own Amount` : `Entry Fee: ${entryFee === 0 ? 'Free' : '₹' + entryFee}`;
+
+            const contentBox = document.getElementById('gameContentBox');
+            
+            let customAmountHtml = '';
+            if (allowUserAmount) {
+                customAmountHtml = `<input id="userCustomPlayAmount" type="number" placeholder="Enter your play amount (₹)" min="1" style="margin-bottom:10px;">`;
+            }
+
+            if (gameId === 'rocket_jump') {
+                contentBox.innerHTML = `
+                    <p style="margin-top:0; color:var(--text-muted);">🚀 Rocket Jump - Cash out before crash!</p>
+                    ${customAmountHtml}
+                    <div class="animation-stage">
+                        <div class="wheel-display-box" style="width:180px;">
+                            <div id="rocketMultiplierDisplay" class="wheel-spinner" style="font-size:36px; color:#38bdf8;">1.00x</div>
+                            <div id="rocketStatusDisplay" style="font-size:12px; color:var(--text-muted);">Click start to launch!</div>
+                        </div>
+                    </div>
+                    <button id="rocketStartBtn" onclick="initRocketJump(${entryFee}, ${allowUserAmount})" class="btn-green">Start Rocket Flight</button>
+                    <button id="rocketCashoutBtn" onclick="cashoutRocketJump()" class="btn-yellow hidden">💰 Cash Out (₹0)</button>
+                `;
+            } else if (gameId === 'spin_wheel') {
+                contentBox.innerHTML = `
+                    <p style="margin-top:0; color:var(--text-muted);">🎡 Click below to spin and win 2x your bet!</p>
+                    ${customAmountHtml}
+                    <div class="animation-stage">
+                        <div class="wheel-display-box">
+                            <div id="prizeSpinner" class="wheel-spinner">₹0</div>
+                        </div>
+                    </div>
+                    <button id="actionBtn" onclick="initSpinWheel(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green">Spin Wheel</button>
+                `;
+            } else if (gameId === 'coin_flip') {
+                contentBox.innerHTML = `
+                    <p style="margin-top:0; color:var(--text-muted);">🪙 Predict Heads or Tails to win 2x your bet:</p>
+                    ${customAmountHtml}
+                    <select id="coinChoice"><option value="Heads">Heads</option><option value="Tails">Tails</option></select>
+                    <div class="animation-stage"><div id="coinElem" class="coin">COIN</div></div>
+                    <button id="actionBtn" onclick="initCoinFlip(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green">Flip the Coin</button>
+                `;
+            } else if (gameId === 'number_guess') {
+                targetNumber = Math.floor(Math.random() * 10) + 1;
+                remainingAttempts = 3;
+                contentBox.innerHTML = `
+                    <p style="margin-top:0; color:var(--text-muted);">🎯 Guess a number between 1 and 10 to win 2x your bet:</p>
+                    ${customAmountHtml}
+                    <div id="guessFeedback" class="guess-box">Attempts left: 3. Make your guess!</div>
+                    <input id="userGuessInput" type="number" placeholder="Enter number (1-10)" min="1" max="10">
+                    <button id="actionBtn" onclick="initNumberGuess(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green">Submit Guess</button>
+                `;
+            } else if (gameId === 'mines') {
+                renderMinesSetup();
+            }
+        }
+
+        let activeGameCurrentFee = 0;
+
+        function getDeductedFee(defaultFee, allowUserAmount) {
+            let fee = defaultFee;
+            if (allowUserAmount) {
+                const customInput = Number(document.getElementById('userCustomPlayAmount').value);
+                if (!customInput || customInput <= 0) {
+                    alert('Please enter a valid amount to start the game.');
+                    return null;
+                }
+                fee = customInput;
+            }
+            if (currentBalance < fee) {
+                alert(`Insufficient wallet balance! Required: ₹${fee}. Please deposit funds.`);
+                return null;
+            }
+            currentBalance -= fee;
+            db.ref('users/' + currentUid).update({ balance: currentBalance });
+            if (fee > 0) {
+                alert(`Amount of ₹${fee} deducted from your wallet.`);
+            }
+            return fee;
+        }
+
+        // Applies bet-size-based win chance scaling: for every ₹100 wagered,
+        // the win chance drops by scalingPercent (admin-configured), so bigger
+        // bets are proportionally harder to win. Result is clamped to 0-100.
+        function getScaledWinChance(baseWinChance, betAmount, scalingPercent) {
+            const scaling = Number(scalingPercent) || 0;
+            const bet = Number(betAmount) || 0;
+            const reduction = (bet / 100) * scaling;
+            let effective = baseWinChance - reduction;
+            if (effective < 0) effective = 0;
+            if (effective > 100) effective = 100;
+            return effective;
+        }
+
+        // Logs a completed round to a unified history used by the admin's
+        // per-user play history digest (total wagered / won / net per user).
+        function logGameRound(gameId, gameName, betAmount, winAmount, result) {
+            db.ref('game_rounds').push({
+                userId: currentUid,
+                customUid: userCustomUid,
+                gameId: gameId,
+                gameName: gameName,
+                betAmount: Number(betAmount) || 0,
+                winAmount: Number(winAmount) || 0,
+                result: result,
+                timestamp: Date.now()
+            });
+        }
+
+        function lockBackToMenu() {
+            const backBtn = document.getElementById('activeGameBackBtn');
+            if (backBtn) backBtn.classList.remove('hidden');
+        }
+
+        function initRocketJump(defaultFee, allowUserAmount) {
+            const fee = getDeductedFee(defaultFee, allowUserAmount);
+            if (fee === null) return;
+            activeGameCurrentFee = fee;
+
+            document.getElementById('rocketStartBtn').classList.add('hidden');
+            document.getElementById('rocketCashoutBtn').classList.remove('hidden');
+            if (allowUserAmount) {
+                const customEl = document.getElementById('userCustomPlayAmount');
+                if (customEl) customEl.disabled = true;
+            }
+
+            db.ref('games/rocket_jump').once('value', snap => {
+                const data = snap.val() || {};
+                let rangeStr = String(data.crashRange || '2.20 - 5.00').trim();
+                let min = 2.20;
+                let max = 5.00;
+
+                if (rangeStr.includes('-')) {
+                    let parts = rangeStr.split('-');
+                    min = parseFloat(parts[0].trim());
+                    max = parseFloat(parts[1].trim());
+                } else {
+                    min = parseFloat(rangeStr);
+                    max = min;
+                }
+
+                if (isNaN(min)) min = 2.20;
+                if (isNaN(max)) max = 5.00;
+                if (min > max) { let temp = min; min = max; max = temp; }
+
+                rocketCrashPoint = parseFloat((Math.random() * (max - min) + min).toFixed(2));
+                currentRocketMultiplier = 1.00;
+                isRocketCashedOut = false;
+
+                document.getElementById('rocketStatusDisplay').innerText = '🚀 Flying...';
+                document.getElementById('rocketStatusDisplay').style.color = '#38bdf8';
+
+                rocketInterval = setInterval(() => {
+                    currentRocketMultiplier += 0.03;
+                    currentRocketMultiplier = parseFloat(currentRocketMultiplier.toFixed(2));
+
+                    const multDisp = document.getElementById('rocketMultiplierDisplay');
+                    const cashoutBtn = document.getElementById('rocketCashoutBtn');
+
+                    if (multDisp) multDisp.innerText = `${currentRocketMultiplier.toFixed(2)}x`;
+                    const potentialWin = Math.floor(activeGameCurrentFee * currentRocketMultiplier);
+                    if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (₹${potentialWin})`;
+
+                    if (currentRocketMultiplier >= rocketCrashPoint) {
+                        clearInterval(rocketInterval);
+                        if (document.getElementById('rocketStatusDisplay')) {
+                            document.getElementById('rocketStatusDisplay').innerText = '💥 CRASHED!';
+                            document.getElementById('rocketStatusDisplay').style.color = '#ef4444';
+                        }
+                        if (multDisp) multDisp.style.color = '#ef4444';
+                        if (cashoutBtn) cashoutBtn.classList.add('hidden');
+                        logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, 0, 'loss');
+                        alert(`💥 Rocket crashed at ${rocketCrashPoint.toFixed(2)}x! You lost.`);
+                        lockBackToMenu();
+                    }
+                }, 90);
+            });
+        }
+
+        function cashoutRocketJump() {
+            if (isRocketCashedOut || currentRocketMultiplier >= rocketCrashPoint) return;
+            isRocketCashedOut = true;
+            clearInterval(rocketInterval);
+
+            const winAmount = Math.floor(activeGameCurrentFee * currentRocketMultiplier);
+            currentBalance += winAmount;
+            db.ref('users/' + currentUid).update({ balance: currentBalance }).then(() => {
+                document.getElementById('rocketStatusDisplay').innerText = '✅ CASHED OUT!';
+                document.getElementById('rocketStatusDisplay').style.color = '#34d399';
+                document.getElementById('rocketCashoutBtn').classList.add('hidden');
+                logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, winAmount, 'win');
+                alert(`🎉 Successfully cashed out at ${currentRocketMultiplier.toFixed(2)}x! Won ₹${winAmount}.`);
+                lockBackToMenu();
+            });
+        }
+
+        /* --- MINES GAME --- */
+        function renderMinesSetup() {
+            const contentBox = document.getElementById('gameContentBox');
+            document.getElementById('activeGameInfo').innerText = `Bet Range: ₹${minesConfig.minBet} - ₹${minesConfig.maxBet}`;
+
+            if (!minesConfig.enabled) {
+                contentBox.innerHTML = `<p style="color:#f87171;">💣 Mines is currently unavailable. Please check back later.</p>`;
+                return;
+            }
+
+            let mineOptions = '';
+            for (let i = minesConfig.minMines; i <= minesConfig.maxMines; i++) {
+                mineOptions += `<option value="${i}" ${i === Math.min(3, minesConfig.maxMines) ? 'selected' : ''}>${i} Mine${i > 1 ? 's' : ''}</option>`;
+            }
+
+            contentBox.innerHTML = `
+                <p style="margin-top:0; color:var(--text-muted);">💣 Reveal safe tiles to build your multiplier — cash out anytime before you hit a mine!</p>
+                <input id="minesBetInput" type="number" placeholder="Bet Amount (₹)" value="${minesConfig.minBet}" min="${minesConfig.minBet}" max="${minesConfig.maxBet}">
+                <select id="minesCountSelect">${mineOptions}</select>
+                <button id="minesStartBtn" onclick="startMinesGame()" class="btn-green">Start Game</button>
+
+                <div id="minesPlayWrap" class="hidden">
+                    <div class="mines-info-row">
+                        <span>Multiplier: <b id="minesMultiplierDisplay" style="color:#facc15;">1.00x</b></span>
+                        <span>Potential Win: <b id="minesPotentialWin" style="color:#34d399;">₹0</b></span>
+                    </div>
+                    <div id="minesGrid" class="mines-grid"></div>
+                    <button id="minesCashoutBtn" onclick="cashoutMines()" class="btn-yellow hidden">💰 Cash Out</button>
+                </div>
+            `;
+        }
+
+        function startMinesGame() {
+            const betInput = document.getElementById('minesBetInput');
+            const minesCountSelect = document.getElementById('minesCountSelect');
+            const bet = Number(betInput.value);
+            const minesCount = Number(minesCountSelect.value);
+
+            if (!bet || bet < minesConfig.minBet || bet > minesConfig.maxBet) {
+                return alert(`Please enter a valid bet between ₹${minesConfig.minBet} and ₹${minesConfig.maxBet}.`);
+            }
+            if (currentBalance < bet) {
+                return alert(`Insufficient wallet balance! Required: ₹${bet}. Please deposit funds.`);
+            }
+
+            currentBalance -= bet;
+            db.ref('users/' + currentUid).update({ balance: currentBalance });
+
+            const positions = new Set();
+            while (positions.size < minesCount) {
+                positions.add(Math.floor(Math.random() * 25));
+            }
+
+            minesState = {
+                bet: bet,
+                minesCount: minesCount,
+                minePositions: positions,
+                revealedCount: 0,
+                currentMultiplier: 1,
+                active: true,
+                roundKey: null,
+                startTimestamp: Date.now()
+            };
+
+            const roundRef = db.ref('mines_rounds').push();
+            minesState.roundKey = roundRef.key;
+            roundRef.set({
+                userId: currentUid,
+                customUid: userCustomUid,
+                betAmount: bet,
+                minesCount: minesCount,
+                status: 'active',
+                timestamp: minesState.startTimestamp
+            });
+
+            betInput.disabled = true;
+            minesCountSelect.disabled = true;
+            document.getElementById('minesStartBtn').classList.add('hidden');
+            document.getElementById('minesPlayWrap').classList.remove('hidden');
+            document.getElementById('minesCashoutBtn').classList.remove('hidden');
+
+            renderMinesGrid();
+            updateMinesMultiplierDisplay();
+        }
+
+        function renderMinesGrid() {
+            const grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'mine-tile';
+                btn.innerText = '❔';
+                btn.dataset.tileIndex = i;
+                grid.appendChild(btn);
+            }
+            // Single delegated click handler on the grid itself: the tapped tile's
+            // own index is always read fresh from its data-tile-index attribute,
+            // so the correct tile opens no matter which one is tapped.
+            grid.onclick = function (e) {
+                const btnEl = e.target.closest('.mine-tile');
+                if (!btnEl || btnEl.disabled || !grid.contains(btnEl)) return;
+                const index = Number(btnEl.dataset.tileIndex);
+                if (Number.isNaN(index)) return;
+                revealMineTile(index, btnEl);
+            };
+        }
+
+        function fairMinesMultiplier(minesCount, revealedCount) {
+            let mult = 1;
+            for (let i = 0; i < revealedCount; i++) {
+                const tilesLeft = 25 - i;
+                const safeLeft = tilesLeft - minesCount;
+                if (safeLeft <= 0) return mult;
+                mult *= tilesLeft / safeLeft;
+            }
+            return mult;
+        }
+
+        function updateMinesMultiplierDisplay() {
+            const fair = fairMinesMultiplier(minesState.minesCount, minesState.revealedCount);
+            const actual = fair * (minesConfig.rtpPercent / 100);
+            minesState.currentMultiplier = actual;
+            const potentialWin = Math.floor(minesState.bet * actual);
+
+            const multEl = document.getElementById('minesMultiplierDisplay');
+            const winEl = document.getElementById('minesPotentialWin');
+            const cashoutBtn = document.getElementById('minesCashoutBtn');
+            if (multEl) multEl.innerText = `${actual.toFixed(2)}x`;
+            if (winEl) winEl.innerText = `₹${potentialWin}`;
+            if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (₹${potentialWin})`;
+        }
+
+        function revealMineTile(index, btnEl) {
+            if (!minesState || !minesState.active) return;
+            if (btnEl.disabled) return;
+            btnEl.disabled = true;
+
+            if (minesState.minePositions.has(index)) {
+                minesState.active = false;
+                btnEl.classList.add('revealed-mine');
+                btnEl.innerText = '💣';
+                revealAllMinesOnLoss();
+                document.getElementById('minesCashoutBtn').classList.add('hidden');
+
+                if (minesState.roundKey) {
+                    db.ref('mines_rounds/' + minesState.roundKey).set({
+                        userId: currentUid,
+                        customUid: userCustomUid,
+                        betAmount: minesState.bet,
+                        minesCount: minesState.minesCount,
+                        status: 'busted',
+                        revealedCount: minesState.revealedCount,
+                        timestamp: minesState.startTimestamp
+                    });
+                }
+                logGameRound('mines', 'Mines', minesState.bet, 0, 'loss');
+
+                alert(`💥 Boom! You hit a mine and lost ₹${minesState.bet}.`);
+                resetMinesAfterRound();
+            } else {
+                minesState.revealedCount++;
+                btnEl.classList.add('revealed-safe');
+                btnEl.innerText = '💎';
+                updateMinesMultiplierDisplay();
+
+                const totalSafe = 25 - minesState.minesCount;
+                if (minesState.revealedCount >= totalSafe) {
+                    cashoutMines();
+                }
+            }
+        }
+
+        function revealAllMinesOnLoss() {
+            const grid = document.getElementById('minesGrid');
+            const tiles = grid.querySelectorAll('.mine-tile');
+            minesState.minePositions.forEach(pos => {
+                const t = tiles[pos];
+                if (t && !t.classList.contains('revealed-mine')) {
+                    t.classList.add('revealed-mine');
+                    t.innerText = '💣';
+                    t.disabled = true;
+                }
+            });
+        }
+
+        function cashoutMines() {
+            if (!minesState || !minesState.active) return;
+            minesState.active = false;
+
+            const winAmount = Math.floor(minesState.bet * minesState.currentMultiplier);
+            currentBalance += winAmount;
+            db.ref('users/' + currentUid).update({ balance: currentBalance }).then(() => {
+                if (minesState.roundKey) {
+                    db.ref('mines_rounds/' + minesState.roundKey).set({
+                        userId: currentUid,
+                        customUid: userCustomUid,
+                        betAmount: minesState.bet,
+                        minesCount: minesState.minesCount,
+                        status: 'cashed_out',
+                        revealedCount: minesState.revealedCount,
+                        multiplier: minesState.currentMultiplier,
+                        payout: winAmount,
+                        timestamp: minesState.startTimestamp
+                    });
+                }
+
+                const cashoutBtn = document.getElementById('minesCashoutBtn');
+                if (cashoutBtn) cashoutBtn.classList.add('hidden');
+                const grid = document.getElementById('minesGrid');
+                if (grid) grid.querySelectorAll('.mine-tile').forEach(t => t.disabled = true);
+
+                logGameRound('mines', 'Mines', minesState.bet, winAmount, 'win');
+                alert(`🎉 Cashed out at ${minesState.currentMultiplier.toFixed(2)}x! Won ₹${winAmount}.`);
+                resetMinesAfterRound();
+            });
+        }
+
+        function resetMinesAfterRound() {
+            lockBackToMenu();
+            const betInput = document.getElementById('minesBetInput');
+            const minesCountSelect = document.getElementById('minesCountSelect');
+            const startBtn = document.getElementById('minesStartBtn');
+            if (betInput) betInput.disabled = false;
+            if (minesCountSelect) minesCountSelect.disabled = false;
+            if (startBtn) startBtn.classList.remove('hidden');
+        }
+
+        function initSpinWheel(defaultFee, allowUserAmount, winChancePercent, betScalingPercent) {
+            const fee = getDeductedFee(defaultFee, allowUserAmount);
+            if (fee === null) return;
+
+            const btn = document.getElementById('actionBtn');
+            const spinner = document.getElementById('prizeSpinner');
+            btn.disabled = true;
+            spinner.classList.add('spinning-text');
+            if (allowUserAmount) {
+                const customEl = document.getElementById('userCustomPlayAmount');
+                if (customEl) customEl.disabled = true;
+            }
+
+            const winAmount = fee * 2;
+            const effectiveWinChance = getScaledWinChance(winChancePercent, fee, betScalingPercent);
+            const isWin = Math.random() * 100 < effectiveWinChance;
+
+            let counter = 0;
+            const interval = setInterval(() => {
+                spinner.innerText = `₹${Math.floor(Math.random() * (winAmount || 20))}`;
+                counter++;
+                if (counter > 15) {
+                    clearInterval(interval);
+                    spinner.classList.remove('spinning-text');
+
+                    if (isWin) {
+                        spinner.innerText = `₹${winAmount}`;
+                        currentBalance += winAmount;
+                        db.ref('users/' + currentUid).update({ balance: currentBalance }).then(() => {
+                            logGameRound('spin_wheel', 'Fortune Wheel', fee, winAmount, 'win');
+                            alert(`Congratulations! You won ₹${winAmount}!`);
+                            btn.disabled = false;
+                            lockBackToMenu();
+                        });
+                    } else {
+                        spinner.innerText = `❌`;
+                        logGameRound('spin_wheel', 'Fortune Wheel', fee, 0, 'loss');
+                        alert(`Unlucky! You lost this round.`);
+                        btn.disabled = false;
+                        lockBackToMenu();
+                    }
+                }
+            }, 100);
+        }
+
+        function initCoinFlip(defaultFee, allowUserAmount, winChancePercent, betScalingPercent) {
+            const fee = getDeductedFee(defaultFee, allowUserAmount);
+            if (fee === null) return;
+
+            const choice = document.getElementById('coinChoice').value;
+            const btn = document.getElementById('actionBtn');
+            const coin = document.getElementById('coinElem');
+            btn.disabled = true;
+            coin.classList.add('flipping');
+            if (allowUserAmount) {
+                const customEl = document.getElementById('userCustomPlayAmount');
+                if (customEl) customEl.disabled = true;
+            }
+
+            const winAmount = fee * 2;
+            const effectiveWinChance = getScaledWinChance(winChancePercent, fee, betScalingPercent);
+            const isWin = Math.random() * 100 < effectiveWinChance;
+
+            setTimeout(() => {
+                coin.classList.remove('flipping');
+                const outcome = isWin ? choice : (choice === 'Heads' ? 'Tails' : 'Heads');
+                coin.innerText = outcome;
+
+                if (isWin) {
+                    currentBalance += winAmount;
+                    db.ref('users/' + currentUid).update({ balance: currentBalance }).then(() => {
+                        logGameRound('coin_flip', 'Lucky Coin Flip', fee, winAmount, 'win');
+                        alert(`It was ${outcome}! You won ₹${winAmount}!`);
+                        btn.disabled = false;
+                        lockBackToMenu();
+                    });
+                } else {
+                    logGameRound('coin_flip', 'Lucky Coin Flip', fee, 0, 'loss');
+                    alert(`It was ${outcome}! You lost.`);
+                    btn.disabled = false;
+                    lockBackToMenu();
+                }
+            }, 1400);
+        }
+
+        function initNumberGuess(defaultFee, allowUserAmount, winChancePercent, betScalingPercent) {
+            const inputVal = Number(document.getElementById('userGuessInput').value);
+            const feedback = document.getElementById('guessFeedback');
+            const btn = document.getElementById('actionBtn');
+
+            if (!inputVal || inputVal < 1 || inputVal > 10) {
+                return alert('Please enter a valid number between 1 and 10.');
+            }
+
+            let fee;
+            if (remainingAttempts === 3) {
+                fee = getDeductedFee(defaultFee, allowUserAmount);
+                if (fee === null) return;
+                activeGameCurrentFee = fee;
+                if (allowUserAmount) {
+                    const customEl = document.getElementById('userCustomPlayAmount');
+                    if (customEl) customEl.disabled = true;
+                }
+            } else {
+                fee = activeGameCurrentFee;
+            }
+
+            remainingAttempts--;
+            const effectiveWinChance = getScaledWinChance(winChancePercent, fee, betScalingPercent);
+            const isWin = Math.random() * 100 < effectiveWinChance;
+
+            if (isWin) {
+                const winAmount = fee * 2;
+                currentBalance += winAmount;
+                db.ref('users/' + currentUid).update({ balance: currentBalance }).then(() => {
+                    logGameRound('number_guess', 'Number Master', fee, winAmount, 'win');
+                    alert(`🎉 Spot on! Number was ${inputVal}. You won ₹${winAmount}!`);
+                    lockBackToMenu();
+                });
+            } else if (remainingAttempts <= 0) {
+                logGameRound('number_guess', 'Number Master', fee, 0, 'loss');
+                alert(`❌ Game Over! Better luck next time.`);
+                lockBackToMenu();
+            } else {
+                let hint = inputVal < targetNumber ? 'Go HIGHER 📈' : 'Go LOWER 📉';
+                feedback.innerText = `Wrong! ${hint}. Attempts left: ${remainingAttempts}`;
+                document.getElementById('userGuessInput').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
