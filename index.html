@@ -2345,12 +2345,39 @@
             const cfg=dashboard20Config||{}; const host=document.getElementById('gvExperienceHub'); if(!host)return;
             const parts=[];
             if(cfg.welcomeEnabled && cfg.welcomeMessage) parts.push(`<div class="gv-welcome"><div class="gv-exp-head">👋 Welcome</div><div class="gv-exp-body">${escapeHtmlUser(cfg.welcomeMessage)}</div></div>`);
-            if(cfg.spotlightEnabled){const safeTitle=escapeHtmlUser(cfg.spotlightTitle||'Game Verse Spotlight'),safeSub=escapeHtmlUser(cfg.spotlightSubtitle||'Explore a featured game');parts.push(`<div class="gv-spotlight"><div class="gv-exp-kicker">✦ FEATURED FOR YOU</div><div class="gv-exp-title">${safeTitle}</div><div class="gv-exp-sub">${safeSub}</div><div class="gv-exp-actions"><button type="button" class="btn-green" onclick="openFeature('Play Games')">🎮 Open Games</button><button type="button" class="btn-gray" onclick="renderDashboard20Experience()">↻ Refresh</button></div></div>`);}
+            if(cfg.spotlightEnabled){const safeTitle=escapeHtmlUser(cfg.spotlightTitle||'Game Verse Spotlight'),safeSub=escapeHtmlUser(cfg.spotlightSubtitle||'Explore a featured game');parts.push(`<div class="gv-spotlight"><div class="gv-exp-kicker">✦ FEATURED FOR YOU</div><div class="gv-exp-title">${safeTitle}</div><div class="gv-exp-sub">${safeSub}</div><div class="gv-exp-actions"><button type="button" class="btn-green" onclick="openSpotlightGame()">🎮 Open Spotlight Game</button><button type="button" class="btn-gray" onclick="renderDashboard20Experience()">↻ Refresh</button></div></div>`);}
             if(cfg.homeAnnouncementEnabled && cfg.homeAnnouncement) parts.push(`<div class="gv-announcement ${cfg.homeAnnouncementStyle||'info'}"><div class="gv-exp-head">📣 ${cfg.homeAnnouncementStyle==='warning'?'Notice':cfg.homeAnnouncementStyle==='success'?'Update':'Announcement'}</div><div class="gv-exp-body">${escapeHtmlUser(cfg.homeAnnouncement)}</div></div>`);
             if(cfg.achievementsEnabled) parts.push(`<div class="gv-achievements"><div class="gv-exp-head">🏆 Achievement Showcase <span style="font-size:9px;color:var(--text-muted);">Profile milestones</span></div><div class="gv-badge-row"><div class="gv-mini-badge"><b>🎮</b>Explorer</div><div class="gv-mini-badge"><b>🎯</b>Missioner</div><div class="gv-mini-badge"><b>🏆</b>Competitor</div><div class="gv-mini-badge"><b>⭐</b>Game Verse</div></div></div>`);
             if(cfg.whatsNewEnabled && cfg.bannerMessage) parts.push(`<div class="gv-whatsnew"><div class="gv-exp-head">📰 What's New</div><div class="gv-exp-body">${escapeHtmlUser(cfg.bannerMessage)}</div></div>`);
             host.innerHTML=parts.join(''); host.classList.toggle('hidden',parts.length===0);
         }
+        function openSpotlightGame(){
+            const gameId=String((dashboard20Config&&dashboard20Config.spotlightGame)||'rocket-jump');
+            const labelMap={'rocket-jump':'Rocket Jump','high-card':'High Card','fortune-wheel':'Fortune Wheel','coin-flip':'Coin Flip','number-master':'Number Master','mines':'Mines','colour-clash':'Colour Clash'};
+            const label=labelMap[gameId]||'Game';
+            if(globalGamesPaused) return alert('Games are temporarily paused by the administrator. Please try again later.');
+            if(gameId==='colour-clash'){ tryPlayColourClash(); return; }
+            if(gameId==='mines'){
+                db.ref('control/minesConfig').once('value').then(s=>{
+                    const cfg=Object.assign({enabled:true},s.val()||{});
+                    if(cfg.enabled===false) return alert(label+' is currently locked by the administrator.');
+                    tryPlayGame('mines','active','Mines',0,0,false,50,0);
+                }).catch(()=>alert('Could not open '+label+'.'));
+                return;
+            }
+            const idMap={'rocket-jump':'rocket_jump','high-card':'high_card','fortune-wheel':'spin_wheel','coin-flip':'coin_flip','number-master':'number_guess'};
+            const firebaseId=idMap[gameId];
+            if(!firebaseId) return alert('Spotlight game is not available.');
+            db.ref('games/'+firebaseId).once('value').then(s=>{
+                const g=s.val()||{};
+                if(String(g.status||'').toLowerCase()!=='active') return alert(label+' is currently locked by the administrator.');
+                const fee=Number(g.entryFee)||0;
+                const winChance=Number.isFinite(Number(g.winChancePercent))?Number(g.winChancePercent):50;
+                const betScaling=Number.isFinite(Number(g.betScalingPercent))?Number(g.betScalingPercent):0;
+                tryPlayGame(firebaseId,'active',g.name||label,Number(g.prize)||0,fee,g.allowUserAmount===true,winChance,betScaling);
+            }).catch(()=>alert('Could not open '+label+'.'));
+        }
+
         function escapeHtmlUser(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[m]));}
 
         db.ref('control/dashboard20').on('value',snap=>{
