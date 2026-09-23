@@ -5457,7 +5457,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 accentClass='cc-modal-gold';
             }else{
                 // Keep the BIG/SMALL entry popup clean: no scale emoji.
-                targetLabel=`${colourClashSelectedSize}`;
+                targetLabel=colourClashSelectedSize==='BIG'?'BIG':'SMALL';
                 accentClass=colourClashSelectedSize==='BIG'?'cc-modal-orange':'cc-modal-violet';
             }
             const amountId=type==='colour'?'ccAmount':type==='number'?'ccNumberAmount':'ccSizeAmount';
@@ -5477,7 +5477,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 <div class="cc-entry-modal-label">ENTRY AMOUNT</div>
                 <div class="cc-entry-modal-input-wrap"><span class="cc-entry-modal-currency">${c==='USDT'?'₮':'₹'}</span><input id="${amountId}" class="cc-entry-modal-input" type="number" inputmode="decimal" enterkeyhint="done" min="${min}" max="${max}" step="${c==='USDT'?'0.0001':'0.01'}" placeholder="${c==='USDT'?'Enter USDT amount':'Enter amount'}" autocomplete="off" autofocus></div>
                 <div class="cc-entry-modal-limit"><span>MIN ${colourClashMoney(min,c)}</span><span>MAX ${colourClashMoney(max,c)}</span></div>
-                <button type="button" id="${buttonId}" class="cc-entry-modal-submit" onclick="${placeFn}"><span>✓</span> CONFIRM &amp; PLACE ENTRY</button>
+                <button type="button" id="${buttonId}" class="cc-entry-modal-submit" onclick="${placeFn}" style="background:linear-gradient(135deg,#22c55e 0%,#16a34a 52%,#15803d 100%) !important;color:#fff !important;border:1px solid rgba(134,239,172,.35) !important;box-shadow:0 10px 24px rgba(22,163,74,.28) !important;"><span>✓</span> CONFIRM &amp; PLACE ENTRY</button>
                 <div class="cc-entry-modal-hint">Your wallet will be debited only after you confirm the entry.</div>
               </div>`;
             modal.addEventListener('click',e=>{if(e.target===modal)closeColourClashEntryModal();});
@@ -8199,7 +8199,7 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 #gameContentBox .cc-entry-modal-label{margin-top:4px;font-size:11px;color:#ddd6fe;}
 #gameContentBox .cc-entry-modal-input{height:52px;font-size:18px;border-color:rgba(167,139,250,.32);background:#090d18;}
 #gameContentBox .cc-entry-modal-input:focus{border-color:#a78bfa;box-shadow:0 0 0 3px rgba(139,92,246,.16),0 0 18px rgba(139,92,246,.12);}
-#gameContentBox .cc-entry-modal-submit{height:50px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);box-shadow:0 8px 18px rgba(124,58,237,.28);}
+#gameContentBox .cc-entry-modal-submit{height:50px;background:linear-gradient(135deg,#22c55e,#16a34a 52%,#15803d)!important;color:#fff!important;border:1px solid rgba(134,239,172,.30)!important;box-shadow:0 8px 18px rgba(22,163,74,.28)!important;}
 #gameContentBox .cc-entry-modal-limit{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.035);}
 @media(max-width:430px){#gameContentBox .cc-entry-modal-backdrop{padding:12px}.cc-entry-modal{max-height:calc(100vh - 24px);overflow:auto}.cc-entry-modal-round{margin-bottom:12px}}
 </style>
@@ -8245,3 +8245,199 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 </style>
 </body>
 </html>
+
+<style id="gv-wingo-entry-popup-final-polish-v1">
+/* Final WINGO entry popup polish: clean header, visible close control, green confirmation CTA. */
+#gameContentBox .cc-entry-modal-backdrop{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:14px!important;
+  background:rgba(2,6,23,.78)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+#gameContentBox .cc-entry-modal{
+  width:min(430px,calc(100vw - 28px))!important;
+  max-height:min(720px,calc(100vh - 28px))!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  padding:18px 18px 16px!important;
+  border-radius:24px!important;
+  background:linear-gradient(155deg,#101827 0%,#172235 58%,#14243a 100%)!important;
+  border:1px solid rgba(148,163,184,.24)!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+#gameContentBox .cc-entry-modal-head{
+  min-height:34px!important;
+  padding:0 46px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#gameContentBox .cc-entry-modal-kicker{
+  margin:0!important;
+  color:#f8fafc!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  letter-spacing:2px!important;
+  font-weight:900!important;
+}
+#gameContentBox .cc-entry-modal-close{
+  right:0!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:38px!important;
+  height:38px!important;
+  border-radius:50%!important;
+  background:#090d14!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  color:#fff!important;
+  font-size:27px!important;
+  line-height:1!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.3)!important;
+}
+#gameContentBox .cc-entry-modal-close:hover{
+  transform:translateY(-50%) scale(1.04)!important;
+  background:#121a27!important;
+  border-color:rgba(255,255,255,.25)!important;
+}
+#gameContentBox .cc-entry-modal-close:active{
+  transform:translateY(-50%) scale(.96)!important;
+}
+#gameContentBox .cc-entry-modal-target{
+  min-height:60px!important;
+  margin-top:12px!important;
+  padding:10px 16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:16px!important;
+  font-size:24px!important;
+  font-weight:1000!important;
+  letter-spacing:.8px!important;
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+}
+#gameContentBox .cc-entry-modal-target.cc-modal-orange{
+  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(251,146,60,.08))!important;
+  border-color:rgba(251,191,36,.26)!important;
+  color:#fed7aa!important;
+}
+#gameContentBox .cc-entry-modal-target.cc-modal-violet{
+  background:linear-gradient(135deg,rgba(139,92,246,.20),rgba(124,58,237,.08))!important;
+  border-color:rgba(167,139,250,.30)!important;
+  color:#ede9fe!important;
+}
+#gameContentBox .cc-entry-modal-target.cc-modal-green{
+  background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(5,150,105,.07))!important;
+  border-color:rgba(52,211,153,.26)!important;
+  color:#bbf7d0!important;
+}
+#gameContentBox .cc-entry-modal-target.cc-modal-red{
+  background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(185,28,28,.07))!important;
+  border-color:rgba(248,113,113,.26)!important;
+  color:#fecaca!important;
+}
+#gameContentBox .cc-entry-modal-target.cc-modal-gold{
+  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(180,83,9,.07))!important;
+  border-color:rgba(250,204,21,.26)!important;
+  color:#fef3c7!important;
+}
+#gameContentBox .cc-entry-modal-round{
+  margin:10px 2px 20px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  color:#94a3b8!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+#gameContentBox .cc-entry-modal-label{
+  margin:0 0 8px!important;
+  color:#cbd5e1!important;
+  font-size:11px!important;
+  letter-spacing:1.2px!important;
+  font-weight:900!important;
+}
+#gameContentBox .cc-entry-modal-input-wrap{
+  position:relative!important;
+}
+#gameContentBox .cc-entry-modal-currency{
+  position:absolute!important;
+  left:14px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  z-index:2!important;
+  color:#f8fafc!important;
+  font-size:20px!important;
+  font-weight:900!important;
+  pointer-events:none!important;
+}
+#gameContentBox .cc-entry-modal-input{
+  height:58px!important;
+  padding:0 16px 0 42px!important;
+  border-radius:15px!important;
+  background:#080d16!important;
+  border:1px solid rgba(148,163,184,.34)!important;
+  color:#fff!important;
+  font-size:18px!important;
+  font-weight:800!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03)!important;
+}
+#gameContentBox .cc-entry-modal-input::placeholder{color:#64748b!important;opacity:1!important}
+#gameContentBox .cc-entry-modal-input:focus{
+  border-color:rgba(74,222,128,.62)!important;
+  box-shadow:0 0 0 3px rgba(34,197,94,.12)!important;
+}
+#gameContentBox .cc-entry-modal-limit{
+  margin:10px 2px 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  color:#94a3b8!important;
+  font-size:10px!important;
+  font-weight:800!important;
+}
+#gameContentBox .cc-entry-modal-submit,
+#gameContentBox .cc-entry-modal-submit:hover,
+#gameContentBox .cc-entry-modal-submit:focus,
+#gameContentBox .cc-entry-modal-submit:active{
+  width:100%!important;
+  min-height:54px!important;
+  border-radius:15px!important;
+  background:linear-gradient(135deg,#22c55e 0%,#16a34a 52%,#15803d 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(134,239,172,.28)!important;
+  box-shadow:0 10px 24px rgba(22,163,74,.28),inset 0 1px 0 rgba(255,255,255,.16)!important;
+  font-size:16px!important;
+  font-weight:1000!important;
+  letter-spacing:.15px!important;
+  transform:none!important;
+  filter:none!important;
+}
+#gameContentBox .cc-entry-modal-submit:hover{filter:brightness(1.04)!important}
+#gameContentBox .cc-entry-modal-submit:active{transform:translateY(1px)!important}
+#gameContentBox .cc-entry-modal-submit:disabled{
+  opacity:.62!important;
+  background:linear-gradient(135deg,#15803d,#166534)!important;
+  box-shadow:none!important;
+}
+#gameContentBox .cc-entry-modal-submit span{margin-right:5px!important;font-size:17px!important}
+#gameContentBox .cc-entry-modal-hint{
+  margin:12px 4px 0!important;
+  text-align:center!important;
+  color:#94a3b8!important;
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+@media(max-width:430px){
+  #gameContentBox .cc-entry-modal-backdrop{padding:10px!important}
+  #gameContentBox .cc-entry-modal{width:calc(100vw - 20px)!important;max-height:calc(100vh - 20px)!important;padding:16px 15px 15px!important;border-radius:22px!important}
+  #gameContentBox .cc-entry-modal-target{min-height:56px!important;font-size:22px!important}
+  #gameContentBox .cc-entry-modal-input{height:56px!important}
+  #gameContentBox .cc-entry-modal-submit{min-height:52px!important}
+}
+</style>
