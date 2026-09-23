@@ -1,4 +1,4 @@
-<!-- GAME VERSE USER APP LIVE FIX v2.1 - Global pause/Colour Clash lock/presence heartbeat -->
+<!-- GAME VERSE USER APP LIVE FIX v2.1 - Global pause/WINGO lock/presence heartbeat -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -217,6 +217,21 @@
 
         .game-card, .tournament-card, .withdraw-history-item, .support-history-item,
         .deposit-history-item, .reward-card, .prediction-card, .membership-card,
+        .gv-event-featured{position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(34,211,238,.42);background:linear-gradient(135deg,rgba(8,35,55,.96),rgba(10,16,30,.98));box-shadow:0 10px 26px rgba(0,0,0,.28),0 0 22px rgba(34,211,238,.08);padding:10px;}
+        .gv-event-featured img{width:100%;max-height:150px;object-fit:cover;border-radius:11px;display:block;margin-bottom:8px;}
+        .gv-event-grid-card{position:relative;padding:11px;border-radius:15px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(18,24,38,.96),rgba(7,11,20,.98));margin-bottom:9px;box-shadow:0 7px 18px rgba(0,0,0,.18);}
+        .gv-event-grid-card.is-live{border-color:rgba(52,211,153,.34);}
+        .gv-event-grid-card.is-upcoming{border-color:rgba(250,204,21,.28);}
+        .gv-event-grid-card.is-ended{opacity:.82;}
+        .gv-event-badges{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
+        .gv-event-badge{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:900;letter-spacing:.35px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#dbeafe;}
+        .gv-event-badge.live{color:#86efac;border-color:rgba(52,211,153,.28);background:rgba(52,211,153,.08);}
+        .gv-event-badge.upcoming{color:#fde68a;border-color:rgba(250,204,21,.28);background:rgba(250,204,21,.08);}
+        .gv-event-badge.ended{color:#cbd5e1;}
+        .gv-event-time{font-size:9px;color:var(--text-muted);margin-top:6px;}
+        .gv-event-countdown{font-size:10px;font-weight:900;color:#67e8f9;margin-top:3px;}
+        .gv-event-cta{display:inline-flex;align-items:center;justify-content:center;min-width:95px;padding:8px 11px;border-radius:9px;text-decoration:none;border:1px solid rgba(52,211,153,.35);background:linear-gradient(135deg,rgba(16,185,129,.22),rgba(34,211,238,.12));color:#fff;font-size:10px;font-weight:900;margin-top:7px;}
+        .gv-event-empty{padding:24px 12px;text-align:center;border:1px dashed rgba(255,255,255,.1);border-radius:14px;color:var(--text-muted);}
         .income-history-item, .invest-history-item, .event-card {
             background: #050505;
             padding: 14px; border-radius: 14px; margin-bottom: 10px;
@@ -616,8 +631,14 @@
         .input-icon-wrap input.has-toggle { padding-right: 42px; }
         .input-icon {
             position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-            font-size: 15px; opacity: 0.75; pointer-events: none;
+            font-size: 16px; line-height: 1; opacity: 0.95; pointer-events: none;
+            z-index: 3; display: block; width: 20px; height: 20px;
+            text-align: center;
+            font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+            visibility: visible !important;
         }
+        .input-icon-wrap input { position: relative; z-index: 1; }
+        .input-icon-wrap:focus-within .input-icon { opacity: 1; visibility: visible !important; }
         .input-toggle-btn {
             position: absolute; right: 4px; top: 50%; transform: translateY(-50%) !important;
             width: auto; padding: 8px; margin: 0; font-size: 14px;
@@ -658,7 +679,7 @@
         #dash { max-width: 440px; }
         .uid-badge { font-family: ui-monospace, monospace; color: var(--blue); font-weight: 700; }
 
-        /* Colour Clash */
+        /* WINGO */
         .cc-round-banner {
             background: #000000;
             border: 1.5px solid var(--blue);
@@ -708,8 +729,8 @@
         }
         .cc-num-green { background: linear-gradient(145deg,#047857,#10b981) !important; }
         .cc-num-red { background: linear-gradient(145deg,#991b1b,#dc2626) !important; }
-        .cc-num-blue-split-red { background: linear-gradient(90deg,#dc2626 0 50%,#2563eb 50% 100%) !important; }
-        .cc-num-blue-split-green { background: linear-gradient(90deg,#10b981 0 50%,#2563eb 50% 100%) !important; }
+        .cc-num-blue-split-red { background: linear-gradient(90deg,#dc2626 0 50%,#8b5cf6 50% 100%) !important; }
+        .cc-num-blue-split-green { background: linear-gradient(90deg,#10b981 0 50%,#8b5cf6 50% 100%) !important; }
         .cc-size-btn { font-weight:900 !important; }
         .cc-size-small { background:linear-gradient(145deg,#2563eb,#1d4ed8) !important; }
         .cc-size-big { background:linear-gradient(145deg,#991b1b,#dc2626) !important; }
@@ -725,7 +746,7 @@
             font-size: 24px; font-weight: 900; margin-top: 12px;
             animation: gameWinGlowPulse 1s ease 2;
         }
-        /* Card sections used throughout the redesigned Colour Clash screen */
+        /* Card sections used throughout the redesigned WINGO screen */
         .cc-section {
             background: #050505;
             border: 1.5px solid #707070;
@@ -767,7 +788,7 @@
         .cc-colour-dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;flex:0 0 auto;box-shadow:0 0 0 2px rgba(255,255,255,.12),0 0 8px rgba(255,255,255,.08);}
         .cc-dot-red{background:#ef4444;box-shadow:0 0 0 2px rgba(239,68,68,.18),0 0 10px rgba(239,68,68,.28);}
         .cc-dot-green{background:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.18),0 0 10px rgba(34,197,94,.28);}
-        .cc-dot-blue{background:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.18),0 0 10px rgba(59,130,246,.30);}
+        .cc-dot-blue{background:#8b5cf6;box-shadow:0 0 0 2px rgba(139,92,246,.18),0 0 10px rgba(139,92,246,.30);}
         .cc-colour-dot-lg{width:22px;height:22px;box-shadow:0 0 0 3px rgba(255,255,255,.12),0 0 18px rgba(255,255,255,.16);}
 .cc-result-dots{display:inline-flex;align-items:center;gap:5px;margin-left:4px;vertical-align:middle;} .cc-result-inline{display:inline-flex;align-items:center;gap:7px;font-weight:900;}
         .cc-wallet-mini{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0;padding:7px 10px;border-radius:10px;background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.18);font-size:11px;color:var(--text-muted);}
@@ -786,7 +807,7 @@
         }
         .cc-chip-red { background: rgba(248,113,113,0.14); color: #f87171; border-color: rgba(248,113,113,0.35); }
         .cc-chip-green { background: rgba(52,211,153,0.14); color: #34d399; border-color: rgba(52,211,153,0.35); }
-        .cc-chip-blue { background: rgba(59,130,246,0.14); color: #60a5fa; border-color: rgba(59,130,246,0.4); }
+        .cc-chip-blue { background: rgba(139,92,246,0.14); color: #c4b5fd; border-color: rgba(139,92,246,0.4); }
         .cc-chip-number { background: rgba(250,204,21,0.14); color: #facc15; border-color: rgba(250,204,21,0.35); }
         #ccMyEntries { display: flex; flex-wrap: wrap; gap: 6px; }
         /* Scrollable lists (my history / round history) */
@@ -1303,6 +1324,94 @@
         @keyframes rocketCrash{0%{transform:translateX(-50%) rotate(-9deg) scale(1)}25%{transform:translateX(-50%) rotate(16deg) scale(1.08)}100%{transform:translate(90px,82px) rotate(78deg) scale(.75);opacity:.08}}
 
     </style>
+
+<style id="gv-colour-mines-refresh-v4">
+/* ===== WINGO + Mines visual/visibility repair v4 ===== */
+#gameContentBox .cc-colour-btn,
+#gameContentBox .cc-num-btn,
+#gameContentBox .cc-size-btn{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;isolation:isolate!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.55)!important;
+}
+#gameContentBox .cc-colour-btn{min-height:68px!important;font-size:14px!important;letter-spacing:.8px!important;border-width:1.5px!important;}
+#gameContentBox .cc-num-btn{min-height:58px!important;font-size:19px!important;border:1.5px solid rgba(255,255,255,.24)!important;}
+#gameContentBox .cc-num-btn.cc-num-red{background:linear-gradient(145deg,#7f1d1d,#ef4444 58%,#991b1b)!important;}
+#gameContentBox .cc-num-btn.cc-num-green{background:linear-gradient(145deg,#065f46,#22c55e 58%,#047857)!important;}
+#gameContentBox .cc-num-btn.cc-num-blue-split-red{background:linear-gradient(90deg,#ef4444 0 50%,#8b5cf6 50% 100%)!important;}
+#gameContentBox .cc-num-btn.cc-num-blue-split-green{background:linear-gradient(90deg,#22c55e 0 50%,#8b5cf6 50% 100%)!important;}
+#gameContentBox .cc-num-btn::before{content:'';position:absolute;inset:1px;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 45%);pointer-events:none;z-index:-1;}
+#gameContentBox .cc-num-btn::after{content:'';position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.8);box-shadow:0 0 8px rgba(255,255,255,.65);opacity:.8;}
+#gameContentBox .cc-num-btn.selected{transform:translateY(-3px) scale(1.045)!important;border-color:#fff!important;box-shadow:0 0 0 2px rgba(255,255,255,.22),0 0 28px rgba(255,255,255,.48),0 12px 25px rgba(0,0,0,.4)!important;}
+#gameContentBox .cc-size-btn{min-height:58px!important;border:1.5px solid rgba(255,255,255,.2)!important;border-radius:14px!important;}
+#gameContentBox .cc-section{border:1px solid rgba(255,255,255,.09)!important;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))!important;box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04)!important;}
+#gameContentBox .cc-round-banner{background:radial-gradient(circle at 50% 0%,rgba(59,130,246,.18),transparent 55%),linear-gradient(145deg,rgba(8,15,30,.98),rgba(12,12,16,.98))!important;border:1px solid rgba(96,165,250,.28)!important;box-shadow:0 12px 30px rgba(0,0,0,.25)!important;}
+#gameContentBox .cc-timer-big{font-size:40px!important;text-shadow:0 0 22px rgba(96,165,250,.55)!important;}
+#gameContentBox .cc-wallet-mini{background:linear-gradient(90deg,rgba(59,130,246,.10),rgba(168,85,247,.08))!important;border-color:rgba(96,165,250,.22)!important;}
+#gameContentBox .mines-hero{padding:13px 14px;border-radius:16px;background:radial-gradient(circle at 85% 20%,rgba(248,113,113,.18),transparent 35%),linear-gradient(145deg,rgba(20,10,12,.98),rgba(8,10,16,.98));border:1px solid rgba(248,113,113,.22);box-shadow:0 12px 28px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.05);margin-bottom:10px;}
+#gameContentBox .mines-hero-title{font-size:18px;font-weight:1000;letter-spacing:.4px;color:#fff;}
+#gameContentBox .mines-hero-sub{font-size:10px;color:var(--text-muted);margin-top:3px;line-height:1.4;}
+#gameContentBox .mines-stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:9px 0;}
+#gameContentBox .mines-stat{padding:8px 7px;border-radius:11px;text-align:center;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);}
+#gameContentBox .mines-stat b{display:block;color:#fff;font-size:12px;margin-top:2px;}
+#gameContentBox .mines-stat span{font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+#gameContentBox .mines-grid{gap:7px!important;padding:8px!important;border-radius:17px!important;background:rgba(0,0,0,.28)!important;border:1px solid rgba(255,255,255,.07)!important;box-shadow:inset 0 0 22px rgba(0,0,0,.35)!important;}
+#gameContentBox .mine-tile{font-size:21px!important;border-radius:13px!important;background:linear-gradient(145deg,#151922,#090b10)!important;border:1px solid rgba(148,163,184,.28)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 12px rgba(0,0,0,.2)!important;color:#dbeafe!important;}
+#gameContentBox .mine-tile:hover:not(:disabled){border-color:rgba(96,165,250,.75)!important;box-shadow:0 0 18px rgba(59,130,246,.25),inset 0 1px 0 rgba(255,255,255,.1)!important;}
+#gameContentBox .mine-tile.revealed-safe{background:linear-gradient(145deg,#064e3b,#10b981)!important;border-color:rgba(110,231,183,.72)!important;box-shadow:0 0 18px rgba(16,185,129,.34)!important;}
+#gameContentBox .mine-tile.revealed-mine{background:radial-gradient(circle at 35% 30%,#f87171,#991b1b 70%)!important;border-color:rgba(248,113,113,.85)!important;box-shadow:0 0 20px rgba(239,68,68,.42)!important;}
+@media(max-width:420px){#gameContentBox .cc-num-btn{min-height:52px!important;font-size:17px!important}.mines-stat-strip{gap:4px!important}}
+</style>
+
+
+<style id="gv-user-requested-ui-fixes-v5">
+/* Requested UI polish: blue Transaction History, bright Mines, filled Big/Small buttons, always-on theme glow */
+.home-history-link{
+  background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 52%,#1e40af 100%) !important;
+  border:1px solid rgba(147,197,253,.9) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  box-shadow:0 8px 22px rgba(37,99,235,.34),inset 0 1px 0 rgba(255,255,255,.22) !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.35) !important;
+}
+.home-history-link:hover{background:linear-gradient(135deg,#3b82f6,#2563eb,#1d4ed8) !important;border-color:#bfdbfe !important;color:#fff !important;}
+#gameContentBox .cc-size-btn.cc-size-small{background:linear-gradient(145deg,#047857,#10b981 58%,#059669) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(110,231,183,.8) !important;box-shadow:0 8px 18px rgba(16,185,129,.24),inset 0 1px 0 rgba(255,255,255,.2) !important;}
+#gameContentBox .cc-size-btn.cc-size-big{background:linear-gradient(145deg,#b45309,#f59e0b 58%,#d97706) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(253,230,138,.82) !important;box-shadow:0 8px 18px rgba(245,158,11,.24),inset 0 1px 0 rgba(255,255,255,.2) !important;}
+#gameContentBox .cc-size-btn.selected{transform:translateY(-3px) scale(1.035) !important;border-color:#fff !important;box-shadow:0 0 0 2px rgba(255,255,255,.2),0 0 24px rgba(255,255,255,.35),0 10px 22px rgba(0,0,0,.3) !important;}
+#gameContentBox .mine-tile{background:linear-gradient(145deg,#354052 0%,#253044 48%,#172235 100%) !important;border:1px solid rgba(191,219,254,.42) !important;color:#f8fbff !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 5px 14px rgba(0,0,0,.24),0 0 8px rgba(96,165,250,.06) !important;}
+#gameContentBox .mine-tile:hover:not(:disabled){background:linear-gradient(145deg,#475569,#334155 55%,#1e3a5f) !important;border-color:rgba(147,197,253,.9) !important;box-shadow:0 0 20px rgba(59,130,246,.3),inset 0 1px 0 rgba(255,255,255,.18) !important;}
+#gameContentBox .mines-grid{background:linear-gradient(145deg,rgba(30,41,59,.78),rgba(15,23,42,.72)) !important;border-color:rgba(148,163,184,.18) !important;box-shadow:inset 0 0 24px rgba(59,130,246,.08) !important;}
+</style>
+
+
+<style id="gv-colour-clash-buttons-final-fix">
+/* WINGO navigation / cancel controls: keep both symbols centered and fully inside their boxes. */
+#gameContentBox .cc-back-btn{
+  width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;
+  padding:0!important;margin:0!important;border-radius:10px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;line-height:1!important;
+  font-family:Arial,"Segoe UI Symbol",sans-serif!important;
+  font-size:26px!important;font-weight:700!important;
+  text-align:center!important;overflow:hidden!important;
+  position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+  transform:none!important;
+}
+#gameContentBox .cc-entry-modal{position:relative!important;}
+#gameContentBox .cc-entry-modal-close{
+  position:absolute!important;top:10px!important;right:10px!important;
+  width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;
+  padding:0!important;margin:0!important;border-radius:9px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;line-height:1!important;
+  font-family:Arial,"Segoe UI Symbol",sans-serif!important;
+  font-size:22px!important;font-weight:700!important;
+  text-align:center!important;overflow:hidden!important;
+  z-index:20!important;
+  transform:none!important;
+}
+#gameContentBox .cc-entry-modal-kicker{padding-right:44px!important;}
+</style>
 </head>
 <body class="auth-mode">
 
@@ -1642,9 +1751,19 @@
         <div id="tabEvents" class="tab-panel">
             <div class="tab-panel-header">
                 <h3 style="color:var(--accent-cyan);">🎉 Events & Activity</h3>
+                <span id="eventsLiveCount" style="font-size:9px;color:var(--text-muted);">Loading...</span>
             </div>
-            <input id="eventSearchInput" type="text" placeholder="🔍 Search events..." oninput="renderUserEvents()" style="margin-bottom:10px;">
-            <div id="userEventsList" style="max-height: 420px; overflow-y: auto;">Loading events...</div>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:8px;">
+                <input id="eventSearchInput" type="text" placeholder="🔍 Search events..." oninput="renderUserEvents()" style="margin:0;">
+                <select id="eventFilterSelect" onchange="renderUserEvents()" style="margin:0;min-width:105px;">
+                    <option value="all">All</option>
+                    <option value="live">🔴 Live</option>
+                    <option value="upcoming">⏳ Upcoming</option>
+                    <option value="ended">✓ Ended</option>
+                </select>
+            </div>
+            <div id="featuredEventBanner" class="hidden" style="margin-bottom:10px;"></div>
+            <div id="userEventsList" style="max-height: 500px; overflow-y: auto;">Loading events...</div>
         </div>
 
         <!-- legacy mainMenu anchor for JS compatibility (hidden) -->
@@ -1885,21 +2004,37 @@
         </div>
 
         <!-- Games Hub Section -->
-        <div id="gamesHub" class="hidden">
-            <h3 style="margin-top:0;">🎮 Play Games</h3>
-            <div id="colourClashTopCard" class="game-hub-card" style="border-color:rgba(var(--accent-rgb),0.55); background:linear-gradient(145deg,rgba(8,8,8,.96),rgba(0,0,0,.96)); box-shadow:0 0 22px rgba(var(--accent-rgb),.16);">
+        <div id="gamesHub" class="hidden gv-games-hub">
+            <div class="gv-games-hero">
+                <div class="gv-games-hero-glow"></div>
+                <div class="gv-games-kicker">GAME VERSE • ARCADE</div>
+                <div class="gv-games-title-row">
+                    <div>
+                        <h3 class="gv-games-title">🎮 Play Games</h3>
+                        <p class="gv-games-subtitle">Choose your game, pick your stake and start playing.</p>
+                    </div>
+                    <div class="gv-games-live-badge"><span></span> LIVE</div>
+                </div>
+                <div class="gv-games-stats">
+                    <div><b>⚡</b><span>Fast Play</span></div>
+                    <div><b>🎯</b><span>Skill & Luck</span></div>
+                    <div><b>💰</b><span>Real Rewards</span></div>
+                </div>
+            </div>
+            <div class="gv-games-section-head"><span>🔥 Featured Game</span><small>Live now</small></div>
+            <div id="colourClashTopCard" class="game-hub-card gv-featured-game" style="border-color:rgba(var(--accent-rgb),0.55); background:linear-gradient(145deg,rgba(8,8,8,.96),rgba(0,0,0,.96)); box-shadow:0 0 22px rgba(var(--accent-rgb),.16);">
                 <div class="gh-row">
                     <div class="game-thumb colour">🎨</div>
                     <div class="gh-body">
                         <div class="gh-top">
-                            <span class="gh-title">Colour Clash</span>
+                            <span class="gh-title">WINGO</span>
                             <span class="status-pill active">LIVE</span>
                         </div>
-                        <div style="font-size:13px;font-weight:700;margin:2px 0;">🔴 RED · 🟢 GREEN · 🔵 BLUE</div>
+                        <div style="font-size:13px;font-weight:700;margin:2px 0;">🔴 RED · 🟢 GREEN · 🟣 VIOLET</div>
                         <div id="colourClashTopStatus" class="gh-meta" style="margin:0;">Loading round...</div>
                     </div>
                 </div>
-                <button onclick="tryPlayColourClash()" class="btn-green" style="margin-top:10px;padding:11px;">🎨 PLAY COLOUR CLASH</button>
+                <button onclick="tryPlayColourClash()" class="btn-green" style="margin-top:10px;padding:11px;">🎨 PLAY WINGO</button>
             </div>
             <div class="section-label" style="margin-top:14px;">Mini Games</div>
             <div id="gameList">Loading games...</div>
@@ -2025,7 +2160,7 @@
         // CSS variables such as rgba(var(--accent-rgb),0.5), which the old version
         // did not match correctly. 0% = no glow, 50% = original design strength,
         // 100% = very strong glow (up to 2.5x alpha + larger blur).
-        let themeGlowScale = 0.5;
+        let themeGlowScale = 1;
         let glowTargets = [];
         let glowStyleSignature = '';
         let glowOverrideStyle = null;
@@ -2104,13 +2239,11 @@
         db.ref('control/appTheme').on('value', snap => {
             applyTheme(snap.val() || 'black');
             // Theme variables may change shadow declarations; reapply glow after theme load.
-            setTimeout(() => applyThemeGlowScale(themeGlowScale), 0);
+            setTimeout(() => applyThemeGlowScale(0.5), 0);
         });
         db.ref('control/themeGlowScale').on('value', snap => {
-            const raw = snap.val();
-            // Stored values are percentages (0-100). Legacy decimal values are also accepted.
-            const n = Number(raw);
-            applyThemeGlowScale(raw === null || raw === undefined ? 50 : (n <= 1 ? n : n / 100));
+            // Theme Glow Strength control removed — all themes use a medium glow.
+            applyThemeGlowScale(0.5);
         });
 
         let currentUid = null;
@@ -2346,7 +2479,7 @@
             if(typeof loadMiniGames==='function') loadMiniGames();
             if(typeof updateColourClashTopCard==='function') updateColourClashTopCard();
             const activeArea=document.getElementById('activeGameArea'), title=document.getElementById('activeGameTitle');
-            if(activeArea && !activeArea.classList.contains('hidden') && title && String(title.innerText||'').toUpperCase()==='COLOUR CLASH'){
+            if(activeArea && !activeArea.classList.contains('hidden') && title && String(title.innerText||'').toUpperCase()==='WINGO'){
                 const info=document.getElementById('activeGameInfo'); if(info) info.innerText=globalGamesPaused?'🔒 This game is currently locked by the administrator.':'Pick a colour or a number';
                 if(typeof renderColourClash==='function') renderColourClash();
             }
@@ -2364,7 +2497,7 @@
         }
         function openSpotlightGame(){
             const gameId=String((dashboard20Config&&dashboard20Config.spotlightGame)||'rocket-jump');
-            const labelMap={'rocket-jump':'Rocket Jump','high-card':'High Card','fortune-wheel':'Fortune Wheel','coin-flip':'Coin Flip','number-master':'Number Master','mines':'Mines','colour-clash':'Colour Clash'};
+            const labelMap={'rocket-jump':'Rocket Jump','high-card':'High Card','fortune-wheel':'Fortune Wheel','coin-flip':'Coin Flip','number-master':'Number Master','mines':'Mines','colour-clash':'WINGO'};
             const label=labelMap[gameId]||'Game';
             if(globalGamesPaused) return alert('Games are temporarily paused by the administrator. Please try again later.');
             if(gameId==='colour-clash'){ tryPlayColourClash(); return; }
@@ -2806,13 +2939,13 @@
                         'spin_wheel': { name: 'Fortune Wheel', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
                         'coin_flip': { name: 'Lucky Coin Flip', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
                         'number_guess': { name: 'Number Master', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
-                        'colour_clash': { name: 'COLOUR CLASH', entryFee: 10, status: 'active', allowUserAmount: true }
+                        'colour_clash': { name: 'WINGO', entryFee: 10, status: 'active', allowUserAmount: true }
                     });
                 }
             });
         }
 
-        db.ref('games/colour_clash').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/colour_clash').set({name:'COLOUR CLASH',entryFee:10,status:'active',allowUserAmount:true}); });
+        db.ref('games/colour_clash').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/colour_clash').set({name:'WINGO',entryFee:10,status:'active',allowUserAmount:true}); });
         db.ref('games/high_card').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/high_card').set({name:'High Card',entryFee:10,usdtEntryFee:0.1,status:'active',allowUserAmount:true,winChancePercent:50,betScalingPercent:0}); });
         db.ref('control/colourClashConfig').once('value').then(snap=>{ if(!snap.exists()) db.ref('control/colourClashConfig').set({enabled:true,entrySeconds:30,cooldownSeconds:5,minBet:10,maxBet:5000,multiplier:2,numberMultiplier:9,autoResult:true}); });
 
@@ -4316,61 +4449,70 @@
         }
 
         let cachedUserEvents = [];
-        function loadUserEvents() {
-            db.ref('events').on('value', snap => {
-                cachedUserEvents = [];
-                if (snap.exists()) {
-                    snap.forEach(child => {
-                        const e = child.val();
-                        if ((e.status || 'active') === 'active') {
-                            cachedUserEvents.push({ eKey: child.key, e });
-                        }
-                    });
-                }
+        let userEventTicker = null;
+        function eventTimeValue(v){
+            if(v===undefined||v===null||v==='') return 0;
+            if(typeof v==='number') return v;
+            const n=Number(v); if(Number.isFinite(n) && n>0) return n;
+            const t=Date.parse(v); return Number.isFinite(t)?t:0;
+        }
+        function formatEventDate(ts){
+            if(!ts) return '';
+            try{return new Date(ts).toLocaleString([], {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}
+        }
+        function getUserEventState(e){
+            const now=Date.now(), start=eventTimeValue(e.startAt), end=eventTimeValue(e.endAt);
+            if(end && now>=end) return 'ended';
+            if(start && now<start) return 'upcoming';
+            return 'live';
+        }
+        function loadUserEvents(){
+            db.ref('events').on('value',snap=>{
+                cachedUserEvents=[];
+                if(snap.exists()) snap.forEach(child=>{
+                    const e=child.val()||{};
+                    if((e.status||'active')==='active') cachedUserEvents.push({eKey:child.key,e});
+                });
                 renderUserEvents();
+                startUserEventTicker();
             });
         }
-
-        function renderUserEvents() {
-            const container = document.getElementById('userEventsList');
-            if (!container) return;
-            const searchTerm = (document.getElementById('eventSearchInput')?.value || '').trim().toLowerCase();
-
-            let events = cachedUserEvents.slice();
-            if (searchTerm) {
-                events = events.filter(({ e }) =>
-                    (e.title || '').toLowerCase().includes(searchTerm) ||
-                    (e.description || '').toLowerCase().includes(searchTerm)
-                );
-            }
-
-            // Pinned events first, then newest first within each group.
-            events.sort((a, b) => {
-                if (!!b.e.pinned !== !!a.e.pinned) return (b.e.pinned ? 1 : 0) - (a.e.pinned ? 1 : 0);
-                return (b.e.timestamp || 0) - (a.e.timestamp || 0);
+        function startUserEventTicker(){
+            if(userEventTicker) clearInterval(userEventTicker);
+            userEventTicker=setInterval(()=>{if(document.getElementById('tabEvents')?.classList.contains('active')) renderUserEvents();},1000);
+        }
+        function eventCountdownText(e,state){
+            const target=state==='upcoming'?eventTimeValue(e.startAt):eventTimeValue(e.endAt);
+            if(!target) return state==='live'?'Live now':'Event ended';
+            let diff=Math.max(0,target-Date.now());
+            const d=Math.floor(diff/86400000); diff%=86400000;
+            const h=Math.floor(diff/3600000); diff%=3600000;
+            const m=Math.floor(diff/60000); const s=Math.floor((diff%60000)/1000);
+            const parts=[]; if(d)parts.push(d+'d'); if(h||d)parts.push(h+'h'); if(m||h||d)parts.push(m+'m'); parts.push(s+'s');
+            return state==='upcoming'?'Starts in '+parts.join(' '):state==='live'?'Ends in '+parts.join(' '):'Event ended';
+        }
+        function renderUserEvents(){
+            const container=document.getElementById('userEventsList'); if(!container)return;
+            const searchTerm=(document.getElementById('eventSearchInput')?.value||'').trim().toLowerCase();
+            const filter=document.getElementById('eventFilterSelect')?.value||'all';
+            let events=cachedUserEvents.slice().map(x=>Object.assign(x,{state:getUserEventState(x.e)}));
+            if(searchTerm) events=events.filter(({e})=>(e.title||'').toLowerCase().includes(searchTerm)||(e.description||'').toLowerCase().includes(searchTerm)||(e.category||'').toLowerCase().includes(searchTerm));
+            if(filter!=='all') events=events.filter(x=>x.state===filter);
+            events.sort((a,b)=>{
+                if(!!b.e.featured!==!!a.e.featured)return (b.e.featured?1:0)-(a.e.featured?1:0);
+                if(!!b.e.pinned!==!!a.e.pinned)return (b.e.pinned?1:0)-(a.e.pinned?1:0);
+                const pa=Number(a.e.priority)||0,pb=Number(b.e.priority)||0;if(pb!==pa)return pb-pa;
+                return (eventTimeValue(b.e.timestamp)||0)-(eventTimeValue(a.e.timestamp)||0);
             });
-
-            if (events.length === 0) {
-                container.innerHTML = searchTerm
-                    ? '<p>No events match your search.</p>'
-                    : '<p>No events right now — check back soon!</p>';
-                return;
-            }
-
-            const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
-            container.innerHTML = events.map(({ e }) => {
-                const isNew = e.timestamp && (Date.now() - e.timestamp) < threeDaysMs;
-                const safeLink = (e.link || '').trim();
-                return `
-                    <div class="event-card">
-                        ${e.pinned ? '<span style="color:#facc15; font-weight:bold; font-size:11px;">📌 PINNED</span>' : ''}
-                        ${isNew ? '<span style="color:#34d399; font-weight:bold; font-size:11px; margin-left:6px;">🆕 NEW</span>' : ''}
-                        <img src="${e.imageUrl}" style="width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin:6px 0;" onerror="this.style.display='none'">
-                        <b style="color:var(--accent-cyan); font-size:15px;">🎉 ${e.title}</b>
-                        <p style="margin:6px 0; font-size:13px; color:var(--text-muted); white-space:pre-wrap;">${e.description || ''}</p>
-                        ${safeLink ? `<button onclick="window.open('${safeLink}', '_blank')" class="btn-green" style="margin-top:4px; padding:8px; font-size:12px;">🔗 View More</button>` : ''}
-                    </div>
-                `;
+            const liveCount=cachedUserEvents.filter(x=>getUserEventState(x.e)==='live').length;
+            const liveEl=document.getElementById('eventsLiveCount'); if(liveEl)liveEl.textContent=liveCount?`${liveCount} live event${liveCount>1?'s':''}`:'Events & updates';
+            const featured=cachedUserEvents.filter(x=>x.e.featured && getUserEventState(x.e)!=='ended').sort((a,b)=>(Number(b.e.priority)||0)-(Number(a.e.priority)||0))[0];
+            const fb=document.getElementById('featuredEventBanner');
+            if(fb && featured){const e=featured.e,s=featured.state;fb.classList.remove('hidden');fb.innerHTML=`<div class="gv-event-featured"><div class="gv-event-badges"><span class="gv-event-badge">⭐ FEATURED</span><span class="gv-event-badge ${s}">${s==='live'?'🔴 LIVE':'⏳ UPCOMING'}</span>${e.category?`<span class="gv-event-badge">${escapeHtmlUser(e.category)}</span>`:''}</div>${e.imageUrl?`<img src="${escapeHtmlUser(e.imageUrl)}" onerror="this.style.display='none'">`:''}<div style="font-size:16px;font-weight:1000;color:#fff;">🎉 ${escapeHtmlUser(e.title||'Game Verse Event')}</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px;white-space:pre-wrap;">${escapeHtmlUser(e.description||'')}</div><div class="gv-event-countdown">${eventCountdownText(e,s)}</div>${e.link?`<a class="gv-event-cta" href="${escapeHtmlUser(e.link)}" target="_blank" rel="noopener noreferrer">${escapeHtmlUser(e.ctaText||'View Event')} ↗</a>`:''}</div>`;} else if(fb){fb.classList.add('hidden');fb.innerHTML='';}
+            if(!events.length){container.innerHTML=`<div class="gv-event-empty">${searchTerm||filter!=='all'?'No events match your filters.':'No events right now — check back soon!'}</div>`;return;}
+            container.innerHTML=events.map(({e,state})=>{
+                const cls=state==='live'?'is-live':state==='upcoming'?'is-upcoming':'is-ended';
+                return `<div class="gv-event-grid-card ${cls}"><div class="gv-event-badges">${e.pinned?'<span class="gv-event-badge">📌 PINNED</span>':''}${e.featured?'<span class="gv-event-badge">⭐ FEATURED</span>':''}<span class="gv-event-badge ${state}">${state==='live'?'🔴 LIVE':state==='upcoming'?'⏳ UPCOMING':'✓ ENDED'}</span>${e.category?`<span class="gv-event-badge">${escapeHtmlUser(e.category)}</span>`:''}</div>${e.imageUrl?`<img src="${escapeHtmlUser(e.imageUrl)}" style="width:100%;max-height:165px;object-fit:cover;border-radius:11px;margin:2px 0 8px;display:block;" onerror="this.style.display='none'">`:''}<div style="font-size:15px;font-weight:1000;color:var(--accent-cyan);">🎉 ${escapeHtmlUser(e.title||'Game Verse Event')}</div>${e.description?`<div style="margin-top:5px;font-size:12px;color:var(--text-muted);white-space:pre-wrap;">${escapeHtmlUser(e.description)}</div>`:''}${e.startAt?`<div class="gv-event-time">🗓️ ${state==='upcoming'?'Starts':'Started'}: ${formatEventDate(eventTimeValue(e.startAt))}</div>`:''}${e.endAt?`<div class="gv-event-time">⏱️ Ends: ${formatEventDate(eventTimeValue(e.endAt))}</div>`:''}<div class="gv-event-countdown">${eventCountdownText(e,state)}</div>${e.link&&state!=='ended'?`<a class="gv-event-cta" href="${escapeHtmlUser(e.link)}" target="_blank" rel="noopener noreferrer">${escapeHtmlUser(e.ctaText||'View Event')} ↗</a>`:''}</div>`;
             }).join('');
         }
 
@@ -4702,7 +4844,7 @@
             });
         }
 
-        /* --- COLOUR CLASH --- */
+        /* --- WINGO --- */
         let colourClashTimer = null;
         let colourClashCurrentRoundId = '';
         // NOTE: this is only a placeholder shape used before the real config has loaded from Firebase.
@@ -4710,7 +4852,7 @@
         // has ever changed entrySeconds/cooldownSeconds away from these defaults, using this placeholder
         // even briefly would compute the wrong cycle length and therefore the wrong round id, writing
         // round-history entries that don't line up with the real current round sequence at all.
-        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:true };
+        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, violetMultiplier:3, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:true };
         let colourClashConfigReady = false;
         let colourClashSelected = '';
         let colourClashAmount = 0;
@@ -4728,7 +4870,8 @@
                 minBetUsdt: Math.max(0.0001, Number(d.minBetUsdt) || 0.1),
                 maxBetUsdt: Math.max(0.0001, Number(d.maxBetUsdt) || Number(d.maxBet) || 5000),
                 multiplier: Math.max(1, Number(d.multiplier) || 2),
-                blueMultiplier: Math.max(1, Number(d.blueMultiplier) || 3),
+                violetMultiplier: Math.max(1, Number(d.violetMultiplier ?? d.blueMultiplier) || 3),
+                blueMultiplier: Math.max(1, Number(d.blueMultiplier) || Number(d.violetMultiplier) || 3),
                 numberMultiplier: Math.max(1, Number(d.numberMultiplier) || 9),
                 sizeMultiplier: Math.max(1, Number(d.sizeMultiplier) || 2),
                 autoResult: d.autoResult !== false,
@@ -4737,19 +4880,19 @@
             };
             colourClashConfigReady = true;
             updateColourClashTopCard();
-            // If the player currently has the Colour Clash screen open, re-render it immediately so
+            // If the player currently has the WINGO screen open, re-render it immediately so
             // an admin toggling the game on/off takes effect right away — locking or unlocking the
             // betting controls — while round + entry history stays visible either way (see
             // renderColourClash below).
             const activeArea = document.getElementById('activeGameArea');
             const titleEl = document.getElementById('activeGameTitle');
-            if (activeArea && !activeArea.classList.contains('hidden') && titleEl && titleEl.innerText === 'COLOUR CLASH') {
+            if (activeArea && !activeArea.classList.contains('hidden') && titleEl && titleEl.innerText === 'WINGO') {
                 renderColourClash();
             }
         });
 
         // Continuous round engine: keeps producing results for every elapsed cycle while the
-        // game is enabled, even if no player is currently on the Colour Clash screen.
+        // game is enabled, even if no player is currently on the WINGO screen.
         // Any online user (or the admin panel) can write the deterministic result; Firebase
         // transactions ensure only one writer wins. Missed rounds are backfilled (up to 20).
         let colourClashBgTimer = null;
@@ -4802,32 +4945,32 @@
             }
             return h >>> 0;
         }
-        // Colour Clash number classification is shared by User + Admin.
+        // WINGO number classification is shared by User + Admin.
         // 0 and 5 are displayed as blue results; their number buttons retain the split visual.
         function ccNumberColour(n){
             n=Number(n);
-            if(n===0 || n===5) return 'BLUE';
+            if(n===0 || n===5) return 'VIOLET';
             return [1,3,7,9].includes(n) ? 'GREEN' : 'RED';
         }
         function ccNumberSize(n){ return Number(n) <= 4 ? 'SMALL' : 'BIG'; }
         function ccNumberColours(n){
             n=Number(n);
-            if(n===0) return ['RED','BLUE'];
-            if(n===5) return ['GREEN','BLUE'];
+            if(n===0) return ['RED','VIOLET'];
+            if(n===5) return ['GREEN','VIOLET'];
             return [ccNumberColour(n)];
         }
         function ccColourMultiplier(colour){
-            return String(colour||'').toUpperCase()==='BLUE' ? colourClashConfig.blueMultiplier : colourClashConfig.multiplier;
+            return ['BLUE','VIOLET'].includes(String(colour||'').toUpperCase()) ? colourClashConfig.violetMultiplier : colourClashConfig.multiplier;
         }
         function ccNumberCssClass(n){
             n=Number(n);
-            if(n===0) return 'cc-num-blue-split-red';
-            if(n===5) return 'cc-num-blue-split-green';
+            if(n===0) return 'cc-num-split-red-violet';
+            if(n===5) return 'cc-num-split-green-violet';
             return ccNumberColour(n)==='GREEN' ? 'cc-num-green' : 'cc-num-red';
         }
         function ccColourDot(colour){
             const c=String(colour||'').toUpperCase();
-            const cls=c==='RED'?'cc-dot-red':c==='GREEN'?'cc-dot-green':'cc-dot-blue';
+            const cls=c==='RED'?'cc-dot-red':c==='GREEN'?'cc-dot-green':'cc-dot-violet';
             return `<span class="cc-colour-dot ${cls}"></span>`;
         }
         function ccColourDots(colours){
@@ -4893,7 +5036,7 @@
             if(globalGamesPaused || !colourClashConfig.enabled){
                 document.getElementById('gamesHub').classList.add('hidden');
                 document.getElementById('activeGameArea').classList.remove('hidden');
-                document.getElementById('activeGameTitle').innerText='COLOUR CLASH';
+                document.getElementById('activeGameTitle').innerText='WINGO';
                 document.getElementById('activeGameInfo').innerText='🔒 This game is currently locked by the administrator.';
                 renderColourClash();
                 return;
@@ -4902,7 +5045,7 @@
             // locked, history-only view in that case rather than blocking access entirely.
             document.getElementById('gamesHub').classList.add('hidden');
             document.getElementById('activeGameArea').classList.remove('hidden');
-            document.getElementById('activeGameTitle').innerText='COLOUR CLASH';
+            document.getElementById('activeGameTitle').innerText='WINGO';
             document.getElementById('activeGameInfo').innerText=`Pick a colour or a number • ₹${colourClashConfig.minBet} - ₹${colourClashConfig.maxBet}`;
             renderColourClash();
         }
@@ -4915,7 +5058,7 @@
             const c = String(currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR';
             activeGameCurrency = c;
             selectedWalletCurrency = c;
-            // Always refresh the selected wallet from Firebase so Colour Clash never
+            // Always refresh the selected wallet from Firebase so WINGO never
             // displays a stale INR value after switching to USDT.
             const paint = () => {
                 updateWalletCurrencyUI();
@@ -4944,7 +5087,7 @@
             }
         }
         function colourClashCurrencySwitchHtml() {
-            return `<div class="cc-currency-switch" aria-label="Colour Clash currency">
+            return `<div class="cc-currency-switch" aria-label="WINGO currency">
                 <button type="button" class="cc-currency-btn ${selectedWalletCurrency==='INR'?'active':''}" data-currency="INR" onclick="setColourClashCurrency('INR')">₹ INR</button>
                 <button type="button" class="cc-currency-btn ${selectedWalletCurrency==='USDT'?'active':''}" data-currency="USDT" onclick="setColourClashCurrency('USDT')">₮ USDT</button>
             </div>`;
@@ -4960,7 +5103,7 @@
                 // can currently be placed.
                 if(colourClashTimer){ clearInterval(colourClashTimer); colourClashTimer=null; }
                 box.innerHTML=`
-                    <div class="cc-locked-banner">🔒 <span>Colour Clash is currently locked. New entries are paused — you can still browse past results below.</span></div>
+                    <div class="cc-locked-banner">🔒 <span>WINGO is currently locked. New entries are paused — you can still browse past results below.</span></div>
                     <div class="cc-section">
                       <div class="cc-section-title">📜 MY ENTRY HISTORY</div>
                       <div id="ccMyHistory" class="cc-scroll-list">Loading your history...</div>
@@ -4975,63 +5118,122 @@
             }
             const r=getColourClashRoundState(); colourClashCurrentRoundId=r.roundId;
             const remaining=Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000));
+            const phaseLabel=r.phase==='open'?'● ENTRIES OPEN':'● ENTRIES CLOSED';
             box.innerHTML=`
-                <div class="cc-round-banner">
-                  <div style="font-size:12px;color:var(--text-muted);letter-spacing:1px;font-weight:700;">ROUND #${r.roundId}</div>
-                  <div id="ccTimer" class="cc-timer-big">${remaining}s</div>
-                  <div id="ccPhase" class="cc-phase-pill ${r.phase==='open'?'cc-phase-open':'cc-phase-cool'}">${r.phase==='open'?'● ENTRIES OPEN':'● COOLDOWN — RESULT SOON'}</div>
-                </div>
-                <div class="cc-wallet-mini"><span>💰 Wallet <strong id="ccWalletBalance">${colourClashMoney(walletAmount(), selectedWalletCurrency)}</strong></span>${colourClashCurrencySwitchHtml()}</div>
-                <div id="ccBetLimits" style="font-size:11px;color:var(--text-muted);margin:6px 0 10px;text-align:center;">Bet limits: <b>${colourClashMoney(selectedWalletCurrency==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet,selectedWalletCurrency)}</b> – <b>${colourClashMoney(selectedWalletCurrency==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet,selectedWalletCurrency)}</b></div>
-
-                <div class="cc-section">
-                  <div class="cc-section-title"><span>🎨 PICK A COLOUR</span><span class="cc-pay-tag">Standard ${colourClashConfig.multiplier}x • Special ${colourClashConfig.blueMultiplier}x</span></div>
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-                    <button id="ccRed" class="cc-colour-btn" onclick="selectColourClash('RED')" style="background:linear-gradient(145deg,#991b1b,#dc2626);">RED</button>
-                    <button id="ccGreen" class="cc-colour-btn" onclick="selectColourClash('GREEN')" style="background:linear-gradient(145deg,#047857,#10b981);">GREEN</button>
-                    <button id="ccBlue" class="cc-colour-btn" onclick="selectColourClash('BLUE')" style="background:linear-gradient(145deg,#1d4ed8,#3b82f6);">BLUE</button>
+                <div class="cc-modern-shell">
+                  <div class="cc-brand-strip">
+                    <button type="button" class="cc-back-btn" onclick="closeActiveGame()">‹</button>
+                    <div class="cc-brand-mark"><span class="cc-brand-crown">◆</span><span class="cc-brand-word">WINGO</span></div>
+                    <div class="cc-brand-actions"><span>🎟️</span><span>◔</span></div>
                   </div>
-                  <input id="ccAmount" type="number" min="${selectedWalletCurrency==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet}" max="${selectedWalletCurrency==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet}" placeholder="Enter amount ${selectedWalletCurrency==='USDT'?'(USDT)':'(₹)'}" style="margin-top:12px;">
-                  <button id="ccPlaceBtn" onclick="placeColourClashEntry()" class="btn-green" style="margin-top:8px;">PLACE ENTRY</button>
-                </div>
 
-                <div class="cc-section">
-                  <div class="cc-section-title"><span>🔢 PICK A NUMBER (0-9)</span><span class="cc-pay-tag">Pays ${colourClashConfig.numberMultiplier}x</span></div>
-                  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;">
-                    ${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button id="ccNum${n}" class="cc-num-btn ${ccNumberCssClass(n)}" onclick="selectColourClashNumber(${n})">${n}</button>`).join('')}
+                  <div class="cc-info-ticket">
+                    <div class="cc-ticket-left">
+                      <button type="button" class="cc-how-play" onclick="alert('Choose a colour, number, or Big/Small. Selecting an option opens the amount entry window automatically.')">▣ &nbsp;How to play</button>
+                      <div class="cc-wingo-label">RECENT RESULTS</div>
+                      <div id="ccRecentResults" class="cc-recent-results"><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span></div>
+                    </div>
+                    <div class="cc-ticket-divider"></div>
+                    <div class="cc-ticket-right">
+                      <div class="cc-time-label">Time remaining</div>
+                      <div id="ccTimer" class="cc-digital-timer">${String(Math.floor(remaining/60)).padStart(2,'0')}<b>:</b>${String(remaining%60).padStart(2,'0')}</div>
+                      <div class="cc-period-number">${r.roundId}</div>
+                    </div>
                   </div>
-                  <input id="ccNumberAmount" type="number" min="${selectedWalletCurrency==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet}" max="${selectedWalletCurrency==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet}" placeholder="Enter amount ${selectedWalletCurrency==='USDT'?'(USDT)':'(₹)'}" style="margin-top:12px;">
-                  <button id="ccNumberPlaceBtn" onclick="placeColourClashNumberEntry()" class="btn-green" style="margin-top:8px;">PLACE NUMBER ENTRY</button>
-                </div>
 
-                <div class="cc-section">
-                  <div class="cc-section-title"><span>📏 PICK BIG / SMALL</span><span class="cc-pay-tag">Pays ${colourClashConfig.sizeMultiplier}x</span></div>
-                  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
-                    <button id="ccSmall" class="cc-size-btn cc-size-small" onclick="selectColourClashSize('SMALL')">SMALL (0-4)</button>
-                    <button id="ccBig" class="cc-size-btn cc-size-big" onclick="selectColourClashSize('BIG')">BIG (5-9)</button>
+                  <div class="cc-wallet-modern"><div class="cc-wallet-main"><span class="cc-wallet-label">WALLET</span><span class="cc-wallet-value"><span class="cc-wallet-coin">G</span><strong id="ccWalletBalance">${colourClashMoney(walletAmount(), selectedWalletCurrency)}</strong></span>${colourClashCurrencySwitchHtml()}</div><div class="cc-phase-row"><span id="ccPhase" class="cc-phase-pill ${r.phase==='open'?'cc-phase-open':'cc-phase-cool'}">${phaseLabel}</span></div></div>
+                  <div id="ccBetLimits" class="cc-limit-modern"><span>BET LIMIT</span> ${colourClashMoney(selectedWalletCurrency==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet,selectedWalletCurrency)} — ${colourClashMoney(selectedWalletCurrency==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet,selectedWalletCurrency)}</div>
+
+                  <div class="cc-bet-panel">
+                    <div class="cc-colour-tabs">
+                      <button id="ccGreen" class="cc-colour-tab cc-tab-green" onclick="selectColourClash('GREEN')"><span class="cc-tab-dot"></span>Green</button>
+                      <button id="ccBlue" class="cc-colour-tab cc-tab-blue" onclick="selectColourClash('VIOLET')"><span class="cc-tab-dot"></span>Violet</button>
+                      <button id="ccRed" class="cc-colour-tab cc-tab-red" onclick="selectColourClash('RED')"><span class="cc-tab-dot"></span>Red</button>
+                    </div>
+
+                    <div class="cc-number-panel">
+                      <div class="cc-number-grid">
+                        ${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button id="ccNum${n}" class="cc-number-ball ${ccNumberCssClass(n)}" onclick="selectColourClashNumber(${n})"><span>${n}</span></button>`).join('')}
+                      </div>
+                    </div>
+
+                    <div class="cc-big-small-row">
+                      <button id="ccBig" class="cc-big-small cc-big" onclick="selectColourClashSize('BIG')">Big</button>
+                      <button id="ccSmall" class="cc-big-small cc-small" onclick="selectColourClashSize('SMALL')">Small</button>
+                    </div>
                   </div>
-                  <input id="ccSizeAmount" type="number" min="${selectedWalletCurrency==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet}" max="${selectedWalletCurrency==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet}" placeholder="Enter amount ${selectedWalletCurrency==='USDT'?'(USDT)':'(₹)'}" style="margin-top:12px;">
-                  <button id="ccSizePlaceBtn" onclick="placeColourClashSizeEntry()" class="btn-green" style="margin-top:8px;">PLACE BIG / SMALL ENTRY</button>
-                </div>
 
-                <div class="cc-section">
-                  <div class="cc-section-title">🎟️ MY ENTRIES THIS ROUND</div>
-                  <div id="ccMyEntries">Loading your entries...</div>
-                </div>
-                <div class="cc-section">
-                  <div class="cc-section-title">📜 MY ENTRY HISTORY</div>
-                  <div id="ccMyHistory" class="cc-scroll-list">Loading your history...</div>
-                </div>
-                <div class="cc-section">
-                  <div class="cc-section-title">📜 ROUND HISTORY</div>
-                  <div id="ccRoundHistory" class="cc-scroll-list">Loading history...</div>
+                  <div class="cc-history-tabs">
+                    <button class="cc-history-tab active" onclick="setColourClashHistoryTab('game',this)">Game history</button>
+                    <button class="cc-history-tab" onclick="setColourClashHistoryTab('mine',this)">My history</button>
+                  </div>
+
+                  <div id="ccHistoryGamePanel" class="cc-history-panel active">
+                    <div class="cc-history-table-head"><span>Period</span><span>Number</span><span>Big Small</span><span>Color</span></div>
+                    <div id="ccRoundHistory" class="cc-history-table-body">Loading history...</div>
+                  </div>
+                  <div id="ccHistoryMinePanel" class="cc-history-panel">
+                    <div class="cc-chart-title">My entries</div>
+                    <div id="ccMyEntries" class="cc-my-entries-modern">Loading your entries...</div>
+                    <div class="cc-chart-title cc-my-history-title">My history</div>
+                    <div id="ccMyHistory" class="cc-my-history-modern">Loading your history...</div>
+                  </div>
                 </div>`;
             startColourClashTimer(); syncColourClashSelections(); setColourClashCurrency(selectedWalletCurrency); loadColourClashMyEntries(r.roundId); loadColourClashMyHistory(); loadColourClashHistory(); listenColourClashResult(r.roundId);
         }
+        function closeColourClashEntryModal(){
+            const modal=document.getElementById('ccEntryAmountModal');
+            if(modal) modal.remove();
+        }
+        function openColourClashEntryModal(type){
+            const r=getColourClashRoundState();
+            if(r.phase!=='open') return alert('Entries are closed for this round.');
+            if(type==='colour' && !colourClashSelected) return alert('Please select RED, GREEN or VIOLET.');
+            if(type==='number' && (colourClashSelectedNumber===null || colourClashSelectedNumber===undefined)) return alert('Please select a number from 0 to 9.');
+            if(type==='size' && !colourClashSelectedSize) return alert('Please select BIG or SMALL.');
+
+            closeColourClashEntryModal();
+            const c=selectedWalletCurrency==='USDT'?'USDT':'INR';
+            const min=c==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet;
+            const max=c==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet;
+            let targetLabel='';
+            let accentClass='cc-modal-accent';
+            if(type==='colour'){
+                targetLabel=`${colourClashSelected==='RED'?'🔴':colourClashSelected==='GREEN'?'🟢':'🟣'} ${colourClashSelected}`;
+                accentClass=colourClashSelected==='RED'?'cc-modal-red':colourClashSelected==='GREEN'?'cc-modal-green':'cc-modal-violet';
+            }else if(type==='number'){
+                targetLabel=`🔢 NUMBER ${colourClashSelectedNumber}`;
+                accentClass='cc-modal-gold';
+            }else{
+                targetLabel=`📏 ${colourClashSelectedSize}`;
+                accentClass=colourClashSelectedSize==='BIG'?'cc-modal-orange':'cc-modal-violet';
+            }
+            const amountId=type==='colour'?'ccAmount':type==='number'?'ccNumberAmount':'ccSizeAmount';
+            const placeFn=type==='colour'?'placeColourClashEntry()':type==='number'?'placeColourClashNumberEntry()':'placeColourClashSizeEntry()';
+            const modal=document.createElement('div');
+            modal.id='ccEntryAmountModal';
+            modal.className='cc-entry-modal-backdrop';
+            modal.innerHTML=`
+              <div class="cc-entry-modal" role="dialog" aria-modal="true" aria-label="Place WINGO entry">
+                <button type="button" class="cc-entry-modal-close" onclick="closeColourClashEntryModal()">×</button>
+                <div class="cc-entry-modal-kicker">PLACE ENTRY</div>
+                <div class="cc-entry-modal-target ${accentClass}">${targetLabel}</div>
+                <div class="cc-entry-modal-round">Round #${r.roundId} • ${c}</div>
+                <div class="cc-entry-modal-label">ENTRY AMOUNT</div>
+                <input id="${amountId}" class="cc-entry-modal-input" type="number" inputmode="decimal" min="${min}" max="${max}" step="${c==='USDT'?'0.0001':'0.01'}" placeholder="${c==='USDT'?'Enter USDT amount':'Enter amount in ₹'}" autofocus>
+                <div class="cc-entry-modal-limit">Minimum ${colourClashMoney(min,c)} • Maximum ${colourClashMoney(max,c)}</div>
+                <button type="button" id="${type==='colour'?'ccPlaceBtn':type==='number'?'ccNumberPlaceBtn':'ccSizePlaceBtn'}" class="cc-entry-modal-submit" onclick="${placeFn}">CONFIRM &amp; PLACE ENTRY</button>
+              </div>`;
+            modal.addEventListener('click',e=>{if(e.target===modal)closeColourClashEntryModal();});
+            document.body.appendChild(modal);
+            const input=document.getElementById(amountId);
+            if(input) setTimeout(()=>input.focus(),50);
+        }
+
         function syncColourClashSelections(){
-            ['RED','GREEN','BLUE'].forEach(x=>{
-                const e=document.getElementById('cc'+x[0]+x.slice(1).toLowerCase());
-                if(e) e.classList.toggle('selected', x===colourClashSelected);
+            [['RED','ccRed'],['GREEN','ccGreen'],['VIOLET','ccBlue']].forEach(([x,id])=>{
+                const e=document.getElementById(id);
+                if(e) e.classList.toggle('selected', x===colourClashSelected || (x==='VIOLET' && colourClashSelected==='BLUE'));
             });
             for(let i=0;i<=9;i++){
                 const e=document.getElementById('ccNum'+i);
@@ -5044,11 +5246,11 @@
         }
         function selectColourClash(c){
             if(getColourClashRoundState().phase!=='open') return alert('Entries are closed for this round.');
-            colourClashSelected=c; syncColourClashSelections();
+            colourClashSelected=c; syncColourClashSelections(); openColourClashEntryModal('colour');
         }
         function selectColourClashNumber(n){
             if(getColourClashRoundState().phase!=='open') return alert('Entries are closed for this round.');
-            colourClashSelectedNumber=n; syncColourClashSelections();
+            colourClashSelectedNumber=n; syncColourClashSelections(); openColourClashEntryModal('number');
         }
         function debitColourClashWallet(amount){
             const userRef=db.ref('users/'+currentUid);
@@ -5074,7 +5276,7 @@
 
         function placeColourClashEntry(){
             const r=getColourClashRoundState(); if(r.phase!=='open') return alert('Round is in cooldown.');
-            if(!colourClashSelected) return alert('Please select RED, GREEN or BLUE.');
+            if(!colourClashSelected) return alert('Please select RED, GREEN or VIOLET.');
             const amount=Number(document.getElementById('ccAmount').value);
             const minBet = selectedWalletCurrency==='USDT' ? colourClashConfig.minBetUsdt : colourClashConfig.minBet;
             const maxBet = selectedWalletCurrency==='USDT' ? colourClashConfig.maxBetUsdt : colourClashConfig.maxBet;
@@ -5086,13 +5288,13 @@
                 const ref=db.ref('colour_clash/entries').push();
                 return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,colour:colourClashSelected,betType:'colour',status:'pending',timestamp:Date.now()})
                     .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
-            }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: ${colourClashSelected} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); document.getElementById('ccAmount').value=''; })
+            }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: ${colourClashSelected} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccPlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
         }
         function selectColourClashSize(size){
             if(getColourClashRoundState().phase!=='open') return alert('Entries are closed for this round.');
-            colourClashSelectedSize=size; syncColourClashSelections();
+            colourClashSelectedSize=size; syncColourClashSelections(); openColourClashEntryModal('size');
         }
         function placeColourClashSizeEntry(){
             const r=getColourClashRoundState(); if(r.phase!=='open') return alert('Round is in cooldown.');
@@ -5107,7 +5309,7 @@
             debitColourClashWallet(amount).then(()=>{
                 return db.ref('colour_clash/entries').push().set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,size:colourClashSelectedSize,betType:'size',status:'pending',timestamp:Date.now()})
                     .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
-            }).then(()=>{ try { trackMissionEvent('bet_placed',1); trackMissionEvent('wager_amount',amount); } catch(e){} alert(`Entry placed: ${colourClashSelectedSize} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); document.getElementById('ccSizeAmount').value=''; })
+            }).then(()=>{ try { trackMissionEvent('bet_placed',1); trackMissionEvent('wager_amount',amount); } catch(e){} alert(`Entry placed: ${colourClashSelectedSize} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccSizePlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
         }
@@ -5125,7 +5327,7 @@
                 const ref=db.ref('colour_clash/entries').push();
                 return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,number:colourClashSelectedNumber,betType:'number',status:'pending',timestamp:Date.now()})
                     .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
-            }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: Number ${colourClashSelectedNumber} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); document.getElementById('ccNumberAmount').value=''; })
+            }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: Number ${colourClashSelectedNumber} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccNumberPlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
         }
@@ -5143,19 +5345,19 @@
                 liveEl.innerHTML = rows.length ? rows.map(e=>{
                     if(e.betType==='number'){
                         const nc=ccNumberColour(e.number); const ns=ccNumberSize(e.number);
-                        return `<span class="cc-chip ${nc==='BLUE'?'cc-chip-blue':nc==='GREEN'?'cc-chip-green':'cc-chip-red'}">₹${e.amount} → Number ${e.number} (${ns})</span>`;
+                        return `<span class="cc-chip ${(nc==='VIOLET'||nc==='BLUE')?'cc-chip-violet':nc==='GREEN'?'cc-chip-green':'cc-chip-red'}">₹${e.amount} → Number ${e.number} (${ns})</span>`;
                     }
                     if(e.betType==='size'){
                         return `<span class="cc-chip ${e.size==='BIG'?'cc-chip-red':'cc-chip-blue'}">₹${e.amount} → ${e.size}</span>`;
                     }
-                    const cls = e.colour==='RED'?'cc-chip-red':e.colour==='GREEN'?'cc-chip-green':'cc-chip-blue';
+                    const cls = e.colour==='RED'?'cc-chip-red':e.colour==='GREEN'?'cc-chip-green':'cc-chip-violet';
                     return `<span class="cc-chip ${cls}">₹${e.amount} → ${ccColourDot(e.colour)}</span>`;
                 }).join('') : '<span style="color:var(--text-muted);">No entries in this round yet.</span>';
             };
             ccMyEntriesRef.on('value', ccMyEntriesListener);
         }
         // Shows this player's past entries across all rounds — kept until an admin deletes them
-        // (see admin's Colour Clash "Users' Entry History" panel). Not tied to the current round.
+        // (see admin's WINGO "Users' Entry History" panel). Not tied to the current round.
         let ccMyHistoryRef=null, ccMyHistoryListener=null;
         let ccMyHistoryRef2=null, ccMyHistoryListener2=null;
         // Keep the latest snapshot from each query path, then rebuild the full list from all of them.
@@ -5212,7 +5414,7 @@
             const header = `<div style="color:var(--text-muted);font-size:11px;margin-bottom:8px;font-weight:700;">Showing all ${rows.length} entr${rows.length===1?'y':'ies'} (newest first)</div>`;
             liveEl.innerHTML = header + rows.map(e=>{
                 const betLabel = e.betType==='number' ? `<strong>${e.number}</strong> • ${ccNumberSize(e.number)} • ${ccColourDots(ccNumberColours(e.number))}` : e.betType==='size' ? (e.size || '—') : ccColourDot(e.colour);
-                const chipCls = e.betType==='number' ? (ccNumberColour(e.number)==='BLUE'?'cc-chip-blue':ccNumberColour(e.number)==='GREEN'?'cc-chip-green':'cc-chip-red') : e.betType==='size' ? 'cc-chip-blue' : (e.colour==='RED'?'cc-chip-red':e.colour==='GREEN'?'cc-chip-green':'cc-chip-blue');
+                const chipCls = e.betType==='number' ? ((ccNumberColour(e.number)==='VIOLET'||ccNumberColour(e.number)==='BLUE')?'cc-chip-violet':ccNumberColour(e.number)==='GREEN'?'cc-chip-green':'cc-chip-red') : e.betType==='size' ? 'cc-chip-blue' : (e.colour==='RED'?'cc-chip-red':e.colour==='GREEN'?'cc-chip-green':'cc-chip-violet');
                 const statusCls = e.status==='win'?'cc-status-win':e.status==='loss'?'cc-status-loss':'cc-status-pending';
                 const statusLabel = e.status==='win'?`WON ₹${e.winAmount||0}`:e.status==='loss'?'LOST':'PENDING';
                 return `<div class="cc-history-item" data-entry-key="${e.key}">
@@ -5221,7 +5423,7 @@
                 </div>`;
             }).join('');
         }
-        // Colour Clash result popup: show once when one of this player's pending entries changes to win/loss.
+        // WINGO result popup: show once when one of this player's pending entries changes to win/loss.
         const ccSettlementSeenStates = Object.create(null);
         let ccSettlementPopupQueue = [];
         let ccSettlementPopupOpen = false;
@@ -5346,10 +5548,10 @@
             colourClashTimer=setInterval(()=>{
                 const box=document.getElementById('ccTimer'); if(!box){clearInterval(colourClashTimer);return;}
                 const r=getColourClashRoundState();
-                box.innerText=Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000))+'s';
+                {const sec=Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000)); box.innerText=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');}
                 const walletMini=document.getElementById('ccWalletBalance'); if(walletMini) walletMini.innerText=colourClashMoney(selectedWalletCurrency==='USDT'?Number(currentUsdtBalance||0):Number(currentBalance||0), selectedWalletCurrency);
-                const phase=document.getElementById('ccPhase'); if(phase){ phase.innerText=r.phase==='open'?'● ENTRIES OPEN':'● COOLDOWN — RESULT SOON'; phase.className='cc-phase-pill '+(r.phase==='open'?'cc-phase-open':'cc-phase-cool'); }
-                const ids=['ccRed','ccGreen','ccBlue','ccPlaceBtn','ccAmount','ccNumberPlaceBtn','ccNumberAmount','ccSmall','ccBig','ccSizePlaceBtn','ccSizeAmount'];
+                const phase=document.getElementById('ccPhase'); if(phase){ phase.innerText=r.phase==='open'?'● ENTRIES OPEN':'● ENTRIES CLOSED'; phase.className='cc-phase-pill '+(r.phase==='open'?'cc-phase-open':'cc-phase-cool'); }
+                const ids=['ccRed','ccGreen','ccBlue','ccSmall','ccBig'];
                 for(let i=0;i<=9;i++) ids.push('ccNum'+i);
                 ids.forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=r.phase!=='open';});
                 if(r.roundId!==colourClashCurrentRoundId){ renderColourClash(); return; }
@@ -5373,6 +5575,11 @@
             });
         }
 
+        function setColourClashHistoryTab(tab,btn){
+            document.querySelectorAll('.cc-history-tab').forEach(x=>x.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            ['game','chart','mine'].forEach(x=>{const e=document.getElementById('ccHistory'+(x==='game'?'Game':x==='chart'?'Chart':'Mine')+'Panel');if(e)e.classList.toggle('active',x===tab);});
+        }
         function loadColourClashHistory(){
             const el=document.getElementById('ccRoundHistory'); if(!el) return;
             db.ref('colour_clash/rounds').limitToLast(30).once('value').then(snap=>{
@@ -5383,21 +5590,41 @@
                     rows.push({id:ch.key,d});
                 });
                 rows.reverse();
-                if(!rows.length){ el.innerHTML='<div style="color:var(--text-muted);padding:10px 0;">No completed rounds yet.</div>'; return; }
+                const recent=rows.slice(0,5);
+                const recentEl=document.getElementById('ccRecentResults');
+                const chartEl=document.getElementById('ccChartResults');
+                if(recentEl){
+                    recentEl.innerHTML=(recent.length?recent.reverse():[]).map(x=>{
+                        const n=x.d.resultNumber!==undefined?Number(x.d.resultNumber):null;
+                        const cls=n===null?'cc-recent-empty':ccNumberCssClass(n);
+                        return `<span class="cc-recent-ball ${cls}">${n===null?'•':n}</span>`;
+                    }).join('') || '<span class="cc-recent-ball cc-recent-empty">•</span>'.repeat(5);
+                }
+                if(chartEl){
+                    const chartRows=rows.slice(0,10).map(x=>{
+                        const n=x.d.resultNumber!==undefined?Number(x.d.resultNumber):null;
+                        return `<div class="cc-chart-row"><span>#${x.d.roundId||x.id}</span><strong class="${n===null?'':ccNumberCssClass(n)}">${n===null?'—':n}</strong><span>${n===null?'—':ccNumberSize(n)}</span><span>${n===null?'—':ccNumberColour(n)}</span></div>`;
+                    }).join('');
+                    chartEl.innerHTML=chartRows||'<div class="cc-empty-modern">No completed rounds yet.</div>';
+                }
+                if(!rows.length){ el.innerHTML='<div class="cc-empty-modern">No completed rounds yet.</div>'; return; }
                 el.innerHTML=rows.map(x=>{
-                    const derivedColours = x.d.resultNumber!==undefined && x.d.resultNumber!==null ? ccNumberColours(x.d.resultNumber) : [x.d.result];
-                    const derivedColour = derivedColours.join(' + ');
-                    const numberPart = (x.d.resultNumber!==undefined && x.d.resultNumber!==null)
-                        ? `<span class="cc-result-inline"><strong>${x.d.resultNumber}</strong> <span style="color:var(--text-muted);">${ccNumberSize(x.d.resultNumber)}</span> <span class="cc-result-dots">${ccColourDots(ccNumberColours(x.d.resultNumber))}</span></span>`
-                        : '<span style="color:var(--text-muted);">—</span>';
-                    return `<div class="cc-round-item">
-                        <div class="cc-round-meta">
-                            <span class="cc-round-id">Round #${x.d.roundId || x.id}</span>
-                        </div>
-                        <span>${numberPart}</span>
+                    const n=x.d.resultNumber!==undefined&&x.d.resultNumber!==null?Number(x.d.resultNumber):null;
+                    const colours=n===null?[]:ccNumberColours(n);
+                    const colour=n===null?'':ccNumberColour(n);
+                    const colourClass=colour==='GREEN'?'green':colour==='RED'?'red':'violet';
+                    return `<div class="cc-history-row">
+                        <span class="cc-period-cell">${x.d.roundId||x.id}</span>
+                        <strong class="cc-history-number ${n===null?'':ccNumberCssClass(n)}">${n===null?'—':n}</strong>
+                        <span class="cc-size-cell">${n===null?'—':ccNumberSize(n)}</span>
+                        <span class="cc-colour-cell">
+                            <span class="cc-result-dots" title="${n===0?'RED + VIOLET':n===5?'GREEN + VIOLET':colour}">
+                                ${colours.map(c=>`<i class="cc-result-dot ${c==='GREEN'?'green':c==='RED'?'red':'violet'}"></i>`).join('')}
+                            </span>
+                        </span>
                     </div>`;
                 }).join('');
-            });
+            }).catch(()=>{el.innerHTML='<div class="cc-empty-modern">Could not load history.</div>';});
         }
         async function resolveColourClashRoundColour(roundId){
             if(Date.now() < Math.max(0,(Number(roundId)||1)-1)*colourClashCycleMs()+colourClashCycleMs()) return;
@@ -6113,13 +6340,37 @@
             activeGameCurrentFee = 0;
         }
 
+        function prepareRocketForRestart() {
+            const startBtn = document.getElementById('rocketStartBtn');
+            const cashoutBtn = document.getElementById('rocketCashoutBtn');
+            const customEl = document.getElementById('userCustomPlayAmount');
+            if (startBtn) {
+                startBtn.classList.remove('hidden');
+                startBtn.disabled = false;
+                startBtn.innerText = '🔄 Play Again';
+            }
+            if (cashoutBtn) cashoutBtn.classList.add('hidden');
+            if (customEl) customEl.disabled = false;
+            refreshGameWalletPanel();
+            const info = document.getElementById('activeGameInfo');
+            if (info) {
+                const c = activeGameCurrency;
+                const fee = Number(info.dataset.entryFee) || 0;
+                const custom = info.dataset.allowUserAmount === 'true';
+                info.dataset.baseInfo = custom ? 'Mode: Set Your Own Amount' : `Entry Fee: ${fee === 0 ? 'Free' : gameMoney(fee, c)}`;
+                info.innerText = `${info.dataset.baseInfo} • ${gameMoney(gameCurrencyAmount(c), c)} wallet`;
+            }
+        }
+
         function initRocketJump(defaultFee, allowUserAmount) {
             const fee = getDeductedFee(defaultFee, allowUserAmount);
             if (fee === null) return;
             activeGameCurrentFee = fee;
+            const startBtn = document.getElementById('rocketStartBtn');
+            const cashoutBtn = document.getElementById('rocketCashoutBtn');
+            if (startBtn) { startBtn.classList.add('hidden'); startBtn.disabled = true; }
+            if (cashoutBtn) { cashoutBtn.classList.remove('hidden'); cashoutBtn.disabled = false; }
 
-            document.getElementById('rocketStartBtn').classList.add('hidden');
-            document.getElementById('rocketCashoutBtn').classList.remove('hidden');
             if (allowUserAmount) {
                 const customEl = document.getElementById('userCustomPlayAmount');
                 if (customEl) customEl.disabled = true;
@@ -6168,7 +6419,7 @@
                         rocketShip.style.bottom = (18 + progress * 170) + 'px';
                         rocketShip.style.left = (50 + Math.sin(currentRocketMultiplier * 1.8) * 18) + '%';
                     }
-                    const potentialWin = Math.floor(activeGameCurrentFee * currentRocketMultiplier);
+                    const potentialWin = Number((Number(activeGameCurrentFee || 0) * Number(currentRocketMultiplier || 0)).toFixed(2));
                     if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (₹${potentialWin})`;
 
                     if (currentRocketMultiplier >= rocketCrashPoint) {
@@ -6183,6 +6434,7 @@
                         logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, 0, 'loss');
                         alert(`💥 Rocket crashed at ${rocketCrashPoint.toFixed(2)}x! You lost.`);
                         lockBackToMenu();
+                        prepareRocketForRestart();
                     }
                 }, 90);
             });
@@ -6193,15 +6445,26 @@
             isRocketCashedOut = true;
             clearInterval(rocketInterval);
 
-            const winAmount = Math.floor(activeGameCurrentFee * currentRocketMultiplier);
-            if (activeGameCurrency === 'USDT') currentUsdtBalance += winAmount; else currentBalance += winAmount;
-            db.ref('users/' + currentUid).update({ usdtBalance: currentUsdtBalance, balance: currentBalance }).then(() => {
+            const winAmount = Number((Number(activeGameCurrentFee || 0) * Number(currentRocketMultiplier || 0)).toFixed(2));
+            if (activeGameCurrency === 'USDT') currentUsdtBalance = Number((Number(currentUsdtBalance || 0) + winAmount).toFixed(4)); else currentBalance = Number((Number(currentBalance || 0) + winAmount).toFixed(2));
+            const updatedWallet = { usdtBalance: Number(currentUsdtBalance || 0), balance: Number(currentBalance || 0) };
+            db.ref('users/' + currentUid).update(updatedWallet).then(() => {
+                refreshGameWalletPanel();
+                const info = document.getElementById('activeGameInfo');
+                if (info) info.innerText = `${info.dataset.baseInfo || ''} • ${gameMoney(gameCurrencyAmount(), activeGameCurrency)} wallet`.replace(/^ • /, '');
+                updateWalletCurrencyUI();
                 document.getElementById('rocketStatusDisplay').innerText = '✅ CASHED OUT!';
                 document.getElementById('rocketStatusDisplay').style.color = '#34d399';
                 document.getElementById('rocketCashoutBtn').classList.add('hidden');
                 logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, winAmount, 'win');
                 alert(`🎉 Successfully cashed out at ${currentRocketMultiplier.toFixed(2)}x! Won ${gameMoney(winAmount, activeGameCurrency)}.`);
                 lockBackToMenu();
+                prepareRocketForRestart();
+            }).catch(err => {
+                isRocketCashedOut = false;
+                if (document.getElementById('rocketCashoutBtn')) document.getElementById('rocketCashoutBtn').classList.remove('hidden');
+                console.error('Rocket Jump cashout wallet update failed:', err);
+                alert('Cash out could not be completed. Please try again.');
             });
         }
 
@@ -6225,21 +6488,27 @@
             }
 
             contentBox.innerHTML = `
-                <div id="minesCurrencyPanel">${gameCurrencySwitcherHtml()}</div>
-                <div id="minesBetLimits" style="font-size:11px;color:var(--text-muted);margin:6px 0 10px;text-align:center;">Bet limits: <b>${gameMoney(setupMin, setupCurrency)}</b> – <b>${gameMoney(setupMax, setupCurrency)}</b></div>
-                <p style="margin-top:0; color:var(--text-muted);">💣 Reveal safe tiles to build your multiplier — cash out anytime before you hit a mine!</p>
+                <div class="mines-hero">
+                    <div class="mines-hero-title">💣 MINES — REVEAL & WIN</div>
+                    <div class="mines-hero-sub">Pick safe tiles, grow your multiplier and cash out before a mine ends the round.</div>
+                </div>
+                <div class="mines-stat-strip">
+                    <div class="mines-stat"><span>Mine Range</span><b>${minesConfig.minMines}-${minesConfig.maxMines}</b></div>
+                    <div class="mines-stat"><span>Board</span><b>25 Tiles</b></div>
+                </div>
+                <div id="minesBetLimits" style="font-size:11px;color:var(--text-muted);margin:7px 0 10px;text-align:center;">Bet limits: <b>${gameMoney(setupMin, setupCurrency)}</b> – <b>${gameMoney(setupMax, setupCurrency)}</b></div>
                 <input id="minesBetInput" type="number" placeholder="Bet Amount (${activeGameCurrency === 'USDT' ? 'USDT' : '₹'})" value="${activeGameCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || minesConfig.minBet) : Number(minesConfig.minBet)}" min="${activeGameCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || minesConfig.minBet) : Number(minesConfig.minBet)}" max="${activeGameCurrency === 'USDT' ? Number(minesConfig.maxBetUsdt || minesConfig.maxBet) : Number(minesConfig.maxBet)}">
                 <select id="minesCountSelect">${mineOptions}</select>
-                <button id="minesStartBtn" onclick="startMinesGame()" class="btn-green">Start Game</button>
-
+                <button id="minesStartBtn" onclick="startMinesGame()" class="btn-green">🚀 START MINES</button>
                 <div id="minesPlayWrap" class="hidden">
                     <div class="mines-info-row">
                         <span>Multiplier: <b id="minesMultiplierDisplay" style="color:#facc15;">1.00x</b></span>
-                        <span>Potential Win: <b id="minesPotentialWin" style="color:#34d399;">₹0</b></span>
+                        <span>Potential Win: <b id="minesPotentialWin" style="color:#34d399;">${gameMoney(0, setupCurrency)}</b></span>
                     </div>
                     <div id="minesGrid" class="mines-grid"></div>
-                    <button id="minesCashoutBtn" onclick="cashoutMines()" class="btn-yellow hidden">💰 Cash Out</button>
+                    <button id="minesCashoutBtn" onclick="cashoutMines()" class="btn-yellow hidden">💰 CASH OUT</button>
                 </div>
+                <div style="margin-top:8px;font-size:9px;color:var(--text-muted);text-align:center;">⚠️ Safe tiles increase the multiplier. Hitting a mine ends the round.</div>
             `;
         }
 
@@ -6836,7 +7105,7 @@ async function openActiveRules(){
         if(mr.blockDeposits)gvRuleAdd(manualLines,'Deposits','Blocked by administrator');
         if(mr.blockWithdrawals)gvRuleAdd(manualLines,'Withdrawals','Blocked by administrator');
         if(mr.blockGiftCodes)gvRuleAdd(manualLines,'Gift codes','Blocked by administrator');
-        if(mr.blockColourClash)gvRuleAdd(manualLines,'Colour Clash','Blocked by administrator');
+        if(mr.blockColourClash)gvRuleAdd(manualLines,'WINGO','Blocked by administrator');
         if(mr.blockRewards)gvRuleAdd(manualLines,'Daily rewards / bonuses','Blocked by administrator');
         if(mr.blockMissions)gvRuleAdd(manualLines,'Missions / mission rewards','Blocked by administrator');
         if(manualLines.length){
@@ -6950,7 +7219,7 @@ window.getWithdrawalRestrictionStatus=async function(currency){
   }
   return Object.assign(base,{bonusRequiredTurnover:required,bonusWagered:wagered,bonusTurnoverLeft:Math.max(0,required-wagered)});
 };
-/* Block Colour Clash resolution until the full entry + cooldown cycle has elapsed. */
+/* Block WINGO resolution until the full entry + cooldown cycle has elapsed. */
 const _baseValidateWithdrawalRestrictions=window.validateWithdrawalRestrictions;
 window.validateWithdrawalRestrictions=async function(amount,currency){
   const result=await _baseValidateWithdrawalRestrictions(amount,currency);if(result)return result;
@@ -7122,7 +7391,7 @@ window.refreshBonusRestrictionStatus=function(){
   },50);
 };
 
-/* Add the most important bet checks to Colour Clash and the shared quick-play fee path. */
+/* Add the most important bet checks to WINGO and the shared quick-play fee path. */
 const _gvOriginalGetDeductedFee=window.getDeductedFee;
 window.getDeductedFee=function(defaultFee,allowUserAmount){
   const mr=gvManualRestrictions(currentUserProfile),c=safetyRestrictionConfig||{},st=safetyUserStats||{};
@@ -7169,13 +7438,13 @@ if(typeof _gvManualGiftWrapper==='function'){
   };
 }
 
-/* Colour Clash */
+/* WINGO */
 const _gvManualCC1=window.placeColourClashEntry;
 const _gvManualCC2=window.placeColourClashSizeEntry;
 const _gvManualCC3=window.placeColourClashNumberEntry;
 function gvManualCCAllowed(){
   const r=gvExtraManualRestriction(currentUserProfile);
-  if(r.freeze||r.blockBetting||r.blockColourClash){showRestrictionPopup('Colour Clash Restricted','Colour Clash betting is currently blocked for your account by the administrator.');return false;}
+  if(r.freeze||r.blockBetting||r.blockColourClash){showRestrictionPopup('WINGO Restricted','WINGO betting is currently blocked for your account by the administrator.');return false;}
   return true;
 }
 if(typeof _gvManualCC1==='function')window.placeColourClashEntry=function(){if(!gvManualCCAllowed())return;return _gvManualCC1.apply(this,arguments);};
@@ -7194,5 +7463,506 @@ if(typeof _gvManualCC3==='function')window.placeColourClashNumberEntry=function(
   if(typeof orig==='function')window[fn]=function(){const r=gvExtraManualRestriction(currentUserProfile);if(r.freeze||r.blockMissions){showRestrictionPopup('Missions Restricted','Missions and mission rewards are currently blocked for your account by the administrator.');return;}return orig.apply(this,arguments);};
 });
 </script>
+
+<style id="gv-user-app-design-v3">
+/* ===== Game Verse User App — visual refresh v3 ===== */
+:root{--gv-line:rgba(255,255,255,.10);--gv-soft:rgba(255,255,255,.045);--gv-panel:rgba(9,11,16,.94);}
+body{background:radial-gradient(circle at 15% 0%,rgba(70,90,120,.14),transparent 30%),radial-gradient(circle at 90% 78%,rgba(120,90,40,.08),transparent 32%),#020203 !important;padding-left:9px;padding-right:9px;}
+body::before,body::after{opacity:.18 !important;filter:blur(95px) !important;}
+.container{background:linear-gradient(180deg,rgba(8,9,12,.98),rgba(1,1,2,.99)) !important;border:1px solid rgba(255,255,255,.16) !important;border-radius:26px !important;box-shadow:0 24px 70px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.035) inset,0 0 30px rgba(255,255,255,.06) !important;}
+#dash.container{padding:12px 12px 84px !important;}
+.app-header-row{margin:0 -2px 13px !important;padding:7px 5px 10px !important;background:linear-gradient(180deg,rgba(5,6,9,.98),rgba(5,6,9,.80),transparent) !important;border-bottom:1px solid rgba(255,255,255,.07);}
+.app-title{font-size:15px !important;letter-spacing:1.4px !important;}
+.header-icons{gap:6px !important;}
+.rules-icon-btn,.icon-btn{width:38px !important;height:38px !important;border-radius:12px !important;background:linear-gradient(145deg,#111318,#07080b) !important;border-color:rgba(255,255,255,.16) !important;}
+.wallet-card{border:1px solid rgba(255,255,255,.18) !important;border-radius:22px !important;padding:17px !important;background:radial-gradient(circle at 92% 8%,rgba(255,255,255,.10),transparent 32%),linear-gradient(145deg,#111318,#050609 62%,#030304) !important;box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.10) !important;}
+.wallet-card::before{background:linear-gradient(120deg,rgba(255,255,255,.07),transparent 42%,rgba(255,255,255,.025)) !important;}
+.wallet-label{color:#9ca3af !important;font-size:9px !important;letter-spacing:1.7px !important;}
+.wallet-amount{font-size:35px !important;letter-spacing:-1px !important;}
+.wallet-tagline{font-size:11px !important;color:#b7b7b7 !important;}
+.home-action-row{gap:8px !important;margin-top:10px !important;}
+.home-action-btn{border-radius:14px !important;padding:12px 10px !important;box-shadow:0 10px 24px rgba(0,0,0,.24) !important;}
+.home-history-link{border:1px solid rgba(255,255,255,.10) !important;background:linear-gradient(145deg,#101217,#07080b) !important;color:#d7d7d7 !important;border-radius:14px !important;}
+.section-label{margin-top:18px !important;color:#a8a8a8 !important;}
+.explore-list{gap:7px !important;}
+.explore-item{background:linear-gradient(145deg,#0d0f13,#07080a) !important;border:1px solid rgba(255,255,255,.09) !important;border-radius:15px !important;padding:11px 12px !important;box-shadow:0 8px 22px rgba(0,0,0,.18) !important;}
+.explore-item:hover{border-color:rgba(255,255,255,.22) !important;background:#101217 !important;box-shadow:0 10px 28px rgba(0,0,0,.3) !important;}
+.explore-icon{width:40px !important;height:40px !important;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);}
+.explore-title{font-size:13px !important;}
+.explore-sub{font-size:10.5px !important;color:#777 !important;}
+.section-card,.profile-hero,.profile-stat,.refer-stat,.prediction-card,.reward-card,.tournament-card{background:linear-gradient(145deg,#0d0f13,#060709) !important;border-color:rgba(255,255,255,.09) !important;box-shadow:0 10px 26px rgba(0,0,0,.22) !important;}
+input,select,textarea{background:#07080a !important;border-color:rgba(255,255,255,.12) !important;}
+button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient(145deg,#111318,#07080a) !important;border-color:rgba(255,255,255,.13) !important;box-shadow:0 8px 18px rgba(0,0,0,.20) !important;}
+.bottom-tab-bar{background:linear-gradient(180deg,rgba(9,10,13,.93),rgba(2,2,3,.99)) !important;border-top:1px solid rgba(255,255,255,.10) !important;box-shadow:0 -14px 35px rgba(0,0,0,.72) !important;padding-top:7px !important;}
+.tab-btn{border-radius:13px !important;color:#666 !important;}
+.tab-btn.active{color:#fff !important;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.035)) !important;border-color:rgba(255,255,255,.15) !important;box-shadow:0 7px 18px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.09) !important;}
+.tab-btn .tab-icon{font-size:18px !important;}
+
+/* Play Games Hub */
+.gv-games-hub{position:relative;}
+.gv-games-hero{position:relative;overflow:hidden;padding:16px;border-radius:21px;border:1px solid rgba(255,255,255,.13);background:radial-gradient(circle at 88% 5%,rgba(255,255,255,.11),transparent 26%),linear-gradient(145deg,#12151b,#07080b 62%,#030304);box-shadow:0 18px 38px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);margin-bottom:13px;}
+.gv-games-hero-glow{position:absolute;width:180px;height:180px;right:-70px;top:-90px;border-radius:50%;background:rgba(255,255,255,.08);filter:blur(28px);pointer-events:none;}
+.gv-games-kicker{font-size:8px;letter-spacing:1.8px;color:#8d8d8d;font-weight:900;margin-bottom:4px;}
+.gv-games-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.gv-games-title{font-size:22px !important;margin:0 !important;padding:0 !important;letter-spacing:-.4px !important;}
+.gv-games-title::after{display:none !important;}
+.gv-games-subtitle{font-size:10.5px !important;text-align:left !important;margin:5px 0 0 !important;color:#858585 !important;max-width:255px;line-height:1.4 !important;}
+.gv-games-live-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:999px;border:1px solid rgba(52,211,153,.25);background:rgba(52,211,153,.07);color:#8ef0bb;font-size:8px;font-weight:900;letter-spacing:.5px;white-space:nowrap;}
+.gv-games-live-badge span{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 9px #34d399;animation:gvLivePulse 1.7s infinite;}
+@keyframes gvLivePulse{50%{opacity:.35;transform:scale(.7)}}
+.gv-games-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:13px;}
+.gv-games-stats div{display:flex;align-items:center;gap:6px;padding:8px 7px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);min-width:0;}
+.gv-games-stats b{font-size:13px;}
+.gv-games-stats span{font-size:8px;color:#929292;font-weight:800;white-space:nowrap;}
+.gv-games-section-head{display:flex;align-items:center;justify-content:space-between;margin:13px 2px 7px;font-size:11px;font-weight:900;letter-spacing:.3px;color:#e7e7e7;}
+.gv-games-section-head small{font-size:8px;color:#777;font-weight:800;text-transform:uppercase;letter-spacing:.7px;}
+.gv-featured-game{margin-bottom:0 !important;border-radius:19px !important;padding:13px !important;background:radial-gradient(circle at 100% 0%,rgba(255,255,255,.10),transparent 32%),linear-gradient(145deg,#11141a,#050608) !important;}
+.gv-featured-game .game-thumb{width:54px;height:54px;border-radius:16px;font-size:26px;}
+.gv-games-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.gv-games-grid .game-hub-card{margin:0 !important;padding:11px !important;border-radius:16px !important;background:linear-gradient(145deg,#0e1014,#060709) !important;border:1px solid rgba(255,255,255,.08) !important;box-shadow:0 10px 24px rgba(0,0,0,.25) !important;}
+.gv-games-grid .game-hub-card:hover{transform:translateY(-2px) !important;border-color:rgba(255,255,255,.22) !important;box-shadow:0 14px 28px rgba(0,0,0,.34) !important;}
+.gv-games-grid .gh-row{align-items:flex-start !important;gap:9px !important;}
+.gv-games-grid .game-thumb{width:42px;height:42px;border-radius:13px;font-size:21px;}
+.gv-games-grid .gh-title{font-size:12px !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gv-games-grid .gh-meta{font-size:9px !important;line-height:1.45 !important;margin-top:4px !important;}
+.gv-games-grid .status-pill{font-size:7px !important;padding:3px 6px !important;}
+.gv-games-grid .game-hub-card button{font-size:10px !important;padding:9px 7px !important;border-radius:10px !important;}
+.gv-games-grid .gh-top{gap:4px !important;margin-bottom:3px !important;}
+.gv-all-games-head{margin-top:15px;}
+
+/* Event / mission / content surfaces */
+#tabEvents .tab-panel-header,#tabMissions .tab-panel-header,#tabRefer .tab-panel-header,#tabDaily .tab-panel-header{margin-bottom:10px;}
+.gv-event-grid-card{background:linear-gradient(145deg,#0f1218,#06080b) !important;border-color:rgba(255,255,255,.08) !important;box-shadow:0 10px 25px rgba(0,0,0,.25) !important;}
+
+@media (max-width:390px){
+  .gv-games-grid{grid-template-columns:1fr;}
+  .gv-games-title{font-size:20px !important;}
+  .gv-games-stats span{font-size:7px;}
+}
+@media (min-width:700px){body{padding-top:24px}.container{max-width:480px !important}}
+</style>
+
+<style id="gv-user-requested-ui-fixes-final">
+.home-history-link{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 52%,#1e40af 100%) !important;border:1px solid rgba(147,197,253,.9) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;box-shadow:0 8px 22px rgba(37,99,235,.34),inset 0 1px 0 rgba(255,255,255,.22) !important;text-shadow:0 1px 2px rgba(0,0,0,.35) !important;}
+.home-history-link:hover{background:linear-gradient(135deg,#3b82f6,#2563eb,#1d4ed8) !important;border-color:#bfdbfe !important;color:#fff !important;}
+#gameContentBox .cc-size-btn.cc-size-small{background:linear-gradient(145deg,#047857,#10b981 58%,#059669) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(110,231,183,.8) !important;box-shadow:0 8px 18px rgba(16,185,129,.24),inset 0 1px 0 rgba(255,255,255,.2) !important;}
+#gameContentBox .cc-size-btn.cc-size-big{background:linear-gradient(145deg,#b45309,#f59e0b 58%,#d97706) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(253,230,138,.82) !important;box-shadow:0 8px 18px rgba(245,158,11,.24),inset 0 1px 0 rgba(255,255,255,.2) !important;}
+#gameContentBox .cc-size-btn.selected{transform:translateY(-3px) scale(1.035) !important;border-color:#fff !important;box-shadow:0 0 0 2px rgba(255,255,255,.2),0 0 24px rgba(255,255,255,.35),0 10px 22px rgba(0,0,0,.3) !important;}
+#gameContentBox .mine-tile{background:linear-gradient(145deg,#354052 0%,#253044 48%,#172235 100%) !important;border:1px solid rgba(191,219,254,.42) !important;color:#f8fbff !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 5px 14px rgba(0,0,0,.24),0 0 8px rgba(96,165,250,.06) !important;}
+#gameContentBox .mine-tile:hover:not(:disabled){background:linear-gradient(145deg,#475569,#334155 55%,#1e3a5f) !important;border-color:rgba(147,197,253,.9) !important;box-shadow:0 0 20px rgba(59,130,246,.3),inset 0 1px 0 rgba(255,255,255,.18) !important;}
+#gameContentBox .mines-grid{background:linear-gradient(145deg,rgba(30,41,59,.78),rgba(15,23,42,.72)) !important;border-color:rgba(148,163,184,.18) !important;box-shadow:inset 0 0 24px rgba(59,130,246,.08) !important;}
+</style>
+
+
+<style id="gv-colour-clash-button-medium-final">
+#gameContentBox .cc-size-btn.cc-size-small{background:linear-gradient(145deg,#2563eb,#1d4ed8) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(147,197,253,.8) !important;box-shadow:0 5px 12px rgba(37,99,235,.28),inset 0 1px 0 rgba(255,255,255,.18) !important;}
+#gameContentBox .cc-size-btn.cc-size-big{background:linear-gradient(145deg,#f97316,#ea580c) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:rgba(253,186,116,.85) !important;box-shadow:0 5px 12px rgba(249,115,22,.28),inset 0 1px 0 rgba(255,255,255,.18) !important;}
+#gameContentBox .cc-size-btn.cc-size-small.selected{box-shadow:0 0 0 2px rgba(255,255,255,.16),0 0 12px rgba(37,99,235,.48),0 5px 12px rgba(0,0,0,.28) !important;}
+#gameContentBox .cc-size-btn.cc-size-big.selected{box-shadow:0 0 0 2px rgba(255,255,255,.16),0 0 12px rgba(249,115,22,.48),0 5px 12px rgba(0,0,0,.28) !important;}
+</style>
+
+<style id="gv-colour-clash-entry-modal-v3">
+.cc-entry-trigger{
+  width:100%;margin-top:10px;padding:11px 14px;border-radius:12px;border:1px solid rgba(148,163,184,.35);
+  font-weight:900;letter-spacing:.4px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,filter .15s;
+  background:linear-gradient(135deg,rgba(37,99,235,.92),rgba(124,58,237,.9));
+  box-shadow:0 5px 14px rgba(37,99,235,.2),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.cc-entry-trigger:hover{transform:translateY(-1px);filter:brightness(1.06);}
+.cc-entry-trigger-number{background:linear-gradient(135deg,rgba(217,158,20,.95),rgba(180,83,9,.92));}
+.cc-entry-trigger-size{background:linear-gradient(135deg,rgba(16,185,129,.92),rgba(5,150,105,.92));}
+.cc-entry-modal-backdrop{
+  position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;
+  background:rgba(2,6,23,.72);backdrop-filter:blur(5px);
+}
+.cc-entry-modal{
+  position:relative;width:min(420px,100%);padding:20px;border-radius:18px;
+  background:linear-gradient(145deg,rgba(15,23,42,.99),rgba(30,41,59,.98));
+  border:1px solid rgba(148,163,184,.34);box-shadow:0 18px 50px rgba(0,0,0,.48),0 0 18px rgba(59,130,246,.12);
+}
+.cc-entry-modal-close{
+  position:absolute;right:10px;top:8px;width:32px;height:32px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer;
+}
+.cc-entry-modal-kicker{text-align:center;font-size:10px;letter-spacing:1.5px;font-weight:900;color:var(--text-muted);margin-bottom:7px;}
+.cc-entry-modal-target{text-align:center;font-size:22px;font-weight:1000;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);}
+.cc-modal-red{color:#fca5a5}.cc-modal-green{color:#6ee7b7}.cc-modal-blue{color:#93c5fd}.cc-modal-gold{color:#fde68a}.cc-modal-orange{color:#fdba74}.cc-modal-accent{color:#fff}
+.cc-entry-modal-round{text-align:center;color:var(--text-muted);font-size:11px;margin:8px 0 16px;}
+.cc-entry-modal-label{font-size:10px;font-weight:900;letter-spacing:1px;margin-bottom:6px;color:#cbd5e1;}
+.cc-entry-modal-input{
+  width:100%;box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid rgba(148,163,184,.38);
+  background:#0b1220;color:#fff;font-size:17px;font-weight:800;outline:none;
+}
+.cc-entry-modal-input:focus{border-color:rgba(96,165,250,.8);box-shadow:0 0 0 3px rgba(59,130,246,.12);}
+.cc-entry-modal-limit{text-align:center;color:var(--text-muted);font-size:10px;margin:8px 0 13px;}
+.cc-entry-modal-submit{
+  width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:#fff;font-weight:1000;letter-spacing:.4px;cursor:pointer;box-shadow:0 7px 16px rgba(37,99,235,.22);
+}
+.cc-entry-modal-submit:disabled{opacity:.6;cursor:not-allowed;}
+#gameContentBox .mine-tile{
+  background:linear-gradient(145deg,#53657d 0%,#40516a 48%,#2f4058 100%) !important;
+  border:1px solid rgba(203,213,225,.55) !important;color:#ffffff !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 5px 14px rgba(0,0,0,.22),0 0 9px rgba(96,165,250,.08) !important;
+}
+#gameContentBox .mine-tile:hover:not(:disabled){
+  background:linear-gradient(145deg,#64748b,#4b5f78 55%,#355277) !important;
+  border-color:rgba(191,219,254,.95) !important;
+}
+</style>
+
+
+<style id="gv-colour-clash-reference-ui-v4">
+#gameContentBox .cc-modern-shell{margin:-2px 0 0;padding:0 0 18px;background:linear-gradient(180deg,#202124 0%,#1e1f20 100%);border-radius:18px;overflow:hidden;color:#f8fafc;box-shadow:0 8px 26px rgba(0,0,0,.28)}
+#gameContentBox .cc-brand-strip{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#242629;border-bottom:1px solid rgba(255,255,255,.06)}
+#gameContentBox .cc-back-btn{width:42px;height:42px;border:0;background:transparent;color:#f8fafc;font-size:38px;line-height:1;cursor:pointer}
+#gameContentBox .cc-brand-mark{font-size:23px;font-weight:1000;letter-spacing:1px;background:linear-gradient(180deg,#fff4a6,#f7c948,#b77912);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#gameContentBox .cc-brand-mark span{font-size:17px;margin-right:3px}
+#gameContentBox .cc-brand-actions{display:flex;gap:15px;font-size:22px;color:#e5e7eb}
+#gameContentBox .cc-info-ticket{margin:10px 12px 12px;padding:14px 15px;display:grid;grid-template-columns:1fr 1px 1fr;gap:14px;border-radius:16px;background:linear-gradient(135deg,#fff0a5 0%,#f5d36a 45%,#c9912c 100%);color:#6b4310;box-shadow:0 7px 18px rgba(0,0,0,.24);position:relative}
+#gameContentBox .cc-ticket-left,#gameContentBox .cc-ticket-right{min-width:0}
+#gameContentBox .cc-ticket-divider{border-left:1px dashed rgba(107,67,16,.28)}
+#gameContentBox .cc-how-play{width:100%;padding:9px 12px;border:1px solid rgba(107,67,16,.65);border-radius:999px;background:rgba(255,248,208,.22);color:#805014;font-size:14px;font-weight:800;cursor:pointer}
+#gameContentBox .cc-wingo-label{font-size:16px;font-weight:700;margin:12px 0 8px}
+#gameContentBox .cc-recent-results{display:flex;gap:7px;align-items:center}
+#gameContentBox .cc-recent-ball{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:18px;font-weight:1000;color:#fff;border:3px solid rgba(255,255,255,.72);box-shadow:inset 0 4px 7px rgba(255,255,255,.55),inset 0 -5px 8px rgba(0,0,0,.28),0 3px 8px rgba(0,0,0,.2)}
+#gameContentBox .cc-recent-empty{background:#b6a77a;color:#fff8d6}
+#gameContentBox .cc-recent-ball.cc-num-green{background:linear-gradient(145deg,#d8ffe9,#2ac879 55%,#07884d)!important}
+#gameContentBox .cc-recent-ball.cc-num-red{background:linear-gradient(145deg,#fff,#ff6666 52%,#bd2430)!important}
+#gameContentBox .cc-recent-ball.cc-num-blue-split-red,#gameContentBox .cc-recent-ball.cc-num-blue-split-green{background:linear-gradient(135deg,#6b5cff 0 48%,#f04d76 50% 100%)!important}
+#gameContentBox .cc-time-label{text-align:right;font-size:18px;font-weight:900;margin:3px 0 6px}
+#gameContentBox .cc-digital-timer{display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:31px;font-weight:1000;color:#fff}
+#gameContentBox .cc-digital-timer b{background:transparent;color:#51330d}
+#gameContentBox .cc-digital-timer{font-variant-numeric:tabular-nums}
+#gameContentBox .cc-digital-timer::first-letter{background:#222;color:#fff}
+#gameContentBox .cc-period-number{text-align:right;margin-top:9px;font-size:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#gameContentBox .cc-wallet-modern{display:flex;align-items:center;justify-content:space-between;gap:7px;margin:0 12px 4px;padding:8px 10px;border-radius:10px;background:#2a2b2d;color:#f3f4f6;font-size:12px}
+#gameContentBox .cc-limit-modern{text-align:center;color:#9ca3af;font-size:10px;margin-bottom:9px}
+#gameContentBox .cc-bet-panel{margin:0 12px;padding:12px;border-radius:16px;background:#303132;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+#gameContentBox .cc-colour-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+#gameContentBox .cc-colour-tab{height:50px;border:0;border-radius:9px;color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.15);transition:.15s}
+#gameContentBox .cc-colour-tab:disabled{opacity:.48;cursor:not-allowed}
+#gameContentBox .cc-colour-tab.selected{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 0 0 2px rgba(255,255,255,.5),0 5px 12px rgba(0,0,0,.25)}
+#gameContentBox .cc-tab-green{background:#12b75d}.cc-tab-blue{background:#9743d4}.cc-tab-red{background:#d9363e}
+#gameContentBox .cc-tab-dot{display:none;width:12px;height:12px;border-radius:50%;background:#fff;margin-right:7px}
+#gameContentBox .cc-number-panel{padding:12px 9px;border-radius:14px;background:#202122}
+#gameContentBox .cc-number-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+#gameContentBox .cc-number-ball{aspect-ratio:1;border:0;border-radius:50%;display:grid;place-items:center;min-width:0;color:#fff;font-size:25px;font-weight:1000;cursor:pointer;position:relative;overflow:hidden;box-shadow:inset 0 5px 8px rgba(255,255,255,.52),inset 0 -8px 10px rgba(0,0,0,.28),0 3px 8px rgba(0,0,0,.3);transition:transform .14s,filter .14s}
+#gameContentBox .cc-number-ball::after{content:"";position:absolute;inset:7% 15% auto 15%;height:22%;border-radius:50%;background:rgba(255,255,255,.72);filter:blur(1px)}
+#gameContentBox .cc-number-ball span{position:relative;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+#gameContentBox .cc-number-ball.cc-num-green{background:linear-gradient(145deg,#f1fff6 0%,#75e7a8 35%,#13ad63 62%,#087b46 100%)!important;color:#168b54!important}
+#gameContentBox .cc-number-ball.cc-num-red{background:linear-gradient(145deg,#fff 0%,#ff9a9a 34%,#ef3d45 64%,#b51d2b 100%)!important;color:#e13c47!important}
+#gameContentBox .cc-number-ball.cc-num-blue-split-red{background:linear-gradient(135deg,#755eff 0 48%,#ff536a 50% 100%)!important;color:#7c49c9!important}
+#gameContentBox .cc-number-ball.cc-num-blue-split-green{background:linear-gradient(135deg,#755eff 0 48%,#4bd58b 50% 100%)!important;color:#7b53d8!important}
+#gameContentBox .cc-number-ball.selected{transform:translateY(-3px) scale(1.06);filter:brightness(1.12);outline:3px solid rgba(255,255,255,.7)}
+#gameContentBox .cc-multiplier-row{display:grid;grid-template-columns:1.55fr repeat(6,1fr);gap:7px;margin:12px 0}
+#gameContentBox .cc-random-btn,#gameContentBox .cc-multiplier{height:46px;border-radius:11px;border:1px solid rgba(255,255,255,.05);background:#242526;color:#bfc2c7;font-size:13px;font-weight:700;cursor:pointer}
+#gameContentBox .cc-random-btn{background:transparent;border-color:#a94a4a;color:#e45f5f}
+#gameContentBox .cc-multiplier.active{background:#12b75d;color:#fff}
+#gameContentBox .cc-big-small-row{display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border-radius:30px}
+#gameContentBox .cc-big-small{height:54px;border:0;color:#fff;font-size:18px;font-weight:800;cursor:pointer}
+#gameContentBox .cc-big{background:#e59a32}.cc-small{background:#4f8bd8}
+#gameContentBox .cc-big-small.selected{filter:brightness(1.12);box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+#gameContentBox .cc-history-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 12px 8px}
+#gameContentBox .cc-history-tab{height:52px;border:0;border-radius:10px;background:#303132;color:#aaa;font-size:14px;font-weight:700;cursor:pointer}
+#gameContentBox .cc-history-tab.active{background:linear-gradient(135deg,#ffeaa0,#d6a33e);color:#6b4310}
+#gameContentBox .cc-history-panel{display:none;margin:0 12px;border-radius:10px;overflow:hidden;background:#303132}
+#gameContentBox .cc-history-panel.active{display:block}
+#gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{display:grid;grid-template-columns:1.65fr .7fr 1fr .5fr;align-items:center;text-align:center}
+#gameContentBox .cc-history-table-head{min-height:50px;background:#3a394d;color:#f3f4f6;font-size:13px;font-weight:800}
+#gameContentBox .cc-history-row{min-height:58px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;color:#f0f1f3}
+#gameContentBox .cc-history-row:last-child{border-bottom:0}
+#gameContentBox .cc-history-number{font-size:27px;font-weight:1000}
+#gameContentBox .cc-history-number.cc-num-green{color:#19b96c!important}.cc-history-number.cc-num-red{color:#e33b45!important}.cc-history-number.cc-num-blue-split-red,.cc-history-number.cc-num-blue-split-green{color:#9252d6!important}
+#gameContentBox .cc-result-dot{display:inline-block;width:16px;height:16px;border-radius:50%}.cc-result-dot.green{background:#49c889}.cc-result-dot.red{background:#ef4b54}.cc-result-dot.blue{background:#8952db}.cc-result-dot.violet{background:#8952db;box-shadow:0 0 10px rgba(137,82,219,.35)}#gameContentBox .cc-colour-cell .cc-result-dots{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:44px}
+#gameContentBox .cc-chart-title{padding:14px 15px;font-size:15px;font-weight:900;color:#f5f5f5;border-bottom:1px solid rgba(255,255,255,.06)}
+#gameContentBox .cc-chart-results{padding:5px 10px}.cc-chart-row{display:grid;grid-template-columns:1.5fr .6fr 1fr 1fr;gap:8px;padding:10px 5px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;align-items:center;text-align:center}.cc-chart-row strong{font-size:20px}.cc-chart-row strong.cc-num-green{color:#19b96c}.cc-chart-row strong.cc-num-red{color:#e33b45}.cc-chart-row strong.cc-num-blue-split-red,.cc-chart-row strong.cc-num-blue-split-green{color:#9252d6}
+#gameContentBox .cc-my-entries-modern,#gameContentBox .cc-my-history-modern{padding:12px}.cc-my-history-title{border-top:1px solid rgba(255,255,255,.06)}
+#gameContentBox .cc-empty-modern{padding:18px;text-align:center;color:#9ca3af;font-size:12px}
+#gameContentBox .cc-modern-shell .cc-entry-trigger{display:none!important}
+@media(max-width:390px){#gameContentBox .cc-info-ticket{grid-template-columns:1fr 1px 1fr;padding:12px 10px;gap:8px}.cc-recent-ball{width:33px!important;height:33px!important;font-size:16px!important}.cc-brand-mark{font-size:19px!important}.cc-multiplier-row{gap:5px!important}.cc-random-btn,.cc-multiplier{font-size:11px!important}.cc-number-grid{gap:7px!important}.cc-number-ball{font-size:22px!important}}
+</style>
+
+<style id="gv-colour-clash-ui-premium-v4">
+/* Premium WINGO refresh: compact mobile layout, clear hierarchy, restrained glow. */
+#gameContentBox .cc-modern-shell{
+  margin:0!important;padding:0 0 20px!important;border-radius:20px!important;overflow:hidden!important;
+  background:linear-gradient(180deg,#17191d 0%,#202225 42%,#191b1f 100%)!important;
+  border:1px solid rgba(255,255,255,.07)!important;box-shadow:0 14px 34px rgba(0,0,0,.34)!important;
+}
+#gameContentBox .cc-brand-strip{
+  height:68px!important;padding:0 12px!important;background:linear-gradient(180deg,#292b30,#222428)!important;
+  border-bottom:1px solid rgba(255,255,255,.09)!important;position:relative!important;
+}
+#gameContentBox .cc-brand-strip:after{content:"";position:absolute;left:15%;right:15%;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent,#f3c64f,transparent);opacity:.65}
+#gameContentBox .cc-back-btn{width:42px!important;height:42px!important;border-radius:12px!important;background:rgba(255,255,255,.05)!important;color:#fff!important;font-size:34px!important;display:grid!important;place-items:center!important}
+#gameContentBox .cc-brand-mark{font-size:22px!important;letter-spacing:.5px!important;text-shadow:0 2px 0 rgba(0,0,0,.35)!important;display:flex!important;align-items:center!important;gap:3px!important}
+#gameContentBox .cc-brand-crown{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:7px;background:linear-gradient(145deg,#fff3a1,#e4a82d);color:#7a4b09;font-size:11px;transform:rotate(45deg);margin-right:4px;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+#gameContentBox .cc-brand-word{color:#ffe58a!important;background:none!important;-webkit-text-fill-color:initial!important}
+#gameContentBox .cc-brand-word-2{color:#f7c34a!important}
+#gameContentBox .cc-brand-actions{gap:8px!important}
+#gameContentBox .cc-brand-actions span{width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.055);display:grid;place-items:center;font-size:18px;border:1px solid rgba(255,255,255,.06)}
+
+#gameContentBox .cc-info-ticket{
+  margin:12px 10px 10px!important;padding:13px!important;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)!important;gap:12px!important;
+  border-radius:18px!important;background:linear-gradient(135deg,#ffeaa0 0%,#f5d56e 48%,#d39a31 100%)!important;
+  box-shadow:0 9px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.55)!important;
+}
+#gameContentBox .cc-how-play{height:36px!important;padding:0 12px!important;font-size:13px!important;background:rgba(255,249,216,.3)!important;border-color:rgba(112,70,12,.45)!important;color:#70470d!important}
+#gameContentBox .cc-wingo-label{font-size:15px!important;margin:11px 0 7px!important;color:#754b10!important}
+#gameContentBox .cc-recent-results{gap:6px!important}
+#gameContentBox .cc-recent-ball{width:34px!important;height:34px!important;font-size:16px!important;border-width:2px!important}
+#gameContentBox .cc-time-label{text-align:right!important;font-size:15px!important;font-weight:900!important;color:#70470d!important}
+#gameContentBox .cc-digital-timer{margin:6px 0 5px!important;justify-content:flex-end!important;font-size:28px!important;font-weight:1000!important;letter-spacing:2px!important}
+#gameContentBox .cc-period-number{text-align:right!important;font-size:13px!important;font-weight:900!important;overflow:hidden;text-overflow:ellipsis;color:#70470d!important}
+
+#gameContentBox .cc-wallet-modern{
+  margin:0 10px!important;min-height:44px!important;padding:7px 9px!important;display:flex!important;align-items:center!important;gap:7px!important;
+  border-radius:13px!important;background:#292b2f!important;border:1px solid rgba(255,255,255,.07)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important
+}
+#gameContentBox .cc-wallet-label{font-size:9px!important;font-weight:900!important;letter-spacing:1px!important;color:#8f949d!important}
+#gameContentBox .cc-wallet-value{display:flex!important;align-items:center!important;gap:5px!important;font-size:14px!important;color:#f5f6f7!important}
+#gameContentBox .cc-wallet-coin{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#ffe58a,#d59b2f);color:#70470d;font-size:10px;font-weight:1000}
+#gameContentBox .cc-phase-pill{margin-left:auto!important;font-size:9px!important;padding:5px 8px!important;border-radius:999px!important;white-space:nowrap!important}
+#gameContentBox .cc-limit-modern{margin:5px 12px 0!important;font-size:9px!important;color:#8f949d!important;text-align:right!important}
+#gameContentBox .cc-limit-modern span{font-weight:900;letter-spacing:.7px;color:#b6bac2}
+
+#gameContentBox .cc-bet-panel{margin:10px!important;padding:11px!important;border-radius:17px!important;background:#2b2d30!important;border:1px solid rgba(255,255,255,.06)!important;box-shadow:0 8px 18px rgba(0,0,0,.18)!important}
+#gameContentBox .cc-colour-tabs{gap:8px!important;margin-bottom:11px!important}
+#gameContentBox .cc-colour-tab{height:52px!important;border-radius:10px!important;font-size:16px!important;font-weight:800!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 9px rgba(0,0,0,.16)!important}
+#gameContentBox .cc-tab-green{background:linear-gradient(180deg,#20bc67,#10a957)!important}
+#gameContentBox .cc-tab-blue{background:linear-gradient(180deg,#a24ee0,#8d3bd0)!important}
+#gameContentBox .cc-tab-red{background:linear-gradient(180deg,#e43e45,#d52e38)!important}
+#gameContentBox .cc-tab-dot{display:inline-block!important;width:10px!important;height:10px!important;margin-right:5px!important;vertical-align:middle!important;background:rgba(255,255,255,.85)!important;box-shadow:0 1px 3px rgba(0,0,0,.25)!important}
+#gameContentBox .cc-colour-tab.selected{transform:translateY(-2px)!important;box-shadow:0 0 0 2px rgba(255,255,255,.28),0 6px 13px rgba(0,0,0,.25)!important}
+
+#gameContentBox .cc-number-panel{padding:11px 8px!important;border-radius:14px!important;background:#202225!important;border:1px solid rgba(255,255,255,.045)!important}
+#gameContentBox .cc-number-grid{gap:8px!important}
+#gameContentBox .cc-number-ball{width:100%!important;aspect-ratio:1!important;font-size:25px!important;box-shadow:inset 0 4px 7px rgba(255,255,255,.5),inset 0 -7px 9px rgba(0,0,0,.25),0 4px 8px rgba(0,0,0,.22)!important}
+#gameContentBox .cc-number-ball:before{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(255,255,255,.22);pointer-events:none}
+#gameContentBox .cc-number-ball.selected{transform:translateY(-2px) scale(1.045)!important;box-shadow:0 0 0 2px rgba(255,255,255,.5),0 7px 13px rgba(0,0,0,.28),inset 0 4px 7px rgba(255,255,255,.55)!important}
+
+#gameContentBox .cc-multiplier-row{grid-template-columns:1.45fr repeat(6,1fr)!important;gap:6px!important;margin:11px 0!important}
+#gameContentBox .cc-random-btn,#gameContentBox .cc-multiplier{height:44px!important;border-radius:10px!important;font-size:12px!important;background:#232528!important;border:1px solid rgba(255,255,255,.035)!important;color:#aeb2b9!important}
+#gameContentBox .cc-random-btn{background:transparent!important;border-color:#a84c52!important;color:#e4777b!important}
+#gameContentBox .cc-multiplier.active{background:linear-gradient(180deg,#18b967,#0ea755)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)!important}
+#gameContentBox .cc-big-small-row{height:54px!important;border-radius:28px!important;box-shadow:0 4px 10px rgba(0,0,0,.18)!important}
+#gameContentBox .cc-big-small{height:54px!important;font-size:18px!important}
+#gameContentBox .cc-big{background:linear-gradient(180deg,#eca63b,#dc9229)!important}
+#gameContentBox .cc-small{background:linear-gradient(180deg,#5795e3,#4c82cb)!important}
+#gameContentBox .cc-big-small.selected{box-shadow:inset 0 0 0 2px rgba(255,255,255,.65),inset 0 2px 0 rgba(255,255,255,.15)!important;filter:brightness(1.08)!important}
+
+#gameContentBox .cc-history-tabs{gap:7px!important;margin:12px 10px 8px!important}
+#gameContentBox .cc-history-tab{height:50px!important;border-radius:11px!important;background:#303236!important;border:1px solid rgba(255,255,255,.04)!important;color:#aeb1b6!important;font-size:13px!important}
+#gameContentBox .cc-history-tab.active{background:linear-gradient(135deg,#ffe99a,#d6a33f)!important;color:#68430f!important;box-shadow:0 5px 12px rgba(0,0,0,.18)!important}
+#gameContentBox .cc-history-panel{margin:0 10px!important;border-radius:12px!important;background:#2d2f32!important;border:1px solid rgba(255,255,255,.045)!important}
+#gameContentBox .cc-history-table-head{min-height:48px!important;background:#3b3a4b!important;font-size:12px!important}
+#gameContentBox .cc-history-row{min-height:57px!important;font-size:11.5px!important;border-bottom-color:rgba(255,255,255,.055)!important}
+#gameContentBox .cc-history-number{font-size:26px!important}
+#gameContentBox .cc-result-dot{width:15px!important;height:15px!important;box-shadow:0 2px 5px rgba(0,0,0,.25)!important}
+
+@media(max-width:390px){
+ #gameContentBox .cc-brand-mark{font-size:19px!important}
+ #gameContentBox .cc-info-ticket{padding:11px!important;gap:9px!important}
+ #gameContentBox .cc-recent-ball{width:30px!important;height:30px!important;font-size:14px!important}
+ #gameContentBox .cc-digital-timer{font-size:25px!important}
+ #gameContentBox .cc-multiplier-row{grid-template-columns:1.3fr repeat(6,1fr)!important;gap:4px!important}
+ #gameContentBox .cc-random-btn,#gameContentBox .cc-multiplier{font-size:10px!important}
+ #gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{grid-template-columns:1.55fr .65fr .95fr .45fr!important}
+}
+</style>
+
+<style id="gv-colour-clash-ui-final-violet-history">
+/* Final WINGO polish */
+#gameContentBox .cc-brand-mark{justify-content:center!important;font-size:24px!important;letter-spacing:1.2px!important}
+#gameContentBox .cc-brand-word{color:#ffe58a!important;font-weight:1000!important}
+#gameContentBox .cc-brand-crown{transform:rotate(45deg) scale(.9)!important}
+#gameContentBox .cc-wingo-label{font-size:10px!important;letter-spacing:1px!important;font-weight:900!important;opacity:.72!important;margin-top:10px!important}
+#gameContentBox .cc-wallet-modern{display:block!important;padding:8px 10px!important}
+#gameContentBox .cc-wallet-main{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important}
+#gameContentBox .cc-wallet-main .cc-currency-switch{margin-left:auto!important;flex:0 0 auto!important}
+#gameContentBox .cc-phase-row{width:100%!important;margin-top:7px!important;display:flex!important;justify-content:center!important}
+#gameContentBox .cc-phase-pill{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:6px 10px!important;text-align:center!important;white-space:normal!important;overflow:hidden!important;text-overflow:ellipsis!important;line-height:1.25!important;font-size:10px!important;box-sizing:border-box!important}
+#gameContentBox .cc-tab-blue{background:linear-gradient(180deg,#a855f7,#7c3aed)!important}
+#gameContentBox .cc-number-ball.cc-num-blue-split-red{background:linear-gradient(90deg,#ef4444 0 50%,#8b5cf6 50% 100%)!important}
+#gameContentBox .cc-number-ball.cc-num-blue-split-green{background:linear-gradient(90deg,#22c55e 0 50%,#8b5cf6 50% 100%)!important}
+#gameContentBox .cc-history-tabs{grid-template-columns:1fr 1fr!important}
+#gameContentBox .cc-history-panel{overflow:hidden!important}
+#gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{grid-template-columns:minmax(0,1.6fr) .72fr 1fr .48fr!important}
+#gameContentBox .cc-history-table-head{padding:0 8px!important;letter-spacing:.15px!important}
+#gameContentBox .cc-history-row{padding:5px 8px!important;min-height:62px!important;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,0))!important}
+#gameContentBox .cc-period-cell{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:10px!important;font-weight:700!important;color:#f1f5f9!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+#gameContentBox .cc-history-number{display:inline-grid!important;place-items:center!important;width:40px!important;height:40px!important;border-radius:50%!important;font-size:23px!important;font-weight:1000!important;background:#111827!important;border:2px solid rgba(255,255,255,.28)!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.55)!important;box-shadow:inset 0 2px 5px rgba(255,255,255,.18),0 3px 8px rgba(0,0,0,.25)!important}
+#gameContentBox .cc-history-number.cc-num-green{background:linear-gradient(145deg,#16a34a,#22c55e)!important;color:#fff!important;border-color:rgba(134,239,172,.65)!important}
+#gameContentBox .cc-history-number.cc-num-red{background:linear-gradient(145deg,#dc2626,#ef4444)!important;color:#fff!important;border-color:rgba(252,165,165,.65)!important}
+#gameContentBox .cc-history-number.cc-num-blue-split-red,#gameContentBox .cc-history-number.cc-num-blue-split-green{background:linear-gradient(135deg,#8b5cf6,#7c3aed)!important;color:#fff!important;border-color:rgba(196,181,253,.75)!important}
+#gameContentBox .cc-size-cell{font-weight:800!important;color:#f8fafc!important;font-size:11px!important}
+#gameContentBox .cc-colour-cell{display:flex!important;justify-content:center!important;align-items:center!important}
+#gameContentBox .cc-result-dot.violet{background:#8b5cf6!important;box-shadow:0 0 0 2px rgba(139,92,246,.2),0 0 10px rgba(139,92,246,.32)!important}
+#gameContentBox .cc-result-dot{width:16px!important;height:16px!important;border-radius:50%!important;border:1px solid rgba(255,255,255,.3)!important}
+#gameContentBox .cc-history-table-body{max-height:390px!important;overflow-y:auto!important;scrollbar-width:thin!important}
+@media(max-width:390px){
+ #gameContentBox .cc-brand-mark{font-size:21px!important}
+ #gameContentBox .cc-wallet-main{gap:6px!important}
+ #gameContentBox .cc-wallet-value{font-size:13px!important}
+ #gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{grid-template-columns:minmax(0,1.45fr) .62fr .92fr .42fr!important}
+ #gameContentBox .cc-history-number{width:36px!important;height:36px!important;font-size:21px!important}
+ #gameContentBox .cc-period-cell{font-size:9px!important}
+ #gameContentBox .cc-size-cell{font-size:10px!important}
+}
+</style>
+
+<style id="gv-colour-clash-final-ui-v4">
+#gameContentBox .cc-wingo-label{font-size:14px!important;letter-spacing:.35px!important;margin:10px 0 7px!important;}
+#gameContentBox .cc-wallet-modern{flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:8px 10px!important;}
+#gameContentBox .cc-wallet-main{width:100%!important;min-width:0!important;}
+#gameContentBox .cc-phase-row{width:100%!important;display:flex!important;justify-content:center!important;min-width:0!important;}
+#gameContentBox .cc-phase-pill{display:block!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;margin-top:0!important;padding:6px 9px!important;font-size:10px!important;line-height:1.2!important;letter-spacing:.35px!important;}
+#gameContentBox .cc-history-tabs{grid-template-columns:1fr 1fr!important;}
+#gameContentBox .cc-history-panel{margin:0 10px!important;border:1px solid rgba(148,163,184,.12)!important;background:#24262a!important;}
+#gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{grid-template-columns:1.55fr .65fr .95fr .42fr!important;}
+#gameContentBox .cc-history-table-head{min-height:44px!important;padding:0 5px!important;font-size:11px!important;letter-spacing:.2px!important;}
+#gameContentBox .cc-history-row{min-height:62px!important;padding:2px 5px!important;font-size:11px!important;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006))!important;}
+#gameContentBox .cc-history-row:nth-child(even){background:rgba(255,255,255,.022)!important;}
+#gameContentBox .cc-period-cell{font-size:10px!important;font-variant-numeric:tabular-nums!important;color:#e5e7eb!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+#gameContentBox .cc-history-number{display:inline-grid!important;place-items:center!important;width:38px!important;height:38px!important;border-radius:12px!important;font-size:25px!important;line-height:1!important;font-weight:1000!important;font-variant-numeric:tabular-nums!important;background:#15171b!important;text-shadow:0 1px 2px rgba(0,0,0,.35)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 8px rgba(0,0,0,.22)!important;}
+#gameContentBox .cc-history-number.cc-num-green{color:#35e18a!important;border:1px solid rgba(53,225,138,.28)!important;}
+#gameContentBox .cc-history-number.cc-num-red{color:#ff5a64!important;border:1px solid rgba(255,90,100,.28)!important;}
+#gameContentBox .cc-history-number.cc-num-blue-split-red,#gameContentBox .cc-history-number.cc-num-blue-split-green{color:#b98cff!important;border:1px solid rgba(167,139,250,.34)!important;}
+#gameContentBox .cc-size-cell{font-size:11px!important;font-weight:800!important;color:#f8fafc!important;white-space:nowrap!important;}
+#gameContentBox .cc-colour-cell{text-align:center!important;}
+#gameContentBox .cc-result-dot{width:14px!important;height:14px!important;box-shadow:0 0 0 3px rgba(255,255,255,.08)!important;}
+#gameContentBox .cc-result-dot.blue{background:#8b5cf6!important;box-shadow:0 0 0 3px rgba(139,92,246,.12),0 0 10px rgba(139,92,246,.3)!important;}
+#gameContentBox .cc-tab-blue{background:linear-gradient(145deg,#8b5cf6,#6d28d9)!important;}
+#gameContentBox .cc-small{background:linear-gradient(145deg,#8b5cf6,#6d28d9)!important;}
+#gameContentBox .cc-num-blue-split-red{background:linear-gradient(135deg,#8b5cf6 0 48%,#ff536a 50% 100%)!important;}
+#gameContentBox .cc-num-blue-split-green{background:linear-gradient(135deg,#8b5cf6 0 48%,#4bd58b 50% 100%)!important;}
+@media(max-width:380px){
+ #gameContentBox .cc-history-table-head,#gameContentBox .cc-history-row{grid-template-columns:1.4fr .6fr .9fr .38fr!important;}
+ #gameContentBox .cc-history-number{width:34px!important;height:34px!important;font-size:23px!important;}
+ #gameContentBox .cc-period-cell{font-size:9px!important;}
+ #gameContentBox .cc-phase-pill{font-size:9px!important;padding:6px 7px!important;}
+}
+</style>
+
+<style id="gv-colour-clash-ui-final-violet-history">
+/* Final WINGO mobile polish */
+#gameContentBox .cc-multiplier-row{display:none!important;}
+#gameContentBox .cc-tab-blue{background:linear-gradient(145deg,#8b5cf6,#6d28d9)!important;border-color:rgba(196,181,253,.8)!important;color:#fff!important;}
+#gameContentBox .cc-tab-blue .cc-tab-dot{background:#c4b5fd!important;box-shadow:0 0 8px rgba(167,139,250,.55)!important;}
+#gameContentBox .cc-num-blue-split-red{background:linear-gradient(135deg,#8b5cf6 0 48%,#ef4444 50% 100%)!important;color:#7c3aed!important;}
+#gameContentBox .cc-num-blue-split-green{background:linear-gradient(135deg,#8b5cf6 0 48%,#22c55e 50% 100%)!important;color:#7c3aed!important;}
+#gameContentBox .cc-result-dot.blue{background:#8b5cf6!important;}
+#gameContentBox .cc-colour-dot.cc-dot-blue{background:#8b5cf6!important;}
+#gameContentBox .cc-wallet-modern{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:8px 10px 9px!important;min-width:0!important;}
+#gameContentBox .cc-wallet-main{width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:7px!important;}
+#gameContentBox .cc-phase-row{width:100%!important;min-width:0!important;display:block!important;}
+#gameContentBox .cc-phase-pill{display:block!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;text-align:center!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;word-break:break-word!important;margin:0!important;padding:7px 10px!important;font-size:11px!important;line-height:1.25!important;letter-spacing:.25px!important;}
+#gameContentBox .cc-history-tabs{grid-template-columns:1fr 1fr!important;margin-top:14px!important;}
+#gameContentBox .cc-history-panel{margin:0 10px!important;border-radius:14px!important;background:linear-gradient(180deg,#262a31,#20242a)!important;border:1px solid rgba(148,163,184,.18)!important;box-shadow:0 8px 18px rgba(0,0,0,.18)!important;}
+#gameContentBox .cc-history-table-head{display:grid!important;grid-template-columns:minmax(0,1.65fr) .65fr .95fr .42fr!important;min-height:46px!important;padding:0 7px!important;background:linear-gradient(180deg,#34374a,#2b2e40)!important;color:#f8fafc!important;font-size:11px!important;font-weight:900!important;}
+#gameContentBox .cc-history-row{display:grid!important;grid-template-columns:minmax(0,1.65fr) .65fr .95fr .42fr!important;min-height:64px!important;padding:4px 7px!important;border-bottom:1px solid rgba(148,163,184,.12)!important;color:#f8fafc!important;font-size:12px!important;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.008))!important;}
+#gameContentBox .cc-period-cell{font-size:11px!important;color:#e5e7eb!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+#gameContentBox .cc-history-number{font-size:31px!important;line-height:1!important;font-weight:1000!important;text-shadow:0 1px 2px rgba(0,0,0,.55)!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:32px!important;}
+#gameContentBox .cc-history-number.cc-num-green{color:#39d98a!important;}
+#gameContentBox .cc-history-number.cc-num-red{color:#ff5661!important;}
+#gameContentBox .cc-history-number.cc-num-blue-split-red,#gameContentBox .cc-history-number.cc-num-blue-split-green{color:#b78cff!important;}
+#gameContentBox .cc-size-cell{font-size:12px!important;font-weight:800!important;color:#f3f4f6!important;text-transform:capitalize!important;}
+#gameContentBox .cc-colour-cell{display:flex!important;align-items:center!important;justify-content:center!important;}
+#gameContentBox .cc-result-dot{width:17px!important;height:17px!important;border:2px solid rgba(255,255,255,.45)!important;box-shadow:0 2px 6px rgba(0,0,0,.3)!important;}
+#gameContentBox .cc-history-tab{min-width:0!important;height:48px!important;font-size:13px!important;}
+#gameContentBox .cc-history-tab.active{box-shadow:0 5px 14px rgba(0,0,0,.2)!important;}
+#gameContentBox .cc-modern-shell .cc-wingo-label{font-size:14px!important;letter-spacing:.4px!important;}
+#gameContentBox .cc-entry-modal .cc-modal-violet{background:linear-gradient(145deg,#8b5cf6,#6d28d9)!important;color:#fff!important;}
+@media(max-width:390px){
+ #gameContentBox .cc-info-ticket{grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)!important;gap:7px!important;padding:10px!important;}
+ #gameContentBox .cc-time-label{font-size:13px!important;}
+ #gameContentBox .cc-digital-timer{font-size:25px!important;}
+ #gameContentBox .cc-history-row{grid-template-columns:minmax(0,1.55fr) .62fr .92fr .4fr!important;min-height:60px!important;padding:3px 5px!important;}
+ #gameContentBox .cc-history-table-head{grid-template-columns:minmax(0,1.55fr) .62fr .92fr .4fr!important;padding:0 5px!important;}
+ #gameContentBox .cc-history-number{font-size:28px!important;}
+ #gameContentBox .cc-period-cell{font-size:10px!important;}
+ #gameContentBox .cc-phase-pill{font-size:10.5px!important;padding:7px 8px!important;}
+}
+</style>
+
+<style id="gv-colour-clash-violet-chip-final">
+#gameContentBox .cc-chip-violet{background:rgba(139,92,246,.16)!important;color:#c4b5fd!important;border-color:rgba(167,139,250,.32)!important;}
+#gameContentBox .cc-dot-violet{background:#8b5cf6!important;box-shadow:0 0 8px rgba(139,92,246,.45)!important;}
+</style>
+<style id="gv-cc-violet-history-popup-final">
+/* 0 = half RED + half VIOLET; 5 = half GREEN + half VIOLET. */
+#gameContentBox .cc-number-ball.cc-num-split-red-violet,
+#gameContentBox .cc-history-number.cc-num-split-red-violet,
+#gameContentBox .cc-recent-ball.cc-num-split-red-violet{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  background:linear-gradient(135deg,#ef4444 0 50%,#8b5cf6 50% 100%)!important;
+  border-color:rgba(221,214,254,.9)!important;
+}
+#gameContentBox .cc-number-ball.cc-num-split-green-violet,
+#gameContentBox .cc-history-number.cc-num-split-green-violet,
+#gameContentBox .cc-recent-ball.cc-num-split-green-violet{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  background:linear-gradient(135deg,#22c55e 0 50%,#8b5cf6 50% 100%)!important;
+  border-color:rgba(221,214,254,.9)!important;
+}
+#gameContentBox .cc-history-number.cc-num-green,
+#gameContentBox .cc-history-number.cc-num-red,
+#gameContentBox .cc-history-number.cc-num-split-red-violet,
+#gameContentBox .cc-history-number.cc-num-split-green-violet{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.72)!important;
+}
+#gameContentBox .cc-result-dot.violet{background:#8b5cf6!important;box-shadow:0 0 0 2px rgba(196,181,253,.22),0 0 12px rgba(139,92,246,.42)!important;}
+#gameContentBox .cc-colour-tab.cc-tab-blue{background:linear-gradient(145deg,#8b5cf6,#6d28d9)!important;border-color:rgba(196,181,253,.7)!important;}
+#gameContentBox .cc-entry-modal{width:min(430px,calc(100vw - 28px));padding:22px 18px 18px;border-radius:20px;background:linear-gradient(145deg,#111827,#1e293b 62%,#24123f);border:1px solid rgba(167,139,250,.38);box-shadow:0 22px 60px rgba(0,0,0,.58),0 0 28px rgba(139,92,246,.16);}
+#gameContentBox .cc-entry-modal-target{min-height:54px;display:flex;align-items:center;justify-content:center;font-size:23px;letter-spacing:.2px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(139,92,246,.09));}
+#gameContentBox .cc-modal-violet{color:#ddd6fe!important;background:linear-gradient(145deg,rgba(139,92,246,.28),rgba(109,40,217,.18))!important;border-color:rgba(167,139,250,.38)!important;}
+#gameContentBox .cc-entry-modal-label{margin-top:4px;font-size:11px;color:#ddd6fe;}
+#gameContentBox .cc-entry-modal-input{height:52px;font-size:18px;border-color:rgba(167,139,250,.32);background:#090d18;}
+#gameContentBox .cc-entry-modal-input:focus{border-color:#a78bfa;box-shadow:0 0 0 3px rgba(139,92,246,.16),0 0 18px rgba(139,92,246,.12);}
+#gameContentBox .cc-entry-modal-submit{height:50px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);box-shadow:0 8px 18px rgba(124,58,237,.28);}
+#gameContentBox .cc-entry-modal-limit{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.035);}
+@media(max-width:430px){#gameContentBox .cc-entry-modal-backdrop{padding:12px}.cc-entry-modal{max-height:calc(100vh - 24px);overflow:auto}.cc-entry-modal-round{margin-bottom:12px}}
+</style>
+
+<style id="gv-cc-white-number-highlight-v2">
+/* Final WINGO number treatment: every number and every history number has a crisp white border, outline and highlight. */
+#gameContentBox .cc-number-ball,
+#gameContentBox .cc-number-ball.cc-num-green,
+#gameContentBox .cc-number-ball.cc-num-red,
+#gameContentBox .cc-number-ball.cc-num-split-red-violet,
+#gameContentBox .cc-number-ball.cc-num-split-green-violet,
+#gameContentBox .cc-number-ball.cc-num-blue-split-red,
+#gameContentBox .cc-number-ball.cc-num-blue-split-green{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border:3px solid #fff!important;
+  outline:2px solid #fff!important;
+  outline-offset:1px!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.9)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.45),0 0 12px rgba(255,255,255,.28),inset 0 3px 7px rgba(255,255,255,.48),inset 0 -7px 9px rgba(0,0,0,.24)!important;
+}
+#gameContentBox .cc-number-ball.selected{
+  border:3px solid #fff!important;
+  outline:3px solid #fff!important;
+  outline-offset:1px!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.3),0 0 20px rgba(255,255,255,.5),0 7px 13px rgba(0,0,0,.28),inset 0 4px 7px rgba(255,255,255,.55)!important;
+}
+#gameContentBox .cc-history-number,
+#gameContentBox .cc-history-number.cc-num-green,
+#gameContentBox .cc-history-number.cc-num-red,
+#gameContentBox .cc-history-number.cc-num-split-red-violet,
+#gameContentBox .cc-history-number.cc-num-split-green-violet,
+#gameContentBox .cc-history-number.cc-num-blue-split-red,
+#gameContentBox .cc-history-number.cc-num-blue-split-green{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border:3px solid #fff!important;
+  outline:2px solid #fff!important;
+  outline-offset:1px!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.9)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.42),0 0 11px rgba(255,255,255,.25),inset 0 2px 6px rgba(255,255,255,.42),0 3px 8px rgba(0,0,0,.25)!important;
+}
+</style>
 </body>
 </html>
