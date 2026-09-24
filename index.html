@@ -5939,6 +5939,38 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 settleColourClashRoundColour(roundId,ccNumberColour(out.resultNumber));
             }catch(e){}
         }
+        // WINGO payout guard: credit each winning entry at most once.
+        // The payout marker and wallet balance are changed in ONE Firebase transaction
+        // on the user's record, so multiple user/admin clients can never add the same
+        // WINGO win repeatedly.
+        function creditColourClashPayoutOnce(entryId,userId,currency,payout){
+            const amount=Number(payout)||0;
+            if(!entryId||!userId||amount<=0) return Promise.resolve(false);
+            const field=walletField(currency||'INR');
+            const userRef=db.ref('users/'+userId);
+            return userRef.transaction(user=>{
+                if(!user) return user;
+                const guards=(user.wingoPayouts && typeof user.wingoPayouts==='object') ? user.wingoPayouts : {};
+                if(guards[entryId]) return user;
+                const next=Object.assign({},user);
+                next[field]=Number((Number(user[field])||0)+amount).toFixed(field==='usdtBalance'?4:2);
+                next.wingoPayouts=Object.assign({},guards,{[entryId]:{
+                    amount:Number(amount.toFixed(field==='usdtBalance'?4:2)),
+                    currency:String(currency||'INR').toUpperCase(),
+                    creditedAt:Date.now()
+                }});
+                return next;
+            }).then(res=>{
+                if(res.committed){
+                    const v=res.snapshot.val()||{};
+                    if(String(currency||'INR').toUpperCase()==='USDT') currentUsdtBalance=Number(v.usdtBalance)||0;
+                    else currentBalance=Number(v.balance)||0;
+                    updateWalletCurrencyUI();
+                }
+                return res.committed;
+            });
+        }
+
         function settleColourClashRoundColour(roundId,result){
             db.ref('colour_clash/rounds/'+roundId).once('value').then(rs=>{
                 const rd=rs.val()||{}; const winningColours=rd.resultNumber!==undefined&&rd.resultNumber!==null ? ccNumberColours(rd.resultNumber) : [String(result||'').toUpperCase()];
@@ -5953,7 +5985,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                             if(!cur) return cur;
                             if(cur.status==='win'||cur.status==='loss'||cur.status==='settled') return;
                             return Object.assign({},cur,{status:win?'win':'loss',winAmount:payout,result:winningColours.join(' + '),resultColours:winningColours,timestampResolved:Date.now()});
-                        }).then(res=>res.committed?db.ref('users/'+e.userId+'/'+walletField(e.currency || 'INR')).transaction(b=>Number(b||0)+payout):null).catch(()=>{}));
+                        }).then(res=>res.committed?creditColourClashPayoutOnce(ch.key,e.userId,e.currency || 'INR',payout):false).catch(()=>false));
                     });
                     return Promise.all(jobs);
                 });
@@ -5970,7 +6002,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     jobs.push(ch.ref.transaction(cur=>{
                         if(!cur || cur.status==='win'||cur.status==='loss'||cur.status==='settled') return cur;
                         return Object.assign({},cur,{status:win?'win':'loss',winAmount:payout,resultNumber,resultSize,timestampResolved:Date.now()});
-                    }).then(res=>res.committed?db.ref('users/'+e.userId+'/'+walletField(e.currency || 'INR')).transaction(b=>Number(b||0)+payout):null).catch(()=>{}));
+                    }).then(res=>res.committed?creditColourClashPayoutOnce(ch.key,e.userId,e.currency || 'INR',payout):false).catch(()=>false));
                 });
                 return Promise.all(jobs);
             }).catch(()=>{});
@@ -5991,9 +6023,9 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                             if(cur.status==='win'||cur.status==='loss'||cur.status==='settled') return;
                             return Object.assign({},cur,{status:win?'win':'loss',winAmount:payout,resultNumber,timestampResolved:Date.now()});
                         }).then(res=>{
-                            if(!res.committed) return;
-                            return db.ref('users/'+e.userId+'/'+walletField(e.currency || 'INR')).transaction(b=>Number(b||0)+payout);
-                        }).catch(()=>{})
+                            if(!res.committed) return false;
+                            return creditColourClashPayoutOnce(ch.key,e.userId,e.currency || 'INR',payout);
+                        }).catch(()=>false)
                     );
                 });
                 return Promise.all(jobs);
