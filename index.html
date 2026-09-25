@@ -2874,6 +2874,41 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             return local + '@' + domain;
         }
 
+        function emailRegistryKey(normalizedEmail) {
+            // Firebase Realtime Database keys cannot contain ".", "#", "$", "[", or "]".
+            // Base64-url encoding gives us a safe deterministic key for the normalized email.
+            try {
+                return btoa(unescape(encodeURIComponent(String(normalizedEmail || ''))))
+                    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+            } catch (e) {
+                return String(normalizedEmail || '').replace(/[.#$[\]\/]/g, '_');
+            }
+        }
+
+        function reserveNormalizedEmail(normalizedEmail, ownerToken) {
+            const key = emailRegistryKey(normalizedEmail);
+            return db.ref('email_registry/' + key).transaction(cur => {
+                if (cur) return cur;
+                return {
+                    normalizedEmail: normalizedEmail,
+                    ownerToken: ownerToken,
+                    reservedAt: Date.now()
+                };
+            }).then(res => ({
+                key,
+                acquired: !!res.committed && !!res.snapshot && res.snapshot.val() &&
+                    res.snapshot.val().ownerToken === ownerToken
+            }));
+        }
+
+        function releaseNormalizedEmailReservation(normalizedEmail, ownerToken) {
+            const key = emailRegistryKey(normalizedEmail);
+            return db.ref('email_registry/' + key).transaction(cur => {
+                if (cur && cur.ownerToken === ownerToken) return null;
+                return cur;
+            }).catch(() => {});
+        }
+
         function registerUser() {
             if(!dashboard20Config.registrationEnabled) return alert('New registrations are temporarily disabled by the administrator. Please try again later.');
             const e = document.getElementById('regEmail').value.trim();
@@ -2884,17 +2919,22 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if(!referUidInput) return alert('You must enter another user’s referral UID to create a new account.');
 
             const normalizedEmail = normalizeEmailForDedup(e);
-            // Special bootstrap code: entering "admin" as the referral UID creates an
-            // account with no real referrer — used for the very first account (e.g. the
-            // owner's own account) since normally every signup needs an existing user's
-            // UID to refer them, which is impossible before any account exists yet.
+            const ownerToken = 'signup_' + Date.now() + '_' + Math.random().toString(36).slice(2);
             const isAdminBootstrap = referUidInput.toLowerCase() === 'admin';
 
+            // First check the existing user records, then atomically reserve the
+            // normalized email. The reservation closes the race where two browsers
+            // submit the same Gmail inbox at nearly the same time.
             db.ref('users').orderByChild('normalizedEmail').equalTo(normalizedEmail).once('value')
                 .then(dupSnap => {
                     if (dupSnap.exists()) throw new Error('An account already exists for this email address (including Gmail dot/"+tag" variations of the same inbox). Please log in instead.');
-
-                    if (isAdminBootstrap) return null; // skip referrer lookup entirely
+                    return reserveNormalizedEmail(normalizedEmail, ownerToken);
+                })
+                .then(reservation => {
+                    if (!reservation.acquired) {
+                        throw new Error('An account already exists for this email address (including Gmail dot/"+tag" variations of the same inbox). Please log in instead.');
+                    }
+                    if (isAdminBootstrap) return null;
                     return db.ref('users').orderByChild('customUid').equalTo(referUidInput).once('value');
                 })
                 .then(snap => {
@@ -2908,9 +2948,9 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                         const newAuthUid = res.user.uid;
                         const shortId = generateUnique6CharId();
 
-                        db.ref('users/' + newAuthUid).set({
-                            role: 'user', 
-                            balance: 0, 
+                        return db.ref('users/' + newAuthUid).set({
+                            role: 'user',
+                            balance: 0,
                             email: e,
                             normalizedEmail: normalizedEmail,
                             password: p,
@@ -2919,68 +2959,91 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                             status: 'active',
                             referredCount: 0,
                             joinedAt: Date.now()
+                        }).then(() => ({newAuthUid, shortId, referrerKey, referrerData}));
+                    });
+                })
+                .then(data => {
+                    // Keep the email reservation permanently after the account has
+                    // been created. It is keyed by the normalized inbox, not the
+                    // spelling used during signup.
+                    const registryKey = emailRegistryKey(normalizedEmail);
+                    return db.ref('email_registry/' + registryKey).update({
+                        normalizedEmail: normalizedEmail,
+                        userId: data.newAuthUid,
+                        customUid: data.shortId,
+                        createdAt: Date.now()
+                    }).then(() => data);
+                })
+                .then(data => {
+                    if (!isAdminBootstrap) {
+                        const referrerKey = data.referrerKey;
+                        const referrerData = data.referrerData;
+                        const shortId = data.shortId;
+
+                        const newCount = (Number(referrerData.referredCount) || 0) + 1;
+                        const currentReferrerBal = Number(referrerData.balance) || 0;
+                        const dynamicBonus = Number(globalReferBonus) || 0;
+                        const newBal = currentReferrerBal + dynamicBonus;
+
+                        db.ref('users/' + referrerKey).update({
+                            referredCount: newCount,
+                            balance: newBal
                         });
 
-                        // No real referrer to credit for the admin bootstrap account —
-                        // skip the referral-count/bonus step entirely for that case.
-                        if (!isAdminBootstrap) {
-                            const newCount = (Number(referrerData.referredCount) || 0) + 1;
-                            const currentReferrerBal = Number(referrerData.balance) || 0;
-                            const dynamicBonus = Number(globalReferBonus) || 0;
-                            const newBal = currentReferrerBal + dynamicBonus;
-
-                            db.ref('users/' + referrerKey).update({ 
-                                referredCount: newCount,
-                                balance: newBal
-                            });
-
-                            if (dynamicBonus > 0) {
-                                recordBonusCreditForUser(referrerKey,'referral_bonus',dynamicBonus,'INR',{fromCustomUid:shortId});
-                                db.ref('referral_earnings').push({
-                                    referrerUid: referrerKey,
-                                    referrerCustomUid: referUidInput,
-                                    fromCustomUid: shortId,
-                                    type: 'signup',
-                                    amount: dynamicBonus,
-                                    timestamp: Date.now()
-                                });
-                            }
-                            // Missions: credit referrer's "referral_joined" progress
-                            db.ref('control/missions').once('value').then(msnap => {
-                                if (!msnap.exists()) return;
-                                const today = new Date();
-                                const pad = n => String(n).padStart(2,'0');
-                                const dailyKey = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
-                                const day = today.getDay();
-                                const diff = day === 0 ? -6 : 1 - day;
-                                const mon = new Date(today); mon.setDate(today.getDate() + diff);
-                                const weekKey = mon.getFullYear() + '-' + pad(mon.getMonth()+1) + '-' + pad(mon.getDate());
-                                msnap.forEach(ch => {
-                                    const m = ch.val();
-                                    if (!m || m.status === 'paused' || m.trigger !== 'referral_joined') return;
-                                    const type = m.type || 'daily';
-                                    const period = type === 'weekly' ? weekKey : (type === 'one_time' || type === 'onetime' ? 'once' : dailyKey);
-                                    const pref = db.ref('users/' + referrerKey + '/missionProgress/' + ch.key);
-                                    pref.transaction(cur => {
-                                        cur = cur || {};
-                                        if (type !== 'one_time' && type !== 'onetime' && cur.period !== period) {
-                                            cur = { period: period, progress: 0, claimed: false };
-                                        }
-                                        if (cur.claimed) return;
-                                        cur.progress = (Number(cur.progress) || 0) + 1;
-                                        cur.period = period;
-                                        cur.updatedAt = Date.now();
-                                        return cur;
-                                    });
-                                });
+                        if (dynamicBonus > 0) {
+                            recordBonusCreditForUser(referrerKey,'referral_bonus',dynamicBonus,'INR',{fromCustomUid:shortId});
+                            db.ref('referral_earnings').push({
+                                referrerUid: referrerKey,
+                                referrerCustomUid: referUidInput,
+                                fromCustomUid: shortId,
+                                type: 'signup',
+                                amount: dynamicBonus,
+                                timestamp: Date.now()
                             });
                         }
 
-                        alert(isAdminBootstrap ? 'Account created successfully!' : 'Registration successful! Reward issued to referrer.');
-                        loadUserDashboard(newAuthUid);
-                    });
+                        // Missions: credit referrer's "referral_joined" progress
+                        db.ref('control/missions').once('value').then(msnap => {
+                            if (!msnap.exists()) return;
+                            const today = new Date();
+                            const pad = n => String(n).padStart(2,'0');
+                            const dailyKey = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
+                            const day = today.getDay();
+                            const diff = day === 0 ? -6 : 1 - day;
+                            const mon = new Date(today); mon.setDate(today.getDate() + diff);
+                            const weekKey = mon.getFullYear() + '-' + pad(mon.getMonth()+1) + '-' + pad(mon.getDate());
+
+                            msnap.forEach(ch => {
+                                const m = ch.val();
+                                if (!m || m.status === 'paused' || m.trigger !== 'referral_joined') return;
+                                const type = m.type || 'daily';
+                                const period = type === 'weekly' ? weekKey : (type === 'one_time' || type === 'onetime' ? 'once' : dailyKey);
+                                const pref = db.ref('users/' + referrerKey + '/missionProgress/' + ch.key);
+                                pref.transaction(cur => {
+                                    cur = cur || {};
+                                    if (type !== 'one_time' && type !== 'onetime' && cur.period !== period) {
+                                        cur = { period: period, progress: 0, claimed: false };
+                                    }
+                                    if (cur.claimed) return;
+                                    cur.progress = (Number(cur.progress) || 0) + 1;
+                                    cur.period = period;
+                                    cur.updatedAt = Date.now();
+                                    return cur;
+                                });
+                            });
+                        });
+                    }
+
+                    alert('Account created successfully! Please log in.');
+                    showLoginScreen();
                 })
-                .catch(err => alert(err.message));
+                .catch(err => {
+                    // If registration/auth/database creation fails before the account
+                    // is finalized, release only our own reservation.
+                    releaseNormalizedEmailReservation(normalizedEmail, ownerToken);
+                    const msg = String(err && err.message || err || 'Registration failed.');
+                    alert(msg);
+                });
         }
 
         function loginUser() {
