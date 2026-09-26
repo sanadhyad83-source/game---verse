@@ -4062,6 +4062,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
+            if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
             // Hide tab panels so only the overlay is visible
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -4118,6 +4119,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (gh) gh.classList.add('hidden');
             const ag = document.getElementById('activeGameArea');
             if (ag) ag.classList.add('hidden');
+            if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
         }
 
         function switchTab(tabName) {
@@ -4131,6 +4133,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
+            if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
 
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -4279,6 +4282,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
         function backToDashboard() {
             if (rocketInterval) clearInterval(rocketInterval);
+            if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
             document.getElementById('gamesHub').classList.add('hidden');
             document.getElementById('activeGameArea').classList.add('hidden');
             switchTab('home');
@@ -4288,6 +4292,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (rocketInterval) clearInterval(rocketInterval);
             if (colourClashTimer) clearInterval(colourClashTimer);
             minesState = null;
+            if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
             document.getElementById('activeGameArea').classList.add('hidden');
             document.getElementById('gamesHub').classList.remove('hidden');
         }
@@ -5286,6 +5291,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             document.getElementById('activeGameTitle').innerText='WINGO';
             document.getElementById('activeGameInfo').innerText=`Pick a colour or a number • ₹${colourClashConfig.minBet} - ₹${colourClashConfig.maxBet}`;
             renderColourClash();
+            if (typeof flushColourClashSettlementPopups === 'function') flushColourClashSettlementPopups();
         }
         function colourClashMoney(amount, currency = selectedWalletCurrency) {
             const c = String(currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR';
@@ -5334,6 +5340,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         function renderColourClash(){
             const box=document.getElementById('gameContentBox');
             if(!box) return;
+            setTimeout(function(){ if (typeof flushColourClashSettlementPopups === 'function') flushColourClashSettlementPopups(); }, 60);
             if(globalGamesPaused || !colourClashConfig.enabled){
                 // Betting is paused while the admin has the game switched off, but round results and
                 // this player's own past entries must stay visible (and keep updating automatically
@@ -5725,6 +5732,31 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         const ccSettlementSeenStates = Object.create(null);
         let ccSettlementPopupQueue = [];
         let ccSettlementPopupOpen = false;
+        let ccSettlementPopupCurrent = null;
+        function isColourClashPageVisible(){
+            const area=document.getElementById('activeGameArea');
+            if(!area || area.classList.contains('hidden')) return false;
+            const title=(document.getElementById('activeGameTitle')&&document.getElementById('activeGameTitle').innerText||'').toUpperCase();
+            if(title.indexOf('WINGO')>=0) return true;
+            const box=document.getElementById('gameContentBox');
+            return !!(box && (box.querySelector('.cc-modern-shell') || box.querySelector('#ccTimer') || box.querySelector('#ccMyHistory')));
+        }
+        function dismissColourClashSettlementUi(requeue){
+            if(requeue && ccSettlementPopupCurrent){
+                ccSettlementPopupQueue.unshift(ccSettlementPopupCurrent);
+            }
+            ccSettlementPopupCurrent=null;
+            const overlay=document.getElementById('ccSettlementOverlay');
+            if(overlay) overlay.remove();
+            ccSettlementPopupOpen=false;
+        }
+        function leaveColourClashPage(){
+            dismissColourClashSettlementUi(true);
+        }
+        function flushColourClashSettlementPopups(){
+            if(!isColourClashPageVisible() || ccSettlementPopupOpen) return;
+            if(ccSettlementPopupQueue.length) showColourClashSettlementPopup(ccSettlementPopupQueue.shift());
+        }
         function ccSettlementText(value){ return String(value == null ? '' : value); }
         function ccSettlementPickLabel(e){
             if(e.betType==='number') return 'Number ' + e.number + ' • ' + ccNumberSize(e.number);
@@ -5738,6 +5770,11 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             return String((d&&d.result)|| (e&&e.result) || '—');
         }
         function showColourClashSettlementPopup(entry){
+            if(!entry) return;
+            if(!isColourClashPageVisible()){
+                ccSettlementPopupQueue.unshift(entry);
+                return;
+            }
             const isWin=entry.status==='win';
             const amount=Number(entry.amount)||0;
             const won=Number(entry.winAmount)||0;
@@ -5765,12 +5802,15 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 <button type="button" class="btn-green cc-settlement-close" onclick="closeColourClashSettlementPopup()">CONTINUE</button>
             </div>`;
             overlay.classList.remove('hidden');
+            ccSettlementPopupCurrent=entry;
             ccSettlementPopupOpen=true;
         }
         function closeColourClashSettlementPopup(){
+            ccSettlementPopupCurrent=null;
             const overlay=document.getElementById('ccSettlementOverlay');
             if(overlay) overlay.remove();
             ccSettlementPopupOpen=false;
+            if(!isColourClashPageVisible()) return;
             if(ccSettlementPopupQueue.length) setTimeout(()=>showColourClashSettlementPopup(ccSettlementPopupQueue.shift()),80);
         }
         function queueColourClashSettlementPopup(entry){
@@ -5778,7 +5818,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const key=String(entry.key||entry.roundId||'')+'|'+String(entry.status)+'|'+String(entry.timestampResolved||'');
             if(!key || ccSettlementSeenStates[key]) return;
             ccSettlementSeenStates[key]=true;
-            if(ccSettlementPopupOpen){ ccSettlementPopupQueue.push(entry); return; }
+            if(!isColourClashPageVisible() || ccSettlementPopupOpen){ ccSettlementPopupQueue.push(entry); return; }
             showColourClashSettlementPopup(entry);
         }
 
