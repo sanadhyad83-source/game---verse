@@ -1079,6 +1079,18 @@
         }
         .meta-chip strong { color: var(--text-main); }
         .history-list { max-height: 200px; overflow-y: auto; margin-top: 4px; }
+        .gv-history-loading { padding: 12px; text-align:center; color:var(--text-muted); font-size:12px; }
+        /* Deposit / withdrawal histories must show every transaction, not only the newest card. */
+        #userDepositList.history-list, #userWithdrawList.history-list, #userHistoryList.history-list {
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        #userDepositList .gv-fin-card, #userWithdrawList .gv-fin-card, #userHistoryList .gv-fin-card {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
         .history-list .deposit-history-item, .history-list .withdraw-history-item {
             border-left: 3px solid rgba(var(--accent-rgb),0.5);
         }
@@ -1321,7 +1333,43 @@
         @keyframes rocketHover{from{margin-top:1px}to{margin-top:-5px}}
         @keyframes rocketCrash{0%{transform:translateX(-50%) rotate(-9deg) scale(1)}25%{transform:translateX(-50%) rotate(16deg) scale(1.08)}100%{transform:translate(90px,82px) rotate(78deg) scale(.75);opacity:.08}}
 
-    </style>
+    
+        /* ===== Premium deposit / withdrawal statement cards ===== */
+        .gv-fin-card{position:relative;overflow:hidden;margin:0 0 12px;padding:0;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,#2b2b2d 0%,#1c1c1e 100%);box-shadow:0 10px 28px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.045);text-align:left;}
+        .gv-fin-card:before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.055),transparent 34%,rgba(255,255,255,.015) 75%);}
+        .gv-fin-card:after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f6b23c,#ff6674);opacity:.95;}
+        .gv-fin-card.deposit-history-item:after{background:linear-gradient(180deg,#34d399,#22c55e);}
+        .gv-fin-card.withdraw-history-item:after{background:linear-gradient(180deg,#ff7b7b,#f43f5e);}
+        .gv-fin-inner{position:relative;z-index:1;padding:14px 14px 13px 17px;}
+        .gv-fin-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;}
+        .gv-fin-type-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+        .gv-fin-icon{width:34px;height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:rgba(255,255,255,.07);font-size:17px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
+        .gv-fin-type{font-size:13px;font-weight:900;letter-spacing:.2px;color:#fff;}
+        .gv-fin-time{font-size:10.5px;color:#a9abb2;line-height:1.35;}
+        .gv-fin-amount{text-align:right;white-space:nowrap;}
+        .gv-fin-amount-label{display:block;font-size:9.5px;color:#9ca0aa;text-transform:uppercase;letter-spacing:.65px;font-weight:800;margin-bottom:2px;}
+        .gv-fin-amount-value{display:block;font-size:17px;color:#f5b23c;font-weight:950;line-height:1.1;}
+        .gv-fin-bonus{display:block;margin-top:4px;color:#ff7580;font-size:10.5px;font-weight:800;}
+        .gv-fin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;margin-top:2px;}
+        .gv-fin-detail{min-width:0;padding:8px 9px;border-radius:10px;background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.055);}
+        .gv-fin-detail.full{grid-column:1/-1;}
+        .gv-fin-label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.55px;color:#858995;font-weight:800;margin-bottom:3px;}
+        .gv-fin-value{display:flex;align-items:center;gap:5px;min-width:0;font-size:11.5px;color:#ececef;font-weight:650;line-height:1.35;}
+        .gv-fin-order{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+        .gv-fin-copy{flex:0 0 28px!important;width:28px!important;height:27px!important;min-width:28px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:0!important;border:1px solid rgba(255,125,145,.38)!important;border-radius:8px!important;background:rgba(244,114,132,.10)!important;color:#ff9aaa!important;cursor:pointer!important;line-height:1!important;font-size:0!important;-webkit-tap-highlight-color:transparent;box-shadow:none!important;}
+        .gv-fin-copy svg{width:14px!important;height:14px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important;}
+        .gv-fin-copy:hover{background:rgba(244,114,132,.22)!important;border-color:rgba(255,125,145,.72)!important;color:#ffd1d8!important;}
+        .gv-fin-copy:active{transform:scale(.94)!important;}
+        .gv-fin-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.06);}
+        .gv-fin-status{text-align:right;font-size:10.5px;font-weight:900;text-transform:uppercase;letter-spacing:.45px;margin-left:auto;}
+        .gv-fin-status.completed{color:#34d399}.gv-fin-status.pending{color:#facc15}.gv-fin-status.rejected{color:#f87171}
+        .gv-fin-status.completed:before{content:'✓ ';}.gv-fin-status.pending:before{content:'◷ ';}.gv-fin-status.rejected:before{content:'× ';}
+        .gv-fin-method{color:#d4d4d8}
+        .gv-fin-muted{color:#a1a1aa!important}
+        @media(max-width:430px){.gv-fin-grid{grid-template-columns:1fr}.gv-fin-detail.full{grid-column:auto}.gv-fin-amount-value{font-size:15px}.gv-fin-inner{padding-right:11px}}
+
+        @media(max-width:520px){#supportArea .info-box>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;}}
+</style>
 
 <style id="gv-colour-mines-refresh-v4">
 /* ===== WINGO + Mines visual/visibility repair v4 ===== */
@@ -2134,7 +2182,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     <button type="button" class="btn-gray" onclick="copyAdminUsdtAddress()">📋 Copy BEP-20 Address</button>
                 </div>
                 <div id="depositQrWrap" class="hidden" style="text-align:center;margin:12px 0;"><p style="margin:0 0 8px 0;color:var(--text-muted);font-size:12px;">Or scan QR to pay</p><img id="depositQrImage" src="" alt="Deposit QR Code" style="max-width:180px;width:100%;border-radius:14px;border:1.5px solid rgba(var(--accent-rgb),.4);background:#fff;padding:8px;"></div>
-                <div class="meta-row"><span class="meta-chip">Min deposit: <strong id="displayMinDeposit">₹0</strong></span></div>
+                <div class="meta-row"><span class="meta-chip">Min deposit: <strong id="displayMinDeposit">₹0</strong></span><span class="meta-chip" id="depositBonusInfo">Deposit bonus: <strong>None</strong></span></div>
                 <input id="depUid" type="text" placeholder="Your UID" readonly style="color:var(--blue);font-family:ui-monospace,monospace;font-weight:700;">
                 <input id="depPhone" type="tel" placeholder="Phone Number" inputmode="numeric">
                 <input id="depAmount" type="number" placeholder="Amount (INR)" min="1">
@@ -2205,6 +2253,11 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 <input id="supportUid" type="text" placeholder="Confirm Your UID" readonly style="color:var(--accent-cyan); font-family:monospace;">
                 <input id="supportTgUsername" type="text" placeholder="Your Telegram Username (e.g. @yourname)">
                 <input id="supportSubject" type="text" placeholder="Subject of your problem">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;">
+                    <input id="supportDepositOrderId" type="text" placeholder="Deposit Order ID (Optional)" style="margin:0;">
+                    <input id="supportWithdrawOrderId" type="text" placeholder="Withdraw Order ID (Optional)" style="margin:0;">
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin:-2px 0 8px 2px;">Add an order ID only if your problem is related to a deposit or withdrawal.</div>
                 <textarea id="supportDesc" placeholder="Describe your problem in detail..." rows="3" style="width:100%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid rgba(120, 120, 120, 0.4); background:rgba(10, 10, 10, 0.8); color:var(--text-main); font-family:inherit; resize:none;"></textarea>
                 <button onclick="submitSupportRequest()" class="btn-green" style="margin-top:8px;">Submit Support Request</button>
             </div>
@@ -2491,6 +2544,16 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const depMinEl = document.getElementById('displayMinDeposit'); if (depMinEl) depMinEl.innerText = formatWalletAmount(depMin,c);
             const wdMinEl = document.getElementById('displayMinWithdraw'); if (wdMinEl) wdMinEl.innerText = formatWalletAmount(wdMin,c);
             const taxEl = document.getElementById('displayWithdrawTax'); if (taxEl) taxEl.innerText = `${c === 'USDT' ? adminWithdrawTaxUsdt : adminWithdrawTax}%`;
+            const bonusInfo = document.getElementById('depositBonusInfo');
+            if(bonusInfo){
+                let bonusText='None';
+                if(depositBonusConfig.type==='percent' && depositBonusConfig.percent>0) bonusText=depositBonusConfig.percent+'% on approved deposit';
+                else if(depositBonusConfig.type==='fixed'){
+                    const fv=c==='USDT'?depositBonusConfig.fixedUsdt:depositBonusConfig.fixedInr;
+                    bonusText=fv>0?formatWalletAmount(fv,c)+' fixed bonus':'None';
+                }
+                bonusInfo.innerHTML='Deposit bonus: <strong>'+bonusText+'</strong>';
+            }
             const depAmt = document.getElementById('depAmount'); if (depAmt) depAmt.placeholder = `Amount (${c})`;
             const wdAmt = document.getElementById('withdrawAmount'); if (wdAmt) wdAmt.placeholder = `Withdrawal Amount (${c})`;
             const depMethod = document.getElementById('depositPaymentMethod'); if (depMethod) depMethod.innerText = c === 'USDT' ? 'USDT BEP-20 Deposit Address' : 'Admin UPI ID';
@@ -2530,6 +2593,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         let referredCount = 0;
         let globalReferBonus = 0;
         let adminMinDeposit = 0;
+        let depositBonusConfig = { type:'off', percent:0, fixedInr:0, fixedUsdt:0 };
         let adminUpiValue = '';
         let adminQrCodeUrl = '';
         let adminUsdtQrCodeUrl = '';
@@ -2739,12 +2803,28 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const data = snap.val() || {};
             adminMinDeposit = Number(data.minDeposit) || 0;
             adminMinDepositUsdt = Number(data.minDepositUsdt) || 0;
+            depositBonusConfig = {
+                type:String(data.depositBonusType||'off').toLowerCase(),
+                percent:Math.max(0,Math.min(100,Number(data.depositBonusPercent)||0)),
+                fixedInr:Math.max(0,Number(data.depositBonusFixedInr)||0),
+                fixedUsdt:Math.max(0,Number(data.depositBonusFixedUsdt)||0)
+            };
             adminUpiValue = data.upiId || 'Not Set';
             adminUsdtBep20Address = data.usdtBep20Address || '';
             adminQrCodeUrl = data.qrCodeUrl || '';
             adminUsdtQrCodeUrl = data.usdtQrCodeUrl || '';
             const upiEl = document.getElementById('displayAdminUpi'); if(upiEl) upiEl.innerText = adminUpiValue;
             const usdtEl = document.getElementById('displayAdminUsdtAddress'); if(usdtEl) usdtEl.innerText = adminUsdtBep20Address || 'Not Set';
+            const bonusInfo = document.getElementById('depositBonusInfo');
+            if(bonusInfo){
+                let bonusText='None';
+                if(depositBonusConfig.type==='percent' && depositBonusConfig.percent>0) bonusText=depositBonusConfig.percent+'% on approved deposit';
+                else if(depositBonusConfig.type==='fixed'){
+                    const fv=selectedWalletCurrency==='USDT'?depositBonusConfig.fixedUsdt:depositBonusConfig.fixedInr;
+                    bonusText=fv>0?formatWalletAmount(fv,selectedWalletCurrency)+' fixed bonus':'None';
+                }
+                bonusInfo.innerHTML='Deposit bonus: <strong>'+bonusText+'</strong>';
+            }
             const qrWrap = document.getElementById('depositQrWrap'), qrImg = document.getElementById('depositQrImage');
             if (qrWrap && qrImg) {
                 const c = selectedWalletCurrency;
@@ -4225,50 +4305,51 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 db.ref('withdrawals').orderByChild('userId').equalTo(uid).once('value')
             ]).then(([depSnap, wdSnap]) => {
                 const items = [];
-                if (depSnap.exists()) {
-                    depSnap.forEach(child => {
-                        const d = child.val();
-                        items.push({
-                            type: 'Deposit',
-                            icon: '💳',
-                            amount: Number(d.amount) || 0,
-                            currency: String(d.currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR',
-                            status: d.status || 'pending',
-                            timestamp: Number(d.timestamp) || 0
-                        });
-                    });
-                }
-                if (wdSnap.exists()) {
-                    wdSnap.forEach(child => {
-                        const w = child.val();
-                        items.push({
-                            type: 'Withdrawal',
-                            icon: '💸',
-                            amount: Number(w.amount) || 0,
-                            currency: String(w.currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR',
-                            status: w.status || 'pending',
-                            timestamp: Number(w.timestamp) || 0
-                        });
-                    });
-                }
-
-                if (items.length === 0) {
+                if (depSnap.exists()) depSnap.forEach(child => {
+                    const d = child.val() || {};
+                    items.push({ key:child.key, type:'Deposit', icon:'💳', ...d });
+                });
+                if (wdSnap.exists()) wdSnap.forEach(child => {
+                    const w = child.val() || {};
+                    items.push({ key:child.key, type:'Withdrawal', icon:'💸', ...w });
+                });
+                if (!items.length) {
                     container.innerHTML = '<p>No transactions yet.</p>';
                     return;
                 }
-
-                items.sort((a, b) => b.timestamp - a.timestamp);
-
-                let statusColor = (s) => s === 'approved' ? '#34d399' : (s === 'rejected' ? '#f87171' : '#facc15');
-
-                container.innerHTML = items.map(it => `
-                    <div class="deposit-history-item">
-                        <b>${it.icon} ${it.type}</b><br>
-                        <b>Amount:</b> ${it.currency === 'USDT' ? `USDT ${Number(it.amount).toFixed(4)}` : `₹${Number(it.amount).toFixed(2)}`}<br>
-                        <b>Status:</b> <span style="color:${statusColor(it.status)}; font-weight:bold;">${it.status.toUpperCase()}</span><br>
-                        <span style="font-size:11px; color:var(--text-muted);">${it.timestamp ? new Date(it.timestamp).toLocaleString() : ''}</span>
-                    </div>
-                `).join('');
+                items.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+                container.innerHTML = items.map(it => {
+                    const c = String(it.currency||'INR').toUpperCase();
+                    const orderId = it.orderId || gvFinancialOrderId(it.type==='Withdrawal'?'WD':'DEP', it.key || it.reqId);
+                    const status = gvFinancialStatusLabel(it.status);
+                    const cls = gvFinancialStatusClass(it.status);
+                    const method = gvFinancialMethod(it.type,it);
+                    const amount = it.type==='Withdrawal'
+                        ? (it.netAmount!==undefined ? Number(it.netAmount)||0 : Number(it.amount)||0)
+                        : Number(it.amount)||0;
+                    const amountText = formatWalletAmount(amount,c);
+                    const isDep=it.type==='Deposit';
+                    const icon=isDep?'💳':'💸';
+                    const title=isDep?'Deposit':'Withdrawal';
+                    const bonus=gvDepositBonusForDisplay(it);
+                    const bonusLabel=gvDepositBonusLabel(it);
+                    const utr=it.utr || it.payoutUtr || it.txid || '—';
+                    return `<div class="gv-fin-card ${isDep?'deposit-history-item':'withdraw-history-item'}">
+                        <div class="gv-fin-inner">
+                          <div class="gv-fin-top">
+                            <div><div class="gv-fin-type-row"><span class="gv-fin-icon">${icon}</span><div><div class="gv-fin-type">${title}</div><div class="gv-fin-time">${it.timestamp ? new Date(it.timestamp).toLocaleString() : ''}</div></div></div></div>
+                            <div class="gv-fin-amount"><span class="gv-fin-amount-label">${isDep?'Balance':'Cash'}</span><span class="gv-fin-amount-value">${isDep?'+':''}${amountText}</span>${isDep?`<span class="gv-fin-bonus">${bonusLabel}</span>`:''}</div>
+                          </div>
+                          <div class="gv-fin-grid">
+                            <div class="gv-fin-detail full"><span class="gv-fin-label">Order ID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(orderId)}</span><button type="button" class="gv-fin-copy" aria-label="Copy order ID" onclick="copyGVOrderId('${String(orderId).replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"></path></svg></button></span></div>
+                            <div class="gv-fin-detail"><span class="gv-fin-label">Method</span><span class="gv-fin-value gv-fin-method">${escapeHtml(method)}</span></div>
+                            <div class="gv-fin-detail"><span class="gv-fin-label">UTR / TXID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(utr)}</span></span></div>
+                          </div>
+                          <div class="gv-fin-status-row"><span class="gv-fin-time">${c==='USDT'?'USDT':'INR'} transaction</span><span class="gv-fin-status ${cls}">${status}</span></div>
+                          ${String(it.status||'').toLowerCase()==='rejected' && it.adminNote ? `<div class="gv-fin-detail" style="margin-top:8px;"><span class="gv-fin-label">Reason</span><span class="gv-fin-value" style="color:#f87171;">${escapeHtml(it.adminNote)}</span></div>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
             }).catch(err => {
                 container.innerHTML = `<p>Failed to load history: ${escapeHtml(err.message)}</p>`;
             });
@@ -4800,6 +4881,73 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
         }
 
+        function gvFinancialOrderId(prefix, firebaseKey){
+            const p = prefix === 'WD' ? 'WD' : 'DEP';
+            const key = String(firebaseKey || '').replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+            return `${p}${key}`;
+        }
+        function gvFinancialStatusLabel(status){
+            const s = String(status || 'pending').toLowerCase();
+            return s === 'approved' ? 'Completed' : (s === 'rejected' ? 'Rejected' : 'Pending');
+        }
+        function gvFinancialStatusClass(status){
+            const s = String(status || 'pending').toLowerCase();
+            return s === 'approved' ? 'completed' : (s === 'rejected' ? 'rejected' : 'pending');
+        }
+        function gvFinancialMethod(type, row){
+            const c = String(row && row.currency || 'INR').toUpperCase();
+            if (type === 'Deposit') return c === 'USDT' ? 'USDT BEP-20' : (row.method || 'UPI-QR');
+            return c === 'USDT' ? 'USDT BEP-20' : (row.method || 'UPI');
+        }
+
+        // Calculate the promotional bonus that would be credited if this deposit
+        // is approved. Pending records are created with bonus: 0, so the UI must
+        // not display that stored zero as the final bonus amount. Once approved,
+        // the exact bonus written by Admin is used instead.
+        function gvDepositBonusForDisplay(row){
+            const c = String(row && row.currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR';
+            const status = String(row && row.status || 'pending').toLowerCase();
+            if(status === 'approved') return Math.max(0, Number(row && row.bonus) || 0);
+            if(status === 'rejected') return 0;
+            const amount = Math.max(0, Number(row && row.amount) || 0);
+            const cfg = depositBonusConfig || {};
+            const type = String(cfg.type || 'off').toLowerCase();
+            if(type === 'percent'){
+                const pct = Math.max(0, Math.min(100, Number(cfg.percent) || 0));
+                return Number((amount * pct / 100).toFixed(c === 'USDT' ? 4 : 2));
+            }
+            if(type === 'fixed'){
+                const fixed = c === 'USDT' ? Number(cfg.fixedUsdt) || 0 : Number(cfg.fixedInr) || 0;
+                return Number(Math.max(0, fixed).toFixed(c === 'USDT' ? 4 : 2));
+            }
+            return 0;
+        }
+
+        function gvDepositBonusLabel(row){
+            const status = String(row && row.status || 'pending').toLowerCase();
+            const bonus = gvDepositBonusForDisplay(row);
+            const c = String(row && row.currency || 'INR').toUpperCase() === 'USDT' ? 'USDT' : 'INR';
+            const amountText = formatWalletAmount(bonus, c);
+            if(status === 'pending' && bonus > 0) return `🎁 Bonus on approval +${amountText}`;
+            return `🎁 Bonus +${amountText}`;
+        }
+        function copyGVOrderId(orderId){
+            const text = String(orderId || '').trim();
+            if (!text) return;
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.setAttribute('readonly','');
+                ta.style.position='fixed'; ta.style.opacity='0'; ta.style.pointerEvents='none';
+                document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, ta.value.length);
+                let ok=false; try { ok=document.execCommand('copy'); } catch(e) {}
+                document.body.removeChild(ta);
+                if (ok) alert('Order ID copied: '+text); else prompt('Copy Order ID:',text);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(()=>alert('Order ID copied: '+text)).catch(fallback);
+            } else fallback();
+        }
+
         function submitDepositRequest() {
             if(!dashboard20Config.depositsEnabled) return alert('Deposits are temporarily disabled by the administrator. Please try again later.');
             const currency = selectedWalletCurrency;
@@ -4813,7 +4961,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (currency === 'USDT' && !adminUsdtBep20Address) return alert('USDT BEP-20 deposit address is not configured by admin yet.');
             if (!utr) return alert(currency === 'USDT' ? 'Please enter the USDT transaction TXID/hash.' : 'Please enter the transaction UTR number.');
             const depRef = db.ref('deposits').push();
-            depRef.set({ reqId:depRef.key,userId:currentUid,customUid:userCustomUid,phoneNumber:phone,amount,currency,utr,status:'pending',timestamp:Date.now() }).then(() => {
+            const orderId = gvFinancialOrderId('DEP', depRef.key);
+            depRef.set({ reqId:depRef.key,orderId,method:currency==='INR'?'UPI-QR':'USDT BEP-20',userId:currentUid,customUid:userCustomUid,phoneNumber:phone,amount,currency,utr,bonus:0,status:'pending',timestamp:Date.now() }).then(() => {
                 alert(`Deposit request submitted successfully! Awaiting ${currency} verification.`);
                 document.getElementById('depPhone').value=''; document.getElementById('depAmount').value=''; document.getElementById('depUtr').value='';
             });
@@ -4825,35 +4974,72 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(()=>alert('USDT BEP-20 address copied.')).catch(()=>prompt('Copy this address:',text)); else prompt('Copy this address:',text);
         }
 
+        // Robust deposit history loader: keeps every record, merges legacy records
+        // that may have been saved with customUid, and uses one live listener only.
+        let gvDepositHistoryQuery = null;
+        let gvDepositHistoryCustomQuery = null;
         function loadUserDeposits(uid) {
-            db.ref('deposits').orderByChild('userId').equalTo(uid).on('value', snap => {
-                const container = document.getElementById('userDepositList');
-                if(!container) return;
-                container.innerHTML = '';
+            const container = document.getElementById('userDepositList');
+            if (!container || !uid) return;
+            container.innerHTML = '<div class="gv-history-loading">Loading all deposit records...</div>';
 
-                if (!snap.exists()) {
-                    container.innerHTML = '<p>No deposit requests submitted yet.</p>';
-                    return;
-                }
+            if (gvDepositHistoryQuery) { try { gvDepositHistoryQuery.off('value'); } catch(e){} }
+            if (gvDepositHistoryCustomQuery) { try { gvDepositHistoryCustomQuery.off('value'); } catch(e){} }
 
-                const rows = [];
-                snap.forEach(child => rows.push(child.val()));
-                rows.sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
-                rows.forEach(r => {
-                    const st = (r.status || 'pending').toLowerCase();
-                    const pill = st === 'approved' ? 'approved' : (st === 'rejected' ? 'rejected' : 'pending');
-                    container.innerHTML += `
-                        <div class="deposit-history-item">
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-                                <b style="font-size:14px;">${formatWalletAmount(r.amount, r.currency || 'INR')}</b>
-                                <span class="status-pill ${pill}">${st.toUpperCase()}</span>
-                            </div>
-                            <div style="font-size:12px;color:var(--text-muted);">UTR: <span style="color:var(--text-main);">${r.utr || '—'}</span></div>
-                            <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${r.timestamp ? new Date(r.timestamp).toLocaleString() : ''}</div>
-                        </div>
-                    `;
+            const rowsByKey = {};
+            let renderTimer = null;
+            const render = () => {
+                clearTimeout(renderTimer);
+                renderTimer = setTimeout(() => {
+                    const rows = Object.values(rowsByKey).sort((a,b) =>
+                        (Number(b.timestamp)||0) - (Number(a.timestamp)||0)
+                    );
+                    if (!rows.length) {
+                        container.innerHTML = '<p>No deposit requests submitted yet.</p>';
+                        return;
+                    }
+                    container.innerHTML = rows.map(r => {
+                        const c = String(r.currency||'INR').toUpperCase();
+                        const orderId = r.orderId || gvFinancialOrderId('DEP', r.key || r.reqId);
+                        const status = gvFinancialStatusLabel(r.status);
+                        const cls = gvFinancialStatusClass(r.status);
+                        const amount = formatWalletAmount(r.amount, c);
+                        const bonusLabel = gvDepositBonusLabel(r);
+                        const method = gvFinancialMethod('Deposit', r);
+                        return `
+                            <div class="gv-fin-card deposit-history-item"><div class="gv-fin-inner">
+                                <div class="gv-fin-top">
+                                    <div><div class="gv-fin-type-row"><span class="gv-fin-icon">💳</span><div><div class="gv-fin-type">Deposit</div><div class="gv-fin-time">${r.timestamp ? new Date(r.timestamp).toLocaleString() : ''}</div></div></div></div>
+                                    <div class="gv-fin-amount"><span class="gv-fin-amount-label">Balance</span><span class="gv-fin-amount-value">+${amount}</span><span class="gv-fin-bonus">${bonusLabel}</span></div>
+                                </div>
+                                <div class="gv-fin-grid">
+                                    <div class="gv-fin-detail full"><span class="gv-fin-label">Order ID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(orderId)}</span><button type="button" class="gv-fin-copy" aria-label="Copy order ID" onclick="copyGVOrderId('${String(orderId).replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"></path></svg></button></span></div>
+                                    <div class="gv-fin-detail"><span class="gv-fin-label">Method</span><span class="gv-fin-value">${escapeHtml(method)}</span></div>
+                                    <div class="gv-fin-detail"><span class="gv-fin-label">UTR / TXID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(r.utr || r.txid || '—')}</span></span></div>
+                                </div>
+                                <div class="gv-fin-status-row"><span class="gv-fin-time">${c==='USDT'?'USDT':'INR'} transaction</span><span class="gv-fin-status ${cls}">${status}</span></div>
+                                ${String(r.status||'').toLowerCase()==='rejected' && r.adminNote ? `<div class="gv-fin-detail" style="margin-top:8px;"><span class="gv-fin-label">Reason</span><span class="gv-fin-value" style="color:#f87171;">${escapeHtml(r.adminNote)}</span></div>` : ''}
+                            </div></div>`;
+                    }).join('');
+                }, 0);
+            };
+            const consume = snap => {
+                if (snap && snap.exists()) snap.forEach(child => {
+                    const value = child.val() || {};
+                    // Merge by Firebase key so a record returned by both queries is never duplicated.
+                    rowsByKey[child.key] = { key: child.key, ...value };
                 });
-            });
+                render();
+            };
+
+            gvDepositHistoryQuery = db.ref('deposits').orderByChild('userId').equalTo(uid);
+            gvDepositHistoryQuery.on('value', consume);
+
+            // Legacy compatibility: older records can have customUid but no/old userId.
+            if (userCustomUid) {
+                gvDepositHistoryCustomQuery = db.ref('deposits').orderByChild('customUid').equalTo(userCustomUid);
+                gvDepositHistoryCustomQuery.on('value', consume);
+            }
         }
 
         function showRestrictionPopup(title, details) {
@@ -4976,7 +5162,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                         if (currency==='USDT') currentUsdtBalance=Number(res.snapshot.val())||0; else currentBalance=Number(res.snapshot.val())||0;
                         updateWalletCurrencyUI();
                         const withdrawRef=db.ref('withdrawals').push();
-                        return withdrawRef.set({reqId:withdrawRef.key,userId:currentUid,customUid:userCustomUid,amount,currency,taxPercent:taxPct,taxAmount,netAmount,firstWithdrawalFee:firstFee,totalDebited:totalDebit,tgUsername,upiId:currency==='INR'?upiId:'',usdtBep20Address:currency==='USDT'?usdtAddress:'',status:'pending',timestamp:Date.now()});
+                        const orderId=gvFinancialOrderId('WD',withdrawRef.key); return withdrawRef.set({reqId:withdrawRef.key,orderId,method:currency==='INR'?'UPI':'USDT BEP-20',userId:currentUid,customUid:userCustomUid,amount,currency,taxPercent:taxPct,taxAmount,netAmount,firstWithdrawalFee:firstFee,totalDebited:totalDebit,tgUsername,upiId:currency==='INR'?upiId:'',usdtBep20Address:currency==='USDT'?usdtAddress:'',status:'pending',timestamp:Date.now()});
                     }).then(()=>{ try{trackMissionEvent('withdrawal',1);}catch(e){} alert(`Withdrawal request sent successfully!\n\nGross: ${formatWalletAmount(amount,currency)}\nFirst withdrawal fee: ${formatWalletAmount(firstFee,currency)}\nTax (${taxPct}%): ${formatWalletAmount(taxAmount,currency)}\nYou Will Receive: ${formatWalletAmount(netAmount,currency)}`); document.getElementById('withdrawAmount').value=''; refreshWithdrawalRestrictionStatus(); });
                 });
             }).catch(e=>alert('Could not submit withdrawal: '+e.message));
@@ -4991,51 +5177,83 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             });
         }
 
+        // Robust withdrawal history loader: keeps every record and merges legacy
+        // records saved against customUid. Only one live listener per query is kept.
+        let gvWithdrawHistoryQuery = null;
+        let gvWithdrawHistoryCustomQuery = null;
         function loadUserWithdrawals(uid) {
-            db.ref('withdrawals').orderByChild('userId').equalTo(uid).on('value', snap => {
-                const container = document.getElementById('userWithdrawList');
-                if(!container) return;
-                container.innerHTML = '';
+            const container = document.getElementById('userWithdrawList');
+            if (!container || !uid) return;
+            container.innerHTML = '<div class="gv-history-loading">Loading all withdrawal records...</div>';
 
-                if (!snap.exists()) {
-                    container.innerHTML = '<p>No withdrawal requests made yet.</p>';
-                    return;
-                }
+            if (gvWithdrawHistoryQuery) { try { gvWithdrawHistoryQuery.off('value'); } catch(e){} }
+            if (gvWithdrawHistoryCustomQuery) { try { gvWithdrawHistoryCustomQuery.off('value'); } catch(e){} }
 
-                const rows = [];
-                snap.forEach(child => rows.push(child.val()));
-                rows.sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
-                rows.forEach(r => {
-                    const st = (r.status || 'pending').toLowerCase();
-                    const pill = st === 'approved' ? 'approved' : (st === 'rejected' ? 'rejected' : 'pending');
-                    const grossAmt = Number(r.amount) || 0;
-                    const taxPct = Number(r.taxPercent) || 0;
-                    const taxAmt = r.taxAmount !== undefined ? Number(r.taxAmount) || 0 : ((grossAmt * taxPct) / 100);
-                    const netAmt = r.netAmount !== undefined ? Number(r.netAmount) || 0 : (grossAmt - taxAmt);
-                    container.innerHTML += `
-                        <div class="withdraw-history-item">
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
-                                <div>
-                                    <div style="font-size:11px;color:var(--text-muted);">Amount after tax</div>
-                                    <b style="font-size:14px;">${formatWalletAmount(netAmt,r.currency||'INR')}</b>
+            const rowsByKey = {};
+            let renderTimer = null;
+            const render = () => {
+                clearTimeout(renderTimer);
+                renderTimer = setTimeout(() => {
+                    const rows = Object.values(rowsByKey).sort((a,b) =>
+                        (Number(b.timestamp)||0) - (Number(a.timestamp)||0)
+                    );
+                    if (!rows.length) {
+                        container.innerHTML = '<p>No withdrawal requests made yet.</p>';
+                        return;
+                    }
+                    container.innerHTML = rows.map(r => {
+                        const c = String(r.currency||'INR').toUpperCase();
+                        const orderId = r.orderId || gvFinancialOrderId('WD', r.key || r.reqId);
+                        const status = gvFinancialStatusLabel(r.status);
+                        const cls = gvFinancialStatusClass(r.status);
+                        const grossAmt = Number(r.amount)||0;
+                        const taxPct = Number(r.taxPercent)||0;
+                        const taxAmt = r.taxAmount !== undefined ? Number(r.taxAmount)||0 : ((grossAmt*taxPct)/100);
+                        const netAmt = r.netAmount !== undefined ? Number(r.netAmount)||0 : (grossAmt-taxAmt);
+                        const method = gvFinancialMethod('Withdrawal', r);
+                        return `
+                            <div class="gv-fin-card withdraw-history-item"><div class="gv-fin-inner">
+                                <div class="gv-fin-top">
+                                    <div><div class="gv-fin-type-row"><span class="gv-fin-icon">💸</span><div><div class="gv-fin-type">Withdrawal</div><div class="gv-fin-time">${r.timestamp ? new Date(r.timestamp).toLocaleString() : ''}</div></div></div></div>
+                                    <div class="gv-fin-amount"><span class="gv-fin-amount-label">Cash</span><span class="gv-fin-amount-value">${formatWalletAmount(netAmt,c)}</span></div>
                                 </div>
-                                <span class="status-pill ${pill}">${st.toUpperCase()}</span>
-                            </div>
-                            ${Number(r.firstWithdrawalFee||0)>0?`<div style="font-size:12px;color:var(--text-muted);">First withdrawal fee: <span style="color:#facc15;">-${formatWalletAmount(Number(r.firstWithdrawalFee),r.currency||'INR')}</span></div>`:''}
-                            <div style="font-size:12px;color:var(--text-muted);">Tax (${taxPct}%): <span style="color:#f87171;">-${formatWalletAmount(taxAmt,r.currency||'INR')}</span></div>
-                            <div style="font-size:13px;font-weight:800;color:#34d399;margin:3px 0;">Net: ${formatWalletAmount(Number(netAmt),r.currency||'INR')}</div>
-                            <div style="font-size:12px;color:var(--text-muted);">UPI: <span style="color:var(--text-main);">${r.upiId || '—'}</span> · TG: ${r.tgUsername || '—'}</div>
-                            <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${r.timestamp ? new Date(r.timestamp).toLocaleString() : ''}</div>
-                        </div>
-                    `;
+                                <div class="gv-fin-grid">
+                                    <div class="gv-fin-detail full"><span class="gv-fin-label">Order ID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(orderId)}</span><button type="button" class="gv-fin-copy" aria-label="Copy order ID" onclick="copyGVOrderId('${String(orderId).replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"></path></svg></button></span></div>
+                                    <div class="gv-fin-detail"><span class="gv-fin-label">Method</span><span class="gv-fin-value">${escapeHtml(method)}</span></div>
+                                    <div class="gv-fin-detail"><span class="gv-fin-label">UTR / Payout ID</span><span class="gv-fin-value"><span class="gv-fin-order">${escapeHtml(r.utr || r.payoutUtr || '—')}</span></span></div>
+                                </div>
+                                <div class="gv-fin-status-row"><span class="gv-fin-time">${c==='USDT'?'USDT':'INR'} payout</span><span class="gv-fin-status ${cls}">${status}</span></div>
+                                ${Number(r.firstWithdrawalFee||0)>0 ? `<div class="gv-fin-detail" style="margin-top:8px;"><span class="gv-fin-label">First withdrawal fee</span><span class="gv-fin-value" style="color:#facc15;">-${formatWalletAmount(Number(r.firstWithdrawalFee),c)}</span></div>` : ''}
+                                <div class="gv-fin-detail" style="margin-top:8px;"><span class="gv-fin-label">Tax (${taxPct}%)</span><span class="gv-fin-value" style="color:#f87171;">-${formatWalletAmount(taxAmt,c)}</span></div>
+                                ${String(r.status||'').toLowerCase()==='rejected' && r.adminNote ? `<div class="gv-fin-detail" style="margin-top:8px;"><span class="gv-fin-label">Reason</span><span class="gv-fin-value" style="color:#f87171;">${escapeHtml(r.adminNote)}</span></div>` : ''}
+                            </div></div>`;
+                    }).join('');
+                }, 0);
+            };
+            const consume = snap => {
+                if (snap && snap.exists()) snap.forEach(child => {
+                    const value = child.val() || {};
+                    rowsByKey[child.key] = { key: child.key, ...value };
                 });
-            });
+                render();
+            };
+
+            gvWithdrawHistoryQuery = db.ref('withdrawals').orderByChild('userId').equalTo(uid);
+            gvWithdrawHistoryQuery.on('value', consume);
+
+            // Legacy compatibility for withdrawal records stored with customUid.
+            if (userCustomUid) {
+                gvWithdrawHistoryCustomQuery = db.ref('withdrawals').orderByChild('customUid').equalTo(userCustomUid);
+                gvWithdrawHistoryCustomQuery.on('value', consume);
+            }
         }
 
         function submitSupportRequest() {
             const tgUsername = document.getElementById('supportTgUsername').value.trim();
             const subject = document.getElementById('supportSubject').value.trim();
             const description = document.getElementById('supportDesc').value.trim();
+            const depositOrderId = document.getElementById('supportDepositOrderId')?.value.trim() || '';
+            const withdrawOrderId = document.getElementById('supportWithdrawOrderId')?.value.trim() || '';
 
             if (!tgUsername) return alert('Please enter your Telegram username so support can reach you.');
             if (!subject) return alert('Please enter the subject of your problem.');
@@ -5049,6 +5267,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 tgUsername: tgUsername,
                 subject: subject,
                 description: description,
+                depositOrderId: depositOrderId || null,
+                withdrawOrderId: withdrawOrderId || null,
                 status: 'pending',
                 timestamp: Date.now()
             }).then(() => {
@@ -5056,11 +5276,21 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 alert('Support request submitted successfully! You can track its status below.');
                 document.getElementById('supportSubject').value = '';
                 document.getElementById('supportDesc').value = '';
+                const dep=document.getElementById('supportDepositOrderId'); if(dep) dep.value='';
+                const wd=document.getElementById('supportWithdrawOrderId'); if(wd) wd.value='';
             }).catch(err => alert('Failed to submit support request: ' + err.message));
         }
 
+        function escapeSupportHtmlUser(value) {
+            const div = document.createElement('div');
+            div.innerText = String(value == null ? '' : value);
+            return div.innerHTML;
+        }
+
         function loadUserSupportRequests(uid) {
-            db.ref('support_requests').orderByChild('userId').equalTo(uid).on('value', snap => {
+            const supportQuery = db.ref('support_requests').orderByChild('userId').equalTo(uid);
+            supportQuery.off('value', window.__gvUserSupportListener || null);
+            const listener = snap => {
                 const container = document.getElementById('userSupportList');
                 if(!container) return;
                 container.innerHTML = '';
@@ -5070,21 +5300,33 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     return;
                 }
 
-                snap.forEach(child => {
-                    const r = child.val();
+                const items=[];
+                snap.forEach(child => items.push({key:child.key,...child.val()}));
+                items.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+
+                items.forEach(r => {
                     let statusColor = 'var(--blue)';
                     if (r.status === 'approved') statusColor = '#34d399';
                     if (r.status === 'rejected') statusColor = '#f87171';
+                    const replies = r.replies && typeof r.replies === 'object' ? Object.entries(r.replies).map(([key,v])=>({key,...v})).sort((x,y)=>(Number(x.timestamp)||0)-(Number(y.timestamp)||0)) : [];
+                    const replyHtml = replies.length ? replies.map(msg => `
+                        <div style="padding:7px 9px;margin-top:6px;border-radius:8px;background:${msg.sender==='admin'?'rgba(34,211,238,.09)':'rgba(255,255,255,.045)'};border:1px solid rgba(255,255,255,.07);font-size:11px;line-height:1.45;">
+                            <b>${msg.sender==='admin'?'🛡️ Admin':'👤 You'}</b> · ${msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}<br>${escapeSupportHtmlUser(msg.message || '')}
+                        </div>`).join('') : '<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">Waiting for an admin reply…</div>';
 
                     container.innerHTML += `
                         <div class="support-history-item">
-                            <b>Subject:</b> ${r.subject}<br>
-                            <b>Description:</b> ${r.description}<br>
-                            <b>Status:</b> <span style="color:${statusColor}; font-weight:bold;">${r.status.toUpperCase()}</span>
+                            <b>Subject:</b> ${escapeSupportHtmlUser(r.subject || '—')}<br>
+                            <b>Description:</b> ${escapeSupportHtmlUser(r.description || '—')}<br>
+                            ${r.depositOrderId || r.withdrawOrderId ? `<div style="margin-top:6px;font-size:11px;">${r.depositOrderId ? `<b>Deposit Order ID:</b> ${escapeSupportHtmlUser(r.depositOrderId)}<br>` : ''}${r.withdrawOrderId ? `<b>Withdraw Order ID:</b> ${escapeSupportHtmlUser(r.withdrawOrderId)}` : ''}</div>` : ''}
+                            <b>Status:</b> <span style="color:${statusColor}; font-weight:bold;">${escapeSupportHtmlUser(String(r.status || 'pending').toUpperCase())}</span>
+                            <div style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(100,116,139,.35);"><b style="color:var(--accent-cyan);">💬 Support Conversation</b>${replyHtml}</div>
                         </div>
                     `;
                 });
-            });
+            };
+            window.__gvUserSupportListener = listener;
+            supportQuery.on('value', listener);
         }
 
         /* --- WINGO --- */
