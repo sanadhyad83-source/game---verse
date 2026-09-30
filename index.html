@@ -1671,50 +1671,9 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
   opacity:.62!important;
 }
 </style>
-<!-- GAME VERSE: Android Chrome launcher -->
+
 <script>
-(function () {
-  'use strict';
-  function gvAndroid(){ return /Android/i.test(navigator.userAgent || ''); }
-  function gvEmbedded(){
-    if(!gvAndroid()) return false;
-    var ua=navigator.userAgent||'', ref=document.referrer||'';
-    return /;\s*wv\)/i.test(ua) || /\bwv\b/i.test(ua) ||
-           /^android-app:\/\//i.test(ref);
-  }
-  function gvOpenChrome(){
-    if(!gvAndroid()) return;
-    var u=location.origin+location.pathname+location.search+location.hash;
-    var intent='intent://'+location.host+location.pathname+location.search+location.hash+
-      '#Intent;scheme=https;package=com.android.chrome;'+
-      'S.browser_fallback_url='+encodeURIComponent(u)+';end';
-    location.href=intent;
-  }
-  function gvChromeButton(){
-    if(!gvEmbedded() || document.getElementById('gvChromeOpen')) return;
-    var b=document.createElement('button');
-    b.id='gvChromeOpen';
-    b.type='button';
-    b.textContent='Open in Chrome';
-    b.onclick=gvOpenChrome;
-    b.style.cssText='position:fixed;right:12px;bottom:12px;z-index:2147483647;padding:11px 15px;border:0;border-radius:12px;background:#fff;color:#111;font:800 13px system-ui;box-shadow:0 6px 24px #0008;';
-    document.body.appendChild(b);
-  }
-  function gvStart(){
-    if(!gvEmbedded()) return;
-    var key='gv_chrome_launch_v2';
-    var tried=false;
-    try { tried=sessionStorage.getItem(key)==='1'; } catch(e){}
-    if(!tried){
-      try { sessionStorage.setItem(key,'1'); } catch(e){}
-      setTimeout(gvOpenChrome,150);
-    }
-    setTimeout(gvChromeButton,900);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',gvStart,{once:true});
-  else gvStart();
-  window.GameVerseOpenInChrome=gvOpenChrome;
-})();
+(function(){window.gvRecordAdminLoginEvent=function(uid){try{if(!uid||!window.db)return;window.db.ref('adminNotifications/loginEvents').push({userId:uid,customUid:window.userCustomUid||'',username:window.username||'',type:'login',timestamp:Date.now()});}catch(e){}};})();
 </script>
 </head>
 <body class="auth-mode">
@@ -3176,6 +3135,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
         function loadUserDashboard(uid) {
             currentUid = uid;
+            try{const k='gv_login_event_'+uid;if(sessionStorage.getItem(k)!=='1'){sessionStorage.setItem(k,'1');setTimeout(()=>{if(typeof window.gvRecordAdminLoginEvent==='function')window.gvRecordAdminLoginEvent(uid);},250);}}catch(e){}
+
             // Lightweight presence heartbeat used by the Admin Dashboard's Online/Recently Active metric.
             // It refreshes every 30 seconds while the user app is open and expires automatically via onlineUntil.
             if (window.__gvPresenceTimer) clearInterval(window.__gvPresenceTimer);
