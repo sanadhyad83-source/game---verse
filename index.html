@@ -1673,7 +1673,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 </style>
 
 <script>
-(function(){window.gvRecordAdminLoginEvent=function(uid){try{if(!uid||!window.db)return;window.db.ref('adminNotifications/loginEvents').push({userId:uid,customUid:window.userCustomUid||'',username:window.username||'',type:'login',timestamp:Date.now()});}catch(e){}};})();
 </script>
 </head>
 <body class="auth-mode">
@@ -3135,7 +3134,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
         function loadUserDashboard(uid) {
             currentUid = uid;
-            try{const k='gv_login_event_'+uid;if(sessionStorage.getItem(k)!=='1'){sessionStorage.setItem(k,'1');setTimeout(()=>{if(typeof window.gvRecordAdminLoginEvent==='function')window.gvRecordAdminLoginEvent(uid);},250);}}catch(e){}
 
             // Lightweight presence heartbeat used by the Admin Dashboard's Online/Recently Active metric.
             // It refreshes every 30 seconds while the user app is open and expires automatically via onlineUntil.
