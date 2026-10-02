@@ -1292,6 +1292,24 @@
 .gv-mini-badge b{display:block;font-size:18px;margin-bottom:3px;}
 @media(max-width:360px){.gv-badge-row{grid-template-columns:repeat(2,1fr)}}
 
+        /* --- PREMIUM HIGH CARD + NUMBER MASTER v3 --- */
+        .gv-high-card-shell{padding:12px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.09);box-shadow:0 14px 36px rgba(0,0,0,.25);}
+        .gv-high-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+        .gv-high-card-badge{padding:6px 9px;border-radius:999px;background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.22);color:#fde68a;font-size:9px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;}
+        .gv-high-card-pay{padding:6px 9px;border-radius:999px;background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.2);color:#86efac;font-size:9px;font-weight:900;}
+        .gv-card-table{display:grid;grid-template-columns:1fr 42px 1fr;align-items:center;gap:7px;padding:8px 0 12px;}
+        .gv-card-seat{text-align:center;min-width:0;}.gv-card-seat-label{font-size:8px;color:#8f93a0;font-weight:900;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;}
+        .gv-playing-card{position:relative;width:104px;height:144px;margin:auto;border-radius:18px;background:linear-gradient(145deg,#fff,#f4f4f5 55%,#d1d5db);color:#111;display:flex;align-items:center;justify-content:center;flex-direction:column;border:2px solid rgba(255,255,255,.9);box-shadow:0 16px 34px rgba(0,0,0,.42),inset 0 1px 0 #fff;transition:.3s;}
+        .gv-playing-card:before,.gv-playing-card:after{position:absolute;font-size:13px;font-weight:950}.gv-playing-card:before{content:attr(data-rank);left:9px;top:8px}.gv-playing-card:after{content:attr(data-rank);right:9px;bottom:8px;transform:rotate(180deg)}
+        .gv-playing-card .card-rank{font-size:42px;font-weight:950;line-height:1}.gv-playing-card .card-suit{font-size:32px;margin-top:7px}.gv-playing-card.hidden-card{background:radial-gradient(circle at 50% 30%,#334155,#0b1020 70%);color:#dbeafe;border-color:#64748b;box-shadow:0 16px 34px rgba(0,0,0,.55),inset 0 0 0 5px rgba(255,255,255,.035)}
+        .gv-card-vs{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;margin:auto;background:linear-gradient(145deg,#27272a,#09090b);border:1px solid rgba(255,255,255,.14);font-size:9px;font-weight:950;color:#facc15;box-shadow:0 0 18px rgba(250,204,21,.08)}
+        .gv-high-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gv-high-action{min-height:46px;border-radius:13px;font-weight:950;letter-spacing:.3px}.gv-high-action small{display:block;font-size:8px;opacity:.7;margin-top:2px}
+        .gv-number-shell{padding:14px;border-radius:20px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(168,85,247,.04));border:1px solid rgba(96,165,250,.14);box-shadow:0 14px 36px rgba(0,0,0,.25)}
+        .gv-number-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.gv-number-title{font-size:15px;font-weight:950}.gv-number-sub{font-size:9px;color:#8f93a0;margin-top:3px}.gv-number-attempts{display:flex;gap:5px}.gv-number-attempt{width:24px;height:8px;border-radius:99px;background:#27272a;border:1px solid rgba(255,255,255,.08)}.gv-number-attempt.on{background:#60a5fa;box-shadow:0 0 9px rgba(96,165,250,.35)}
+        .gv-number-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0}.gv-number-btn{height:43px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,#18181b,#0d0d10);color:#f4f4f5;font-weight:950;font-size:15px;cursor:pointer;transition:.18s}.gv-number-btn:hover{transform:translateY(-1px);border-color:rgba(96,165,250,.4)}.gv-number-btn.selected{background:linear-gradient(145deg,#2563eb,#1d4ed8);border-color:#60a5fa;box-shadow:0 0 18px rgba(37,99,235,.3)}
+        .gv-number-range{display:flex;justify-content:space-between;font-size:8px;color:#71717a;margin-top:-4px}.gv-number-result{min-height:44px;padding:11px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);font-size:11px;font-weight:800;text-align:center;display:grid;place-items:center}
+        @media(max-width:390px){.gv-playing-card{width:88px;height:126px}.gv-playing-card .card-rank{font-size:36px}.gv-number-grid{gap:5px}.gv-number-btn{height:39px;font-size:14px}}
+
         /* --- HIGH CARD + ROCKET JUMP VISUALS v2 --- */
         .game-thumb.card{background:linear-gradient(145deg,#ffffff,#9ca3af);color:#111;box-shadow:0 0 18px rgba(255,255,255,.16);}
         .high-card-stage{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;justify-items:center;gap:7px;min-height:214px;padding:10px 0;}
@@ -1369,6 +1387,37 @@
         @media(max-width:430px){.gv-fin-grid{grid-template-columns:1fr}.gv-fin-detail.full{grid-column:auto}.gv-fin-amount-value{font-size:15px}.gv-fin-inner{padding-right:11px}}
 
         @media(max-width:520px){#supportArea .info-box>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;}}
+
+/* ===== ROCKET JUMP v3 — wide flight deck + premium rocket ===== */
+.rocket-v3-shell{position:relative;display:grid;gap:10px;text-align:left}
+.rocket-v3-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(135deg,rgba(15,23,42,.95),rgba(2,6,23,.98));box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.rocket-v3-title{font-size:14px;font-weight:1000;letter-spacing:.2px}.rocket-v3-sub{font-size:9px;color:var(--text-muted);margin-top:2px}
+.rocket-v3-wallet{font-size:11px;font-weight:1000;padding:8px 11px;border-radius:12px;background:rgba(34,197,94,.08);border:1px solid rgba(74,222,128,.22);color:#86efac;white-space:nowrap}
+.rocket-v3-stage{position:relative;width:100%;height:430px;min-height:330px;overflow:hidden;border-radius:26px;border:1px solid rgba(148,163,184,.20);background:radial-gradient(circle at 78% 18%,rgba(59,130,246,.16),transparent 22%),radial-gradient(circle at 20% 28%,rgba(168,85,247,.13),transparent 25%),linear-gradient(180deg,#020617 0%,#07111f 55%,#02040a 100%);box-shadow:inset 0 0 80px rgba(0,0,0,.58),0 20px 45px rgba(0,0,0,.34)}
+.rocket-v3-stage:before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.85) 1px,transparent 1.5px),radial-gradient(circle,rgba(125,211,252,.55) 1px,transparent 1.4px);background-size:71px 71px,113px 113px;opacity:.34;animation:rocketV3Stars 4s linear infinite}
+.rocket-v3-stage:after{content:'';position:absolute;left:0;right:0;bottom:0;height:35%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.78));pointer-events:none}
+.rocket-v3-grid{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:52px 52px;transform:perspective(400px) rotateX(62deg) translateY(120px);transform-origin:center bottom;opacity:.42}
+.rocket-v3-orbit{position:absolute;left:7%;right:7%;bottom:10%;height:62%;border:1px solid rgba(125,211,252,.18);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;transform:rotate(-16deg);box-shadow:0 0 35px rgba(56,189,248,.05)}
+.rocket-v3-planet{position:absolute;width:42px;height:42px;border-radius:50%;right:9%;top:17%;background:radial-gradient(circle at 32% 28%,#e0f2fe,#38bdf8 30%,#1d4ed8 62%,#111827 100%);box-shadow:0 0 28px rgba(56,189,248,.24)}
+.rocket-v3-mult{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none}
+.rocket-v3-mult strong{display:block;font-size:clamp(38px,7vw,66px);line-height:1;font-weight:1000;letter-spacing:-2px;color:#f8fafc;text-shadow:0 0 24px rgba(125,211,252,.22)}
+.rocket-v3-mult span{font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1.6px;text-transform:uppercase}
+.rocket-v3-ship{position:absolute;left:50%;bottom:22px;width:78px;height:132px;z-index:4;transform:translateX(-50%) rotate(-10deg);transition:left .08s linear,bottom .08s linear;filter:drop-shadow(0 0 14px rgba(56,189,248,.28)) drop-shadow(0 0 22px rgba(251,146,60,.22))}
+.rocket-v3-ship .body{position:absolute;left:16px;top:10px;width:46px;height:92px;border-radius:52% 52% 35% 35%;background:linear-gradient(90deg,#64748b,#f8fafc 38%,#cbd5e1 68%,#64748b);border:2px solid rgba(255,255,255,.85);box-shadow:inset -8px -3px 12px rgba(15,23,42,.28),inset 5px 2px 9px rgba(255,255,255,.45)}
+.rocket-v3-ship .nose{position:absolute;left:24px;top:-10px;width:30px;height:28px;border-radius:70% 70% 24% 24%;background:linear-gradient(145deg,#fff,#94a3b8);box-shadow:0 0 12px rgba(255,255,255,.12)}
+.rocket-v3-ship .window{position:absolute;left:26px;top:29px;width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#e0f2fe,#38bdf8 38%,#1e3a8a 75%,#0f172a);border:3px solid #e2e8f0;box-shadow:0 0 14px rgba(56,189,248,.55)}
+.rocket-v3-ship .fin{position:absolute;top:67px;width:25px;height:39px;background:linear-gradient(145deg,#fb7185,#991b1b);z-index:-1}.rocket-v3-ship .fin.l{left:0;clip-path:polygon(100% 0,100% 100%,0 100%)}.rocket-v3-ship .fin.r{right:0;clip-path:polygon(0 0,100% 100%,0 100%)}
+.rocket-v3-ship .flame{position:absolute;left:50%;bottom:-38px;transform:translateX(-50%);width:30px;height:52px;border-radius:50% 50% 45% 45%;background:linear-gradient(180deg,#fff,#fde047 24%,#fb923c 58%,#ef4444 100%);box-shadow:0 0 30px rgba(251,146,60,.72);animation:rocketV3Flame .10s ease-in-out infinite alternate}
+.rocket-v3-ship .exhaust{position:absolute;left:50%;bottom:-72px;width:12px;height:72px;transform:translateX(-50%);background:linear-gradient(transparent,rgba(255,255,255,.72),rgba(56,189,248,.30),transparent);filter:blur(4px);animation:rocketV3Exhaust .12s ease-in-out infinite alternate}
+.rocket-v3-control{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rocket-v3-control .btn{width:100%}
+.rocket-v3-amount{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;align-items:center}.rocket-v3-amount button{height:42px;border-radius:12px;font-size:18px;font-weight:1000}.rocket-v3-amount input{height:42px;text-align:center;font-size:15px;font-weight:1000}
+.rocket-v3-limits{display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;padding:0 2px}
+.rocket-v3-status{text-align:center;font-size:10px;font-weight:900;color:#94a3b8}
+@keyframes rocketV3Stars{from{transform:translateY(0)}to{transform:translateY(71px)}}
+@keyframes rocketV3Flame{from{transform:translateX(-50%) scale(.82,.86)}to{transform:translateX(-50%) scale(1.08,1.18)}}
+@keyframes rocketV3Exhaust{from{height:52px;opacity:.42}to{height:82px;opacity:.92}}
+@media(max-width:620px){.rocket-v3-stage{height:360px}.rocket-v3-control{grid-template-columns:1fr}.rocket-v3-ship{transform:translateX(-50%) rotate(-10deg) scale(.88)}.rocket-v3-mult strong{font-size:48px}}
+
 </style>
 
 <style id="gv-colour-mines-refresh-v4">
@@ -1805,6 +1854,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         </div>
                 <!-- ========== HOME TAB ========== -->
         <div id="tabHome" class="tab-panel active">
+            <!-- Admin-controlled banner slider (hidden when admin has no active banner) -->
+            <div id="gvBannerSlider" class="gv-bn hidden" aria-label="Promotions"></div>
             <!-- Wallet Card -->
             <div class="wallet-card">
                 <div class="wallet-top-row">
@@ -2288,23 +2339,23 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     <div><b>💰</b><span>Real Rewards</span></div>
                 </div>
             </div>
-            <div class="gv-games-section-head"><span>🔥 Featured Game</span><small>Live now</small></div>
-            <div id="colourClashTopCard" class="game-hub-card gv-featured-game" style="border-color:rgba(var(--accent-rgb),0.55); background:linear-gradient(145deg,rgba(8,8,8,.96),rgba(0,0,0,.96)); box-shadow:0 0 22px rgba(var(--accent-rgb),.16);">
-                <div class="gh-row">
-                    <div class="game-thumb colour">🎨</div>
-                    <div class="gh-body">
-                        <div class="gh-top">
-                            <span class="gh-title">WINGO</span>
-                            <span class="status-pill active">LIVE</span>
+            <div class="gv-games-section-head"><span>🎮 All Games</span><small>Live now</small></div>
+            <div class="gv-sq-grid" id="gvGamesGrid">
+                <div id="colourClashTopCard" class="game-hub-card gv-sq-card">
+                    <div class="gh-row">
+                        <div class="game-thumb colour">🎨</div>
+                        <div class="gh-body">
+                            <div class="gh-top">
+                                <span class="gh-title">WINGO</span>
+                                <span class="status-pill active">LIVE</span>
+                            </div>
+                            <div id="colourClashTopStatus" class="gh-meta">Loading round...</div>
                         </div>
-                        <div style="font-size:13px;font-weight:700;margin:2px 0;">🔴 RED · 🟢 GREEN · 🟣 VIOLET</div>
-                        <div id="colourClashTopStatus" class="gh-meta" style="margin:0;">Loading round...</div>
                     </div>
+                    <button onclick="tryPlayColourClash()" class="btn-green">▶ Play Now</button>
                 </div>
-                <button onclick="tryPlayColourClash()" class="btn-green" style="margin-top:10px;padding:11px;">🎨 PLAY WINGO</button>
+                <div id="gameList" class="gv-sq-list"></div>
             </div>
-            <div class="section-label" style="margin-top:14px;">Mini Games</div>
-            <div id="gameList">Loading games...</div>
             <button onclick="backToDashboard()" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
         </div>
 
@@ -2616,6 +2667,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         let rocketInterval = null;
         let currentRocketMultiplier = 1.00;
         let rocketCrashPoint = 2.00;
+        let rocketWalletListenerRef = null;
         let isRocketCashedOut = false;
 
         let minesConfig = { enabled: true, minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000, minMines: 1, maxMines: 10, rtpPercent: 95 };
@@ -2751,7 +2803,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         db.ref('control/globalGamesStatus').on('value',snap=>{
             globalGamesPaused = snap.val()==='paused';
             if(typeof loadMiniGames==='function') loadMiniGames();
-            if(typeof updateColourClashTopCard==='function') updateColourClashTopCard();
+            if(typeof updateColourClashTopCard==='function') updateColourClashTopCard(); const fairEl=document.getElementById('ccFairnessState'); if(fairEl) fairEl.textContent = colourClashConfig.fairRandomOnly===true ? '✓ Fair' : '⚙ Admin mode';
             const activeArea=document.getElementById('activeGameArea'), title=document.getElementById('activeGameTitle');
             if(activeArea && !activeArea.classList.contains('hidden') && title && String(title.innerText||'').toUpperCase()==='WINGO'){
                 const info=document.getElementById('activeGameInfo'); if(info) info.innerText=globalGamesPaused?'🔒 This game is currently locked by the administrator.':'Pick a colour or a number';
@@ -5341,7 +5393,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         // has ever changed entrySeconds/cooldownSeconds away from these defaults, using this placeholder
         // even briefly would compute the wrong cycle length and therefore the wrong round id, writing
         // round-history entries that don't line up with the real current round sequence at all.
-        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, violetMultiplier:3, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:true };
+        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, violetMultiplier:3, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:false, fairRandomOnly:false, auditRounds:true };
         let colourClashConfigReady = false;
         let colourClashSelected = '';
         let colourClashAmount = 0;
@@ -5364,11 +5416,13 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 numberMultiplier: Math.max(1, Number(d.numberMultiplier) || 9),
                 sizeMultiplier: Math.max(1, Number(d.sizeMultiplier) || 2),
                 autoResult: d.autoResult !== false,
-                randomizedResult: d.randomizedResult !== false,
-                noConsecutiveRepeat: d.noConsecutiveRepeat !== false
+                randomizedResult: true,
+                noConsecutiveRepeat: false,
+                fairRandomOnly: d.fairRandomOnly === true,
+                auditRounds: d.auditRounds !== false
             };
             colourClashConfigReady = true;
-            updateColourClashTopCard();
+            updateColourClashTopCard(); const fairEl=document.getElementById('ccFairnessState'); if(fairEl) fairEl.textContent = colourClashConfig.fairRandomOnly===true ? '✓ Fair' : '⚙ Admin mode';
             // If the player currently has the WINGO screen open, re-render it immediately so
             // an admin toggling the game on/off takes effect right away — locking or unlocking the
             // betting controls — while round + entry history stays visible either way (see
@@ -5477,13 +5531,11 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         // not derived from the public round id or a predictable sequence.
         function ccSecureRandomInt(max){
             max=Math.max(1,Number(max)||1);
-            if(window.crypto&&window.crypto.getRandomValues){
-                const limit=Math.floor(0x100000000/max)*max;
-                const buf=new Uint32Array(1);
-                do{window.crypto.getRandomValues(buf);}while(buf[0]>=limit);
-                return buf[0]%max;
-            }
-            return Math.floor(Math.random()*max);
+            if(!(window.crypto&&window.crypto.getRandomValues)) throw new Error('Secure random generator unavailable.');
+            const limit=Math.floor(0x100000000/max)*max;
+            const buf=new Uint32Array(1);
+            do{window.crypto.getRandomValues(buf);}while(buf[0]>=limit);
+            return buf[0]%max;
         }
         async function ccGetSecureAutomaticNumber(roundId){
             let previous=null;
@@ -5615,14 +5667,14 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                   <div class="cc-brand-strip">
                     <button type="button" class="cc-back-btn" onclick="closeActiveGame()">‹</button>
                     <div class="cc-brand-mark"><span class="cc-brand-crown">◆</span><span class="cc-brand-word">WINGO</span></div>
-                    <div class="cc-brand-actions"><span>🎟️</span><span>◔</span></div>
+                    <div class="cc-brand-actions"><span>🎟️</span><span id="ccFairnessState" title="Fairness status">✓ Fair</span></div>
                   </div>
 
                   <div class="cc-info-ticket">
                     <div class="cc-ticket-left">
                       <button type="button" class="cc-how-play" onclick="alert('Choose a colour, number, or Big/Small. Selecting an option opens the amount entry window automatically.')">▣ &nbsp;How to play</button>
-                      <div class="cc-wingo-label">RECENT RESULTS</div>
-                      <div id="ccRecentResults" class="cc-recent-results"><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span></div>
+                      
+                      <div class="cc-wingo-label">RECENT RESULTS</div><div id="ccRecentResults" class="cc-recent-results"><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span><span class="cc-recent-ball cc-recent-empty">•</span></div>
                     </div>
                     <div class="cc-ticket-divider"></div>
                     <div class="cc-ticket-right">
@@ -5711,6 +5763,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         function closeColourClashEntryModal(){
             const modal=document.getElementById('ccEntryAmountModal');
             if(modal && typeof modal._ccViewportCleanup==='function') modal._ccViewportCleanup();
+            if(modal && modal._wgpKey) document.removeEventListener('keydown',modal._wgpKey);
             document.body.classList.remove('gv-wingo-entry-open');
             if(modal) modal.remove();
         }
@@ -5725,60 +5778,88 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const c=selectedWalletCurrency==='USDT'?'USDT':'INR';
             const min=c==='USDT'?colourClashConfig.minBetUsdt:colourClashConfig.minBet;
             const max=c==='USDT'?colourClashConfig.maxBetUsdt:colourClashConfig.maxBet;
-            let targetLabel='';
-            let accentClass='cc-modal-accent';
+            const cap=s=>s.charAt(0)+s.slice(1).toLowerCase();
+            // Header text + theme colour (BIG uses the yellow from the reference design)
+            let pickText='', theme='#f9b93e';
             if(type==='colour'){
-                targetLabel=`${colourClashSelected==='RED'?'🔴':colourClashSelected==='GREEN'?'🟢':'🟣'} ${colourClashSelected}`;
-                accentClass=colourClashSelected==='RED'?'cc-modal-red':colourClashSelected==='GREEN'?'cc-modal-green':'cc-modal-violet';
+                pickText='Select '+cap(colourClashSelected==='BLUE'?'VIOLET':colourClashSelected);
+                theme=colourClashSelected==='RED'?'#e5484d':colourClashSelected==='GREEN'?'#2fb36b':'#8b5cf6';
             }else if(type==='number'){
-                targetLabel=`🔢 NUMBER ${colourClashSelectedNumber}`;
-                accentClass='cc-modal-gold';
+                pickText='Select '+colourClashSelectedNumber;
+                const nc=ccNumberColour(colourClashSelectedNumber);
+                theme=nc==='GREEN'?'#2fb36b':nc==='RED'?'#e5484d':'#8b5cf6';
             }else{
-                // Keep the BIG/SMALL entry popup clean: no scale emoji.
-                targetLabel=colourClashSelectedSize==='BIG'?'BIG':'SMALL';
-                accentClass=colourClashSelectedSize==='BIG'?'cc-modal-orange':'cc-modal-violet';
+                pickText='Select '+cap(colourClashSelectedSize);
+                theme=colourClashSelectedSize==='BIG'?'#f9b93e':'#4a8fe7';
             }
+            const cycleSec=Math.round(colourClashCycleMs()/1000);
+            const gameTitle='WinGo '+(cycleSec%60===0?(cycleSec/60)+' Min':cycleSec+' Sec');
             const amountId=type==='colour'?'ccAmount':type==='number'?'ccNumberAmount':'ccSizeAmount';
             const buttonId=type==='colour'?'ccPlaceBtn':type==='number'?'ccNumberPlaceBtn':'ccSizePlaceBtn';
-            const placeFn=type==='colour'?'placeColourClashEntry()':type==='number'?'placeColourClashNumberEntry()':'placeColourClashSizeEntry()';
+            const place=()=>type==='colour'?placeColourClashEntry():type==='number'?placeColourClashNumberEntry():placeColourClashSizeEntry();
+            const units=c==='USDT'?[0.1,1,10,100]:[1,10,100,1000];
+            const mults=[1,5,10,20,50,100];
+            const st={unit:(units.find(x=>x>=min)||units[units.length-1]),qty:1,mult:1,agree:true};
+
             const modal=document.createElement('div');
             modal.id='ccEntryAmountModal';
-            modal.className='cc-entry-modal-backdrop';
+            modal.className='wgp-backdrop';
             modal.innerHTML=`
-              <div class="cc-entry-modal" role="dialog" aria-modal="true" aria-label="Place WINGO entry">
-                <div class="cc-entry-modal-head">
-                  <div class="cc-entry-modal-kicker">PLACE ENTRY</div>
-                  <button type="button" class="cc-entry-modal-close" aria-label="Close" onclick="closeColourClashEntryModal()">×</button>
+              <div class="wgp-card" role="dialog" aria-modal="true" aria-label="Place WINGO entry" style="--wgp:${theme}">
+                <div class="wgp-head">
+                  <div class="wgp-title">${gameTitle}</div>
+                  <div class="wgp-pick">${pickText}</div>
                 </div>
-                <div class="cc-entry-modal-target ${accentClass}">${targetLabel}</div>
-                <div class="cc-entry-modal-round"><span>Round #${r.roundId}</span><span>•</span><span>${c}</span></div>
-                <div class="cc-entry-modal-label">ENTRY AMOUNT</div>
-                <div class="cc-entry-modal-input-wrap"><span class="cc-entry-modal-currency">${c==='USDT'?'₮':'₹'}</span><input id="${amountId}" class="cc-entry-modal-input" type="number" inputmode="decimal" enterkeyhint="done" min="${min}" max="${max}" step="${c==='USDT'?'0.0001':'0.01'}" placeholder="${c==='USDT'?'Enter USDT amount':'Enter amount'}" autocomplete="off" autofocus></div>
-                <div class="cc-entry-modal-limit"><span>MIN ${colourClashMoney(min,c)}</span><span>MAX ${colourClashMoney(max,c)}</span></div>
-                <button type="button" id="${buttonId}" class="cc-entry-modal-submit" onclick="${placeFn}" style="background:linear-gradient(135deg,#22c55e 0%,#16a34a 52%,#15803d 100%) !important;color:#fff !important;border:1px solid rgba(134,239,172,.35) !important;box-shadow:0 10px 24px rgba(22,163,74,.28) !important;"><span>✓</span> CONFIRM &amp; PLACE ENTRY</button>
-                <div class="cc-entry-modal-hint">Your wallet will be debited only after you confirm the entry.</div>
+                <div class="wgp-body">
+                  <div class="wgp-row"><span class="wgp-lbl">Balance</span><div class="wgp-chips wgp-units">${units.map(x=>`<button type="button" class="wgp-chip" data-unit="${x}">${x}</button>`).join('')}</div></div>
+                  <div class="wgp-row"><span class="wgp-lbl">Quantity</span>
+                    <div class="wgp-qty"><button type="button" class="wgp-qbtn" data-q="-1" aria-label="Decrease">-</button><input class="wgp-qinput" type="number" inputmode="numeric" min="1" max="9999" step="1" value="1" aria-label="Quantity"><button type="button" class="wgp-qbtn" data-q="1" aria-label="Increase">+</button></div>
+                  </div>
+                  <div class="wgp-chips wgp-mults">${mults.map(x=>`<button type="button" class="wgp-chip" data-mult="${x}">X${x}</button>`).join('')}</div>
+                  <div class="wgp-agree"><button type="button" class="wgp-check on" role="checkbox" aria-checked="true" aria-label="I agree"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="wgp-agree-txt">I agree</span><button type="button" class="wgp-rules">《Pre-sale rules》</button></div>
+                </div>
+                <div class="wgp-foot">
+                  <button type="button" class="wgp-cancel">Cancel</button>
+                  <button type="button" id="${buttonId}" class="wgp-total">Total amount <span class="wgp-total-val"></span></button>
+                </div>
+                <input type="hidden" id="${amountId}" value="">
               </div>`;
-            modal.addEventListener('click',e=>{if(e.target===modal)closeColourClashEntryModal();});
             document.body.appendChild(modal);
             document.body.classList.add('gv-wingo-entry-open');
-            gvWingoEntryModalViewportSync(modal);
-            const input=document.getElementById(amountId);
-            const submit=document.getElementById(buttonId);
-            if(input){
-                input.addEventListener('focus',()=>{
-                    setTimeout(()=>{
-                        try{input.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
-                        setTimeout(()=>gvWingoEntryScrollButtonIntoView(modal),180);
-                    },120);
-                });
-                input.addEventListener('keydown',e=>{
-                    if(e.key==='Enter'){
-                        e.preventDefault();
-                        if(submit && !submit.disabled) submit.click();
-                    }
-                });
-                setTimeout(()=>{input.focus();setTimeout(()=>gvWingoEntryScrollButtonIntoView(modal),260);},100);
-            }
+
+            const q=s=>modal.querySelector(s);
+            const qinput=q('.wgp-qinput'), amt=document.getElementById(amountId);
+            const fmt=n=>c==='USDT'?n.toFixed(4):n.toFixed(2);
+            const refresh=()=>{
+                const total=Number((st.unit*st.qty*st.mult).toFixed(c==='USDT'?4:2));
+                amt.value=String(total);
+                q('.wgp-total-val').textContent=(c==='USDT'?'USDT ':'₹')+fmt(total);
+                modal.querySelectorAll('[data-unit]').forEach(b=>b.classList.toggle('on',Number(b.dataset.unit)===st.unit));
+                modal.querySelectorAll('[data-mult]').forEach(b=>b.classList.toggle('on',Number(b.dataset.mult)===st.mult));
+                const ck=q('.wgp-check'); ck.classList.toggle('on',st.agree); ck.setAttribute('aria-checked',String(st.agree));
+            };
+            const setQty=v=>{ v=Math.floor(Number(v)); if(!isFinite(v)||v<1) v=1; if(v>9999) v=9999; st.qty=v; qinput.value=String(v); refresh(); };
+            modal.querySelectorAll('[data-unit]').forEach(b=>b.addEventListener('click',()=>{st.unit=Number(b.dataset.unit);refresh();}));
+            modal.querySelectorAll('[data-mult]').forEach(b=>b.addEventListener('click',()=>{st.mult=Number(b.dataset.mult);refresh();}));
+            modal.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>setQty(st.qty+Number(b.dataset.q))));
+            qinput.addEventListener('input',()=>{ const v=Math.floor(Number(qinput.value)); if(isFinite(v)&&v>=1){ st.qty=Math.min(9999,v); refresh(); } });
+            qinput.addEventListener('blur',()=>setQty(qinput.value));
+            q('.wgp-check').addEventListener('click',()=>{st.agree=!st.agree;refresh();});
+            q('.wgp-agree-txt').addEventListener('click',()=>{st.agree=!st.agree;refresh();});
+            q('.wgp-rules').addEventListener('click',()=>{
+                const cfg=colourClashConfig||{};
+                alert('WINGO pre-sale rules\n\n• Colour entry pays x'+cfg.multiplier+' (Violet x'+cfg.violetMultiplier+')\n• Number entry pays x'+cfg.numberMultiplier+'\n• Big / Small entry pays x'+cfg.sizeMultiplier+'\n• Entry limit: '+colourClashMoney(min,c)+' – '+colourClashMoney(max,c)+'\n• Total amount = Balance × Quantity × Multiplier\n• Your wallet is debited as soon as you confirm. Entries close when the round timer ends.');
+            });
+            q('.wgp-cancel').addEventListener('click',closeColourClashEntryModal);
+            q('.wgp-total').addEventListener('click',()=>{
+                if(!st.agree) return alert('Please agree to the Pre-sale rules to continue.');
+                setQty(qinput.value);
+                place();
+            });
+            modal.addEventListener('click',e=>{ if(e.target===modal) closeColourClashEntryModal(); });
+            modal._wgpKey=e=>{ if(e.key==='Escape') closeColourClashEntryModal(); };
+            document.addEventListener('keydown',modal._wgpKey);
+            refresh();
         }
 
         function syncColourClashSelections(){
@@ -5825,6 +5906,43 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             });
         }
 
+        async function reserveColourClashCapacity(roundId, amount, currency){
+            const cfg=colourClashConfig||{};
+            const maxUser=Math.max(1,Number(cfg.maxEntriesPerUserPerRound)||5);
+            const maxEntries=Math.max(1,Number(cfg.maxRoundEntries)||500);
+            const maxLiability=String(currency).toUpperCase()==='USDT'?Number(cfg.maxRoundLiabilityUsdt)||0:Number(cfg.maxRoundLiability)||0;
+            const userRef=db.ref('colour_clash/roundStats/'+roundId+'/users/'+currentUid);
+            const roundRef=db.ref('colour_clash/roundStats/'+roundId+'/totals');
+            let userCommitted=false, roundCommitted=false;
+            try{
+                const ur=await userRef.transaction(v=>{v=v||{};const count=Number(v.count)||0;return count>=maxUser?v:Object.assign({},v,{count:count+1,lastAt:Date.now()});});
+                if(!ur.committed) throw new Error(`Round limit reached: maximum ${maxUser} entries per user.`);
+                userCommitted=true;
+                const rr=await roundRef.transaction(v=>{
+                    v=v||{};const entries=Number(v.entries)||0;const field=String(currency).toUpperCase()==='USDT'?'usdtWagered':'inrWagered';const wagered=Number(v[field])||0;
+                    if(entries>=maxEntries)return v;
+                    if(maxLiability>0 && wagered+Number(amount)>maxLiability)return v;
+                    return Object.assign({},v,{entries:entries+1,[field]:Number((wagered+Number(amount)).toFixed(8)),updatedAt:Date.now()});
+                });
+                if(!rr.committed){
+                    if(userCommitted) await userRef.transaction(v=>{v=v||{};return Object.assign({},v,{count:Math.max(0,(Number(v.count)||0)-1)});});
+                    throw new Error(maxLiability>0?`Round capacity reached for ${currency}. Please try a smaller amount or wait for the next round.`:'Round entry limit reached. Please try the next round.');
+                }
+                roundCommitted=true;
+                return true;
+            }catch(e){
+                if(userCommitted && !roundCommitted) await userRef.transaction(v=>{v=v||{};return Object.assign({},v,{count:Math.max(0,(Number(v.count)||0)-1)});}).catch(()=>{});
+                throw e;
+            }
+        }
+        async function releaseColourClashCapacity(roundId, amount, currency){
+            const userRef=db.ref('colour_clash/roundStats/'+roundId+'/users/'+currentUid);
+            const roundRef=db.ref('colour_clash/roundStats/'+roundId+'/totals');
+            await userRef.transaction(v=>{v=v||{};return Object.assign({},v,{count:Math.max(0,(Number(v.count)||0)-1)});}).catch(()=>{});
+            const field=String(currency).toUpperCase()==='USDT'?'usdtWagered':'inrWagered';
+            await roundRef.transaction(v=>{v=v||{};return Object.assign({},v,{entries:Math.max(0,(Number(v.entries)||0)-1),[field]:Math.max(0,Number((Number(v[field])||0)-Number(amount||0)).toFixed(8))});}).catch(()=>{});
+        }
+
         function placeColourClashEntry(){
             const r=getColourClashRoundState(); if(r.phase!=='open') return alert('Round is in cooldown.');
             if(!colourClashSelected) return alert('Please select RED, GREEN or VIOLET.');
@@ -5835,10 +5953,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if(!currentUid) return alert('Please login first.');
             if(!(Number(walletAmount()) > 0) || amount > Number(walletAmount())) return alert(`Insufficient ${selectedWalletCurrency} wallet balance. Please deposit funds.`);
             const btn=document.getElementById('ccPlaceBtn'); if(btn) btn.disabled=true;
-            debitColourClashWallet(amount).then(()=>{
+            reserveColourClashCapacity(r.roundId,amount,selectedWalletCurrency).then(()=>debitColourClashWallet(amount)).then(()=>{
                 const ref=db.ref('colour_clash/entries').push();
                 return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,colour:colourClashSelected,betType:'colour',status:'pending',timestamp:Date.now()})
-                    .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
+                    .catch(err=>refundColourClashWallet(amount).then(()=>releaseColourClashCapacity(r.roundId,amount,selectedWalletCurrency)).then(()=>{ throw err; }));
             }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: ${colourClashSelected} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccPlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
@@ -5857,9 +5975,9 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if(!currentUid) return alert('Please login first.');
             if(!(Number(walletAmount()) > 0) || amount > Number(walletAmount())) return alert(`Insufficient ${selectedWalletCurrency} wallet balance. Please deposit funds.`);
             const betBtn=document.getElementById('ccSizePlaceBtn'); if(betBtn) betBtn.disabled=true;
-            debitColourClashWallet(amount).then(()=>{
+            reserveColourClashCapacity(r.roundId,amount,selectedWalletCurrency).then(()=>debitColourClashWallet(amount)).then(()=>{
                 return db.ref('colour_clash/entries').push().set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,size:colourClashSelectedSize,betType:'size',status:'pending',timestamp:Date.now()})
-                    .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
+                    .catch(err=>refundColourClashWallet(amount).then(()=>releaseColourClashCapacity(r.roundId,amount,selectedWalletCurrency)).then(()=>{ throw err; }));
             }).then(()=>{ try { trackMissionEvent('bet_placed',1); trackMissionEvent('wager_amount',amount); } catch(e){} alert(`Entry placed: ${colourClashSelectedSize} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccSizePlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
@@ -5874,10 +5992,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if(!currentUid) return alert('Please login first.');
             if(!(Number(walletAmount()) > 0) || amount > Number(walletAmount())) return alert(`Insufficient ${selectedWalletCurrency} wallet balance. Please deposit funds.`);
             const betBtn=document.getElementById('ccNumberPlaceBtn'); if(betBtn) betBtn.disabled=true;
-            debitColourClashWallet(amount).then(()=>{
+            reserveColourClashCapacity(r.roundId,amount,selectedWalletCurrency).then(()=>debitColourClashWallet(amount)).then(()=>{
                 const ref=db.ref('colour_clash/entries').push();
                 return ref.set({roundId:r.roundId,userId:currentUid,customUid:userCustomUid,amount,currency:selectedWalletCurrency,number:colourClashSelectedNumber,betType:'number',status:'pending',timestamp:Date.now()})
-                    .catch(err=>refundColourClashWallet(amount).then(()=>{ throw err; }));
+                    .catch(err=>refundColourClashWallet(amount).then(()=>releaseColourClashCapacity(r.roundId,amount,selectedWalletCurrency)).then(()=>{ throw err; }));
             }).then(()=>{ try { trackMissionEvent('bet_placed', 1); trackMissionEvent('wager_amount', amount); } catch(e){} alert(`Entry placed: Number ${colourClashSelectedNumber} • ${colourClashMoney(amount, selectedWalletCurrency)}`); loadColourClashMyEntries(r.roundId); closeColourClashEntryModal(); })
               .catch(err=>alert('Could not place entry: '+err.message))
               .finally(()=>{ const b=document.getElementById('ccNumberPlaceBtn'); if(b) b.disabled=getColourClashRoundState().phase!=='open'; });
@@ -6234,14 +6352,14 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 }
                 const hasConfirmed=current.confirmedResultNumber!==undefined&&current.confirmedResultNumber!==null;
                 if(!hasConfirmed&&!colourClashConfig.autoResult)return;
-                const resultNumber=hasConfirmed ? Number(current.confirmedResultNumber) : await ccGetSecureAutomaticNumber(roundId);
+                const resultNumber=(hasConfirmed && colourClashConfig.fairRandomOnly !== true) ? Number(current.confirmedResultNumber) : await ccGetSecureAutomaticNumber(roundId);
                 const res=await ref.transaction(cur=>{
                     cur=cur||{};
                     if(cur.status==='resolved'&&cur.resultNumber!==undefined&&cur.resultNumber!==null)return cur;
                     const confirmed=cur.confirmedResultNumber!==undefined&&cur.confirmedResultNumber!==null;
                     if(!confirmed&&!colourClashConfig.autoResult)return cur;
-                    const n=confirmed?Number(cur.confirmedResultNumber):resultNumber;
-                    return Object.assign({},cur,{roundId,status:'resolved',resultNumber:n,result:ccNumberColour(n),resultColours:ccNumberColours(n),resultSize:ccNumberSize(n),resolvedNumberAt:Date.now(),resolvedAt:Date.now(),modeNumber:confirmed?'manual':'auto',mode:confirmed?'manual-number':'auto',randomSource:confirmed?'manual':'crypto.getRandomValues'});
+                    const n=(confirmed && colourClashConfig.fairRandomOnly !== true)?Number(cur.confirmedResultNumber):resultNumber;
+                    return Object.assign({},cur,{roundId,status:'resolved',resultNumber:n,result:ccNumberColour(n),resultColours:ccNumberColours(n),resultSize:ccNumberSize(n),resolvedNumberAt:Date.now(),resolvedAt:Date.now(),audit:{rng:'Web Crypto getRandomValues',fairRandomOnly:colourClashConfig.fairRandomOnly===true,generatedAfterEntry:true},modeNumber:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual':'auto',mode:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual-number':'auto',randomSource:'crypto.getRandomValues'});
                 });
                 const out=res.snapshot.val();
                 if(!out||out.resultNumber===undefined||out.resultNumber===null)return;
@@ -6387,6 +6505,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     const winChance = isNaN(winChanceVal) ? 50 : winChanceVal;
                     const betScalingVal = Number(g.betScalingPercent);
                     const betScaling = isNaN(betScalingVal) ? 0 : betScalingVal;
+                    const minBetINR = Number(g.minBetINR ?? g.minBet ?? 0);
+                    const maxBetINR = Number(g.maxBetINR ?? g.maxBet ?? 0);
+                    const minBetUSDT = Number(g.minBetUSDT ?? 0);
+                    const maxBetUSDT = Number(g.maxBetUSDT ?? 0);
                     
                     const icons = { rocket_jump:'🚀', high_card:'🃏', spin_wheel:'🎡', coin_flip:'🪙', number_guess:'🎯' };
                     const thumbs = { rocket_jump:'rocket', high_card:'card', spin_wheel:'wheel', coin_flip:'coin', number_guess:'number' };
@@ -6404,14 +6526,14 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                                     <div class="gh-meta" style="margin:0;">Reward: <b>${prizeDisplay}</b><br>Entry: <b style="color:${feeVal === 0 && !g.allowUserAmount ? '#34d399' : '#facc15'};">${feeDisplay}</b></div>
                                 </div>
                             </div>
-                            <button onclick="tryPlayGame('${gameId}', '${g.status}', '${gameTitleName}', ${g.prize || 0}, ${feeVal}, ${g.allowUserAmount ? true : false}, ${winChance}, ${betScaling})" class="${isActive ? 'btn-green' : 'btn-gray'}" style="margin-top:10px; padding:10px;">${isActive ? '▶ Play Now' : '🔒 Locked'}</button>
+                            <button onclick="tryPlayGame('${gameId}', '${g.status}', '${gameTitleName}', ${g.prize || 0}, ${feeVal}, ${g.allowUserAmount ? true : false}, ${winChance}, ${betScaling}, ${minBetINR}, ${maxBetINR}, ${minBetUSDT}, ${maxBetUSDT})" class="${isActive ? 'btn-green' : 'btn-gray'}" style="margin-top:10px; padding:10px;">${isActive ? '▶ Play Now' : '🔒 Locked'}</button>
                         </div>
                     `;
                 }
             });
         }
 
-        function tryPlayGame(gameId, status, gameName, prize, entryFee, allowUserAmount, winChance, betScaling) {
+        function tryPlayGame(gameId, status, gameName, prize, entryFee, allowUserAmount, winChance, betScaling, minBetINR=0, maxBetINR=0, minBetUSDT=0, maxBetUSDT=0) {
             if (globalGamesPaused) return alert('Games are temporarily paused by the administrator. Please try again later.');
             if (status !== 'active') return alert('Access Denied: Game locked.');
 
@@ -6432,33 +6554,44 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 activeInfo.innerText = `${activeInfo.dataset.baseInfo} • ${gameMoney(gameCurrencyAmount(), activeGameCurrency)} wallet`;
             }
             
+            window.activeGameLimits = {minINR:Number(minBetINR)||0,maxINR:Number(maxBetINR)||0,minUSDT:Number(minBetUSDT)||0,maxUSDT:Number(maxBetUSDT)||0};
             const contentBox = document.getElementById('gameContentBox');
             
             let customAmountHtml = gameCurrencySwitcherHtml();
             if (allowUserAmount) {
-                customAmountHtml += `<input id="userCustomPlayAmount" type="number" placeholder="Enter play amount (${activeGameCurrency})" min="1" style="margin-bottom:10px;">`;
+                customAmountHtml += `<div class="gv-bet-editor" style="margin-bottom:10px;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.025);">
+                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:10px;font-weight:900;"><span>Set Your Bet</span><span id="rocketBetLimits" style="color:var(--text-muted);">Min — • Max —</span></div>
+                    <input id="userCustomPlayAmount" type="number" placeholder="Enter amount (${activeGameCurrency})" min="0" step="0.01" style="margin:8px 0 0;">
+                </div>`;
             }
 
             if (gameId === 'rocket_jump') {
                 contentBox.innerHTML = `
-                    <p style="margin-top:0; color:var(--text-muted);">🚀 Rocket Jump - Cash out before crash!</p>
-                    ${customAmountHtml}
-                    <div class="rocket-flight-stage" id="rocketFlightStage">
-                        <div class="rocket-stars"></div><div class="rocket-path"></div>
-                        <div id="rocketShip" class="rocket-ship">
-                            <span class="rocket-nose"></span><span class="rocket-body"></span>
-                            <span class="rocket-fin left"></span><span class="rocket-fin right"></span>
-                            <span class="rocket-flame"></span><span class="rocket-exhaust"></span>
-                        </div>
-                        <span class="rocket-speed-line one"></span><span class="rocket-speed-line two"></span><span class="rocket-speed-line three"></span>
-                        <div style="position:absolute;left:12px;right:12px;top:12px;text-align:center;z-index:3;">
-                            <div id="rocketMultiplierDisplay" class="wheel-spinner" style="font-size:36px;color:#d0d0d0;text-shadow:0 0 14px rgba(255,255,255,.22);">1.00x</div>
-                            <div id="rocketStatusDisplay" style="font-size:12px;color:var(--text-muted);">Click start to launch!</div>
-                        </div>
+                    <div class="rocket-v3-shell" data-allow-user-amount="${allowUserAmount ? 'true' : 'false'}">
+                      <div class="rocket-v3-head">
+                        <div><div class="rocket-v3-title">🚀 Rocket Jump</div><div class="rocket-v3-sub">Set your bet • launch • cash out before the crash</div></div>
+                        <div id="rocketLiveWallet" class="rocket-v3-wallet">${gameMoney(gameCurrencyAmount(), activeGameCurrency)}</div>
+                      </div>
+                      <div class="rocket-v3-amount">
+                        <button type="button" class="btn-gray" onclick="adjustRocketBet(-1)">−</button>
+                        <input id="rocketBetAmount" type="number" min="0" step="0.01" placeholder="Enter your bet">
+                        <button type="button" class="btn-gray" onclick="adjustRocketBet(1)">+</button>
+                      </div>
+                      <div class="rocket-v3-limits"><span id="rocketBetLimits">Minimum —</span><span id="rocketBetMax">Maximum —</span></div>
+                      <div class="rocket-v3-stage" id="rocketFlightStage">
+                        <div class="rocket-v3-grid"></div><div class="rocket-v3-orbit"></div><div class="rocket-v3-planet"></div>
+                        <div class="rocket-v3-mult"><strong id="rocketMultiplierDisplay">1.00x</strong><span>live multiplier</span></div>
+                        <div id="rocketShip" class="rocket-v3-ship"><span class="nose"></span><span class="body"></span><span class="window"></span><span class="fin l"></span><span class="fin r"></span><span class="flame"></span><span class="exhaust"></span></div>
+                        <div id="rocketStatusDisplay" class="rocket-v3-status" style="position:absolute;left:0;right:0;bottom:14px;z-index:6;">Ready for launch</div>
+                      </div>
+                      <div class="rocket-v3-control">
+                        <button id="rocketStartBtn" onclick="initRocketJump(${entryFee}, ${allowUserAmount})" class="btn-green">🚀 START FLIGHT</button>
+                        <button id="rocketCashoutBtn" onclick="cashoutRocketJump()" class="btn-yellow hidden">💰 CASH OUT</button>
+                      </div>
                     </div>
-                    <button id="rocketStartBtn" onclick="initRocketJump(${entryFee}, ${allowUserAmount})" class="btn-green">Start Rocket Flight</button>
-                    <button id="rocketCashoutBtn" onclick="cashoutRocketJump()" class="btn-yellow hidden">💰 Cash Out (0)</button>
                 `;
+                startRocketWalletListener();
+                setTimeout(()=>setupRocketBetEditor(),0);
             } else if (gameId === 'spin_wheel') {
                 contentBox.innerHTML = `
                     <p style="margin-top:0; color:var(--text-muted);">🎡 Spin the wheel — land on 🎉 to win 2x your bet!</p>
@@ -6500,41 +6633,43 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             } else if (gameId === 'high_card') {
                 db.ref('control/highCardConfig').once('value').then(s => { window.highCardConfig = Object.assign({tieRule:'loss',payoutMultiplier:2,animationMs:900}, s.val()||{}); }).catch(()=>{});
                 contentBox.innerHTML = `
-                    <p class="high-card-hint">🃏 High Card — choose HIGH or LOW, then reveal the next card.</p>
-                    ${customAmountHtml}
-                    <div class="high-card-stage animation-stage">
-                        <div class="playing-card-wrap"><div id="highCardCurrent" class="playing-card" data-rank="?"><span class="card-rank">?</span><span class="card-suit">🂠</span></div><small>Current Card</small></div>
-                        <div class="high-card-arrow">VS</div>
-                        <div class="playing-card-wrap"><div id="highCardNext" class="playing-card card-hidden" data-rank="?"><span class="card-rank">?</span><span class="card-suit">◆</span></div><small>Next Card</small></div>
-                    </div>
-                    <div id="highCardResult" class="guess-box">Choose your side</div>
-                    <div class="high-card-choice-row">
-                        <button id="highCardHighBtn" onclick="initHighCard(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling}, 'high')" class="btn-green">⬆ HIGH</button>
-                        <button id="highCardLowBtn" onclick="initHighCard(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling}, 'low')" class="btn-yellow">⬇ LOW</button>
+                    <div class="gv-high-card-shell">
+                        <div class="gv-high-card-top"><div><div style="font-size:15px;font-weight:950;">🃏 High Card</div><div style="font-size:9px;color:#8f93a0;margin-top:2px;">Predict whether the next card is higher or lower</div></div><span class="gv-high-card-badge">Skill Pick</span></div>
+                        ${customAmountHtml}
+                        <div class="gv-card-table animation-stage">
+                            <div class="gv-card-seat"><div class="gv-card-seat-label">Current Card</div><div id="highCardCurrent" class="gv-playing-card" data-rank="?"><span class="card-rank">?</span><span class="card-suit">🂠</span></div></div>
+                            <div class="gv-card-vs">VS</div>
+                            <div class="gv-card-seat"><div class="gv-card-seat-label">Next Card</div><div id="highCardNext" class="gv-playing-card hidden-card card-hidden" data-rank="?"><span class="card-rank">?</span><span class="card-suit">◆</span></div></div>
+                        </div>
+                        <div id="highCardResult" class="gv-number-result">Choose HIGH or LOW to reveal the next card</div>
+                        <div class="gv-high-actions" style="margin-top:9px;">
+                            <button id="highCardHighBtn" onclick="initHighCard(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling}, 'high')" class="btn-green gv-high-action">⬆ HIGH<small>Next card is higher</small></button>
+                            <button id="highCardLowBtn" onclick="initHighCard(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling}, 'low')" class="btn-yellow gv-high-action">⬇ LOW<small>Next card is lower</small></button>
+                        </div>
                     </div>
                 `;
             } else if (gameId === 'number_guess') {
+                window.numberMasterConfig = {minNumber:1,maxNumber:10,attempts:3,payoutMultiplier:2};
                 targetNumber = Math.floor(Math.random() * 10) + 1;
                 remainingAttempts = 3;
+                db.ref('games/number_guess').once('value').then(snap=>{ const d=snap.val()||{}; const min=Math.max(1,Math.min(10,Math.floor(Number(d.minNumber)||1))); const max=Math.max(min,Math.min(10,Math.floor(Number(d.maxNumber)||10))); const attempts=Math.min(3,Math.max(1,Math.floor(Number(d.attempts)||3))); window.numberMasterConfig={minNumber:min,maxNumber:max,attempts,payoutMultiplier:Math.max(1,Number(d.payoutMultiplier)||2)}; targetNumber=Math.floor(Math.random()*(max-min+1))+min; remainingAttempts=attempts; });
                 contentBox.innerHTML = `
-                    <p style="margin-top:0; color:var(--text-muted);">🎯 Guess a number between 1 and 10 to win 2x your bet:</p>
-                    ${customAmountHtml}
-                    <div class="animation-stage" style="min-height:auto;padding:6px 0 2px;">
-                        <div id="attemptDots" class="attempt-dots">
-                            <span class="attempt-dot"></span><span class="attempt-dot"></span><span class="attempt-dot"></span>
-                        </div>
-                        <div id="guessGaugeWrap" class="guess-gauge-wrap hidden">
-                            <div class="guess-gauge-track"><div id="guessGaugeFill" class="guess-gauge-fill"></div></div>
-                            <div class="guess-gauge-labels"><span>1</span><span>10</span></div>
-                        </div>
+                    <div class="gv-number-shell">
+                        <div class="gv-number-head"><div><div class="gv-number-title">🎯 Number Master</div><div class="gv-number-sub">Pick the hidden number and use your attempts wisely</div></div><div class="gv-number-attempts"><span class="gv-number-attempt on"></span><span class="gv-number-attempt on"></span><span class="gv-number-attempt on"></span></div></div>
+                        ${customAmountHtml}
+                        <div id="numberMasterGrid" class="gv-number-grid">${Array.from({length:10},(_,i)=>`<button type="button" class="gv-number-btn" data-number="${i+1}" onclick="selectNumberMaster(${i+1})">${i+1}</button>`).join('')}</div>
+                        <div class="gv-number-range"><span>LOW</span><span>1 — 10</span><span>HIGH</span></div>
+                        <input id="userGuessInput" type="number" min="1" max="10" value="" style="display:none;">
+                        <div id="guessFeedback" class="gv-number-result" style="margin-top:10px;">Attempts left: 3 — select a number</div>
+                        <div id="guessGaugeWrap" class="guess-gauge-wrap hidden" style="margin-top:8px;"><div class="guess-gauge-track"><div id="guessGaugeFill" class="guess-gauge-fill"></div></div><div class="guess-gauge-labels"><span>1</span><span>10</span></div></div>
+                        <button id="actionBtn" onclick="initNumberGuess(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green" style="margin-top:10px;">🎯 Lock In Guess</button>
                     </div>
-                    <div id="guessFeedback" class="guess-box">Attempts left: 3. Make your guess!</div>
-                    <input id="userGuessInput" type="number" placeholder="Enter number (1-10)" min="1" max="10">
-                    <button id="actionBtn" onclick="initNumberGuess(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green">Submit Guess</button>
                 `;
             } else if (gameId === 'mines') {
                 renderMinesSetup();
             }
+            const customInput=document.getElementById('userCustomPlayAmount');
+            if(customInput && allowUserAmount){ const lim=window.activeGameLimits||{}; const min=activeGameCurrency==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0); const max=activeGameCurrency==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0); if(min>0)customInput.min=min; if(max>0)customInput.max=max; customInput.step=activeGameCurrency==='USDT'?'0.0001':'0.01'; const labels=document.getElementById('rocketBetLimits'); if(labels) labels.innerText=`Min ${gameMoney(min||0,activeGameCurrency)} • Max ${max>0?gameMoney(max,activeGameCurrency):'No limit'}`; }
         }
 
         let activeGameCurrentFee = 0;
@@ -6573,12 +6708,18 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             refreshGameWalletPanel();
         }
         function gameCurrencySwitcherHtml() { return `<div class="game-wallet-panel"><div class="game-wallet-head"><span>Game Wallet</span><span id="gameWalletLive" class="game-wallet-live">${gameMoney(gameCurrencyAmount(), activeGameCurrency)}</span></div><div class="game-currency-switch"><button type="button" class="game-currency-btn ${activeGameCurrency==='INR'?'active':''}" data-currency="INR" onclick="setGameCurrency('INR')">₹ INR</button><button type="button" class="game-currency-btn ${activeGameCurrency==='USDT'?'active':''}" data-currency="USDT" onclick="setGameCurrency('USDT')">₮ USDT</button></div><div class="game-wallet-sub">Selected wallet will be used for this game.</div></div>`; }
-        function refreshGameWalletPanel() { const el=document.getElementById('gameWalletLive'); if(el) el.innerText=gameMoney(gameCurrencyAmount(), activeGameCurrency); }
+        function refreshGameWalletPanel() {
+            const value=gameMoney(gameCurrencyAmount(), activeGameCurrency);
+            const el=document.getElementById('gameWalletLive'); if(el) el.innerText=value;
+            const rocketEl=document.getElementById('rocketLiveWallet'); if(rocketEl) rocketEl.innerText=value;
+            const info=document.getElementById('activeGameInfo');
+            if(info && !Number(activeGameCurrentFee||0)){ const base=info.dataset.baseInfo||''; info.innerText=base ? `${base} • ${value} wallet` : `${value} wallet`; }
+        }
 
         function getDeductedFee(defaultFee, allowUserAmount) {
             let fee = defaultFee;
             if (allowUserAmount) {
-                const customInput = Number(document.getElementById('userCustomPlayAmount').value);
+                const customInput = Number((document.getElementById('rocketBetAmount')||document.getElementById('userCustomPlayAmount')).value);
                 if (!customInput || customInput <= 0) {
                     alert('Please enter a valid amount to start the game.');
                     return null;
@@ -6586,14 +6727,33 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 fee = customInput;
             }
             const currency = activeGameCurrency;
+            const lim=window.activeGameLimits||{};
+            const min=currency==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0);
+            const max=currency==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0);
+            if (allowUserAmount && min>0 && fee<min) { alert(`Minimum bet is ${gameMoney(min,currency)}.`); return null; }
+            if (allowUserAmount && max>0 && fee>max) { alert(`Maximum bet is ${gameMoney(max,currency)}.`); return null; }
             if (gameCurrencyAmount(currency) < fee) {
                 alert(`Insufficient ${currency} wallet balance! Required: ${gameMoney(fee, currency)}. Please deposit funds.`);
                 return null;
             }
-            if (currency === 'USDT') currentUsdtBalance -= fee; else currentBalance -= fee;
-            db.ref('users/' + currentUid).update({ usdtBalance: currentUsdtBalance, balance: currentBalance });
-            refreshGameWalletPanel();
-            if (fee > 0) alert(`Amount of ${gameMoney(fee, currency)} deducted from your ${currency} wallet.`);
+            // Use a Firebase transaction for the deduction so the Rocket Jump wallet cannot
+            // drift when another wallet update happens at the same time. The live user listener
+            // then refreshes the visible wallet immediately from the database's committed value.
+            const field = currency === 'USDT' ? 'usdtBalance' : 'balance';
+            const walletRef = db.ref('users/' + currentUid + '/' + field);
+            const resultPromise = walletRef.transaction(balance => {
+                const current = Number(balance || 0);
+                return current >= fee ? Number((current - fee).toFixed(currency === 'USDT' ? 4 : 2)) : balance;
+            }).then(res => {
+                if(!res.committed) throw new Error(`Insufficient ${currency} wallet balance.`);
+                if(currency === 'USDT') currentUsdtBalance=Number(res.snapshot.val()||0); else currentBalance=Number(res.snapshot.val()||0);
+                refreshGameWalletPanel();
+                return fee;
+            });
+            // Keep this synchronous API contract by marking the pending deduction; Rocket Jump
+            // waits for the promise in initRocketJump below.
+            window.__gvRocketDeductionPromise=resultPromise;
+            if (fee > 0) refreshGameWalletPanel();
             return fee;
         }
 
@@ -6956,7 +7116,12 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             activeGameCurrentFee = 0;
         }
 
+        function stopRocketWalletListener(){
+            if(rocketWalletListenerRef){ try{rocketWalletListenerRef.off('value', rocketWalletListenerRef._gvRocketWalletHandler); }catch(e){} rocketWalletListenerRef=null; }
+        }
+
         function prepareRocketForRestart() {
+            stopRocketWalletListener();
             const startBtn = document.getElementById('rocketStartBtn');
             const cashoutBtn = document.getElementById('rocketCashoutBtn');
             const customEl = document.getElementById('userCustomPlayAmount');
@@ -6978,10 +7143,46 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
         }
 
+        function setupRocketBetEditor(){
+            const src=document.getElementById('userCustomPlayAmount'), target=document.getElementById('rocketBetAmount');
+            if(src && target){
+                target.value=src.value||'';
+                src.style.display='none';
+                src.addEventListener('input',()=>{target.value=src.value;});
+                target.addEventListener('input',()=>{src.value=target.value;});
+            }
+            const c=activeGameCurrency, lim=window.activeGameLimits||{};
+            const min=c==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0), max=c==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0);
+            const lo=document.getElementById('rocketBetLimits'), hi=document.getElementById('rocketBetMax');
+            if(lo)lo.textContent=`Minimum ${gameMoney(min,c)}`; if(hi)hi.textContent=`Maximum ${gameMoney(max,c)}`;
+            if(target){target.min=min||0;target.max=max||'';target.step=c==='USDT'?'0.0001':'0.01'; if(!target.value&&min)target.value=min; const shell=document.querySelector('.rocket-v3-shell'); const custom=shell&&shell.dataset.allowUserAmount==='true'; target.disabled=!custom; if(!custom)target.value='';}
+        }
+        function adjustRocketBet(direction){
+            const input=document.getElementById('rocketBetAmount'); if(!input)return;
+            const c=activeGameCurrency, lim=window.activeGameLimits||{};
+            const min=c==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0), max=c==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0);
+            const step=c==='USDT'?0.1:10, current=Number(input.value)||min||0;
+            const next=Math.min(max||Infinity,Math.max(min||0,current+direction*step)); input.value=next.toFixed(c==='USDT'?4:2); const src=document.getElementById('userCustomPlayAmount'); if(src)src.value=input.value;
+        }
+
+        function startRocketWalletListener(){
+            stopRocketWalletListener();
+            if(!currentUid)return;
+            rocketWalletListenerRef=db.ref('users/'+currentUid);
+            rocketWalletListenerRef._gvRocketWalletHandler=snap=>{
+                const d=snap.val()||{}; currentBalance=Number(d.balance)||0; currentUsdtBalance=Number(d.usdtBalance)||0; refreshGameWalletPanel();
+            };
+            rocketWalletListenerRef.on('value',rocketWalletListenerRef._gvRocketWalletHandler);
+        }
+
         function initRocketJump(defaultFee, allowUserAmount) {
             const fee = getDeductedFee(defaultFee, allowUserAmount);
             if (fee === null) return;
+            const rocketDeduction = window.__gvRocketDeductionPromise || Promise.resolve();
+            window.__gvRocketDeductionPromise = null;
+            rocketDeduction.catch(err=>{ alert(err.message||'Bet could not be placed.'); prepareRocketForRestart(); });
             activeGameCurrentFee = fee;
+            startRocketWalletListener();
             const startBtn = document.getElementById('rocketStartBtn');
             const cashoutBtn = document.getElementById('rocketCashoutBtn');
             if (startBtn) { startBtn.classList.add('hidden'); startBtn.disabled = true; }
@@ -7012,6 +7213,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 if (min > max) { let temp = min; min = max; max = temp; }
 
                 rocketCrashPoint = parseFloat((Math.random() * (max - min) + min).toFixed(2));
+                const tickMs=Math.max(40,Number(data.tickMs)||90);
+                const multiplierStep=Math.max(0.001,Number(data.multiplierStep)||0.03);
+                const maxCap=Math.max(1,Number(data.maxMultiplierCap)||100);
+                rocketCrashPoint=Math.min(rocketCrashPoint,maxCap);
                 currentRocketMultiplier = 1.00;
                 isRocketCashedOut = false;
 
@@ -7023,7 +7228,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 document.getElementById('rocketStatusDisplay').style.color = 'var(--blue)';
 
                 rocketInterval = setInterval(() => {
-                    currentRocketMultiplier += 0.03;
+                    currentRocketMultiplier += multiplierStep;
                     currentRocketMultiplier = parseFloat(currentRocketMultiplier.toFixed(2));
 
                     const multDisp = document.getElementById('rocketMultiplierDisplay');
@@ -7032,11 +7237,11 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     if (multDisp) multDisp.innerText = `${currentRocketMultiplier.toFixed(2)}x`;
                     if (rocketShip) {
                         const progress = Math.min(1, Math.max(0, (currentRocketMultiplier - 1) / Math.max(.01, rocketCrashPoint - 1)));
-                        rocketShip.style.bottom = (18 + progress * 170) + 'px';
-                        rocketShip.style.left = (50 + Math.sin(currentRocketMultiplier * 1.8) * 18) + '%';
+                        rocketShip.style.bottom = (22 + progress * 315) + 'px';
+                        rocketShip.style.left = (46 + progress * 42 + Math.sin(currentRocketMultiplier * 1.6) * 5) + '%';
                     }
                     const potentialWin = Number((Number(activeGameCurrentFee || 0) * Number(currentRocketMultiplier || 0)).toFixed(2));
-                    if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (₹${potentialWin})`;
+                    if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (${gameMoney(potentialWin, activeGameCurrency)})`;
 
                     if (currentRocketMultiplier >= rocketCrashPoint) {
                         clearInterval(rocketInterval);
@@ -7052,7 +7257,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                         lockBackToMenu();
                         prepareRocketForRestart();
                     }
-                }, 90);
+                }, tickMs);
             });
         }
 
@@ -7066,6 +7271,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const updatedWallet = { usdtBalance: Number(currentUsdtBalance || 0), balance: Number(currentBalance || 0) };
             db.ref('users/' + currentUid).update(updatedWallet).then(() => {
                 refreshGameWalletPanel();
+                stopRocketWalletListener();
                 const info = document.getElementById('activeGameInfo');
                 if (info) info.innerText = `${info.dataset.baseInfo || ''} • ${gameMoney(gameCurrencyAmount(), activeGameCurrency)} wallet`.replace(/^ • /, '');
                 updateWalletCurrencyUI();
@@ -7501,30 +7707,38 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if(currentEl){ currentEl.classList.remove('card-win','card-loss'); currentEl.dataset.rank=rank(currentValue); currentEl.innerHTML=`<span class="card-rank">${rank(currentValue)}</span><span class="card-suit">${currentSuit}</span>`; currentEl.style.color=(currentSuit==='♥'||currentSuit==='♦')?'#dc2626':'#111'; }
             if(result) result.innerText='Revealing next card…';
             setTimeout(()=>{
-                if(nextEl){ nextEl.classList.remove('card-hidden'); nextEl.classList.add('card-reveal'); nextEl.style.color=(nextSuit==='♥'||nextSuit==='♦')?'#dc2626':'#111'; nextEl.innerHTML=`<span class="card-rank">${rank(nextValue)}</span><span class="card-suit">${nextSuit}</span>`; }
+                if(nextEl){ nextEl.classList.remove('card-hidden','hidden-card'); nextEl.classList.add('card-reveal'); nextEl.style.color=(nextSuit==='♥'||nextSuit==='♦')?'#dc2626':'#111'; nextEl.innerHTML=`<span class="card-rank">${rank(nextValue)}</span><span class="card-suit">${nextSuit}</span>`; }
                 const actualWin = choice==='high' ? nextValue>currentValue : nextValue<currentValue;
                 if(result) result.innerText=actualWin ? `🎉 ${rank(nextValue)} is ${choice.toUpperCase()} — YOU WIN!` : `❌ ${rank(nextValue)} is ${choice==='high'?'LOW':'HIGH'} — YOU LOSE`;
                 if(nextEl) nextEl.classList.add(actualWin?'card-win':'card-loss');
                 if(actualWin){
-                    const winAmount=fee*2;
+                    const winAmount=Number((fee*Number(highCardConfig.payoutMultiplier||2)).toFixed(activeGameCurrency==='USDT'?4:2));
                     if(activeGameCurrency==='USDT') currentUsdtBalance+=winAmount; else currentBalance+=winAmount;
                     db.ref('users/'+currentUid).update({usdtBalance:currentUsdtBalance,balance:currentBalance}).then(()=>{ refreshGameWalletPanel(); logGameRound('high_card','High Card',fee,winAmount,'win'); spawnConfetti(document.querySelector('.animation-stage')); alert(`🎉 High Card win! You won ${gameMoney(winAmount,activeGameCurrency)}.`); lockBackToMenu(); });
                 } else { logGameRound('high_card','High Card',fee,0,'loss'); setTimeout(()=>{alert('❌ High Card lost. Better luck next time.'); lockBackToMenu();},250); }
-            },900);
+            }, Math.max(300,Number(highCardConfig.animationMs)||900));
+        }
+
+        function selectNumberMaster(n){
+            const input=document.getElementById('userGuessInput'); if(input) input.value=String(n);
+            document.querySelectorAll('#numberMasterGrid .gv-number-btn').forEach(b=>b.classList.toggle('selected',Number(b.dataset.number)===Number(n)));
+            const feedback=document.getElementById('guessFeedback'); if(feedback) feedback.innerText=`Selected ${n}. Press Lock In Guess.`;
         }
 
         function initNumberGuess(defaultFee, allowUserAmount, winChancePercent, betScalingPercent) {
             const inputVal = Number(document.getElementById('userGuessInput').value);
+            const nmCfg=window.numberMasterConfig||{minNumber:1,maxNumber:10,attempts:3,payoutMultiplier:2};
+            const nmMin=Math.max(1,Number(nmCfg.minNumber)||1), nmMax=Math.max(nmMin,Number(nmCfg.maxNumber)||10);
             const feedback = document.getElementById('guessFeedback');
             const btn = document.getElementById('actionBtn');
             const stage = document.querySelector('.animation-stage');
 
-            if (!inputVal || inputVal < 1 || inputVal > 10) {
-                return alert('Please enter a valid number between 1 and 10.');
+            if (!inputVal || inputVal < nmMin || inputVal > nmMax) {
+                return alert(`Please select a valid number between ${nmMin} and ${nmMax}.`);
             }
 
             let fee;
-            if (remainingAttempts === 3) {
+            if (remainingAttempts === Number(nmCfg.attempts||3)) {
                 fee = getDeductedFee(defaultFee, allowUserAmount);
                 if (fee === null) return;
                 activeGameCurrentFee = fee;
@@ -7537,12 +7751,12 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
 
             remainingAttempts--;
-            updateAttemptDots(3 - remainingAttempts);
+            updateAttemptDots(Number(nmCfg.attempts||3) - remainingAttempts);
             const effectiveWinChance = getScaledWinChance(winChancePercent, fee, betScalingPercent);
             const isWin = Math.random() * 100 < effectiveWinChance;
 
             if (isWin) {
-                const winAmount = fee * 2;
+                const winAmount = Number((fee * Number(nmCfg.payoutMultiplier || 2)).toFixed(activeGameCurrency==='USDT'?4:2));
                 feedback.innerText = `🎯 Spot on! It was ${inputVal}.`;
                 feedback.classList.add('game-win-glow');
                 if (activeGameCurrency === 'USDT') currentUsdtBalance += winAmount; else currentBalance += winAmount;
@@ -8784,3 +8998,153 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
   #gameContentBox .cc-entry-modal-submit{min-height:52px!important}
 }
 </style>
+
+<style id="gv-square-games-and-banner">
+/* ===== Play Games Hub: square tiles, 2 columns x 4 rows ===== */
+.gv-sq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:6px;}
+.gv-sq-list{display:contents;}
+.gv-sq-grid .game-hub-card{position:relative;aspect-ratio:1/1;margin:0 !important;padding:10px !important;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;overflow:hidden;border-radius:18px !important;background:linear-gradient(145deg,#0e1014,#060709) !important;border:1px solid rgba(255,255,255,.10) !important;box-shadow:0 10px 24px rgba(0,0,0,.28) !important;}
+#colourClashTopCard.gv-sq-card{border-color:rgba(255,255,255,.28) !important;box-shadow:0 0 18px rgba(255,255,255,.10),0 10px 24px rgba(0,0,0,.28) !important;}
+.gv-sq-grid .game-hub-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.24) !important;}
+.gv-sq-grid .gh-row{flex:1;width:100%;min-height:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+.gv-sq-grid .game-thumb{width:42px;height:42px;font-size:22px;border-radius:13px;}
+.gv-sq-grid .gh-body{flex:none;width:100%;}
+.gv-sq-grid .gh-top{flex-direction:column;align-items:center;gap:0;margin:0 0 3px;}
+.gv-sq-grid .gh-title{font-size:13px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gv-sq-grid .gh-meta{font-size:9px;line-height:1.4;margin:0 !important;}
+.gv-sq-grid .status-pill{position:absolute;top:7px;right:7px;font-size:7px !important;padding:2px 6px !important;}
+.gv-sq-grid .game-hub-card button{flex:none;width:100%;margin:6px 0 0 !important;padding:8px 6px !important;font-size:10.5px !important;border-radius:10px !important;}
+@media (max-width:340px){.gv-sq-grid{gap:8px;}.gv-sq-grid .game-thumb{width:36px;height:36px;font-size:19px;}.gv-sq-grid .gh-meta{font-size:8.5px;}}
+
+/* ===== Home banner slider (controlled from Admin > Notifications) ===== */
+.gv-bn{position:relative;margin:0 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:16/7;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;}
+.gv-bn-track{display:flex;height:100%;transition:transform .45s ease;will-change:transform;}
+.gv-bn-slide{flex:0 0 100%;height:100%;position:relative;}
+.gv-bn-slide.link{cursor:pointer;}
+.gv-bn-slide img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none;pointer-events:none;}
+.gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;}
+.gv-bn-dot{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .25s,background .25s;}
+.gv-bn-dot.on{width:16px;background:#fff;}
+</style>
+<style id="gv-compact-wallet-and-wingo-popup">
+/* ===== Compact wallet card (all inner sizes reduced; balance + currency switch share one row) ===== */
+#dash .wallet-card{display:grid !important;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;row-gap:3px;align-items:center;padding:10px 13px 9px !important;border-radius:16px !important;margin-bottom:10px !important;}
+#dash .wallet-card .wallet-top-row{grid-column:1 / -1;grid-row:1;min-height:0;}
+#dash .wallet-card .wallet-label{font-size:8.5px !important;letter-spacing:1.3px !important;}
+#dash .wallet-card .wallet-amount-row{grid-column:1;grid-row:2;margin:0 !important;gap:6px !important;}
+#dash .wallet-card .wallet-amount{font-size:25px !important;line-height:1.1 !important;letter-spacing:-.6px !important;}
+#dash .wallet-card .wallet-currency-switch{grid-column:2;grid-row:2;margin:0 !important;gap:5px !important;}
+#dash .wallet-card .wallet-currency-btn{margin:0 !important;padding:5px 9px !important;font-size:11px !important;line-height:1.1 !important;min-height:0 !important;border-radius:9px !important;width:auto !important;}
+#dash .wallet-card .wallet-tagline{grid-column:1 / -1;grid-row:3;margin:0 !important;font-size:9.5px !important;line-height:1.2 !important;}
+#dash .wallet-card .wallet-badge-row .g-badge-profile{padding:3px 8px 3px 3px !important;gap:6px !important;border-radius:9px !important;}
+#dash .wallet-card .wallet-badge-row .g-badge-mark,#dash .wallet-card .wallet-badge-row .g-badge-mark::before{width:30px !important;height:30px !important;flex-basis:30px !important;border-radius:8px !important;background-size:contain !important;}
+#dash .wallet-card .wallet-badge-row .g-badge-copy b{font-size:8.5px !important;}
+#dash .wallet-card .wallet-badge-row .g-badge-copy small{font-size:7px !important;max-width:120px !important;}
+#dash .wallet-card .wallet-badge-row .g-badge-copy em{display:none !important;}
+
+/* ===== WINGO entry popup (yellow-header style) ===== */
+.wgp-backdrop{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,.62);overflow-y:auto;}
+.wgp-card{--wgp:#f9b93e;width:100%;max-width:380px;border-radius:26px 26px 0 0;overflow:hidden;background:#2c313b;box-shadow:0 24px 60px rgba(0,0,0,.6);font-family:'Inter',system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none;}
+.wgp-head{background:var(--wgp);padding:16px 18px 40px;text-align:center;clip-path:polygon(0 0,100% 0,100% 80%,50% 100%,0 80%);}
+.wgp-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:10px;text-shadow:0 1px 2px rgba(0,0,0,.18);}
+.wgp-pick{background:#f4f6f8;color:#2c313b;border-radius:7px;font-size:15px;font-weight:500;padding:9px 10px;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+.wgp-body{padding:4px 16px 14px;margin-top:-18px;position:relative;}
+.wgp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;}
+.wgp-lbl{font-size:15px;font-weight:600;color:#fff;flex:0 0 auto;}
+.wgp-chips{display:flex;gap:6px;flex:1 1 auto;justify-content:flex-end;min-width:0;}
+.wgp-mults{margin-top:12px;justify-content:space-between;}
+.wgp-mults .wgp-chip{flex:1 1 0;}
+.wgp-units .wgp-chip{flex:0 1 auto;min-width:44px;}
+.wgp-chip{margin:0;border:0;border-radius:6px;background:#9ba1a9;color:#fff;font-size:13px;font-weight:600;padding:8px 6px;line-height:1.1;cursor:pointer;box-shadow:none;transition:background .15s,transform .1s;min-width:0;width:auto;}
+.wgp-chip:active{transform:scale(.96);}
+.wgp-chip.on{background:var(--wgp);}
+.wgp-qty{display:flex;align-items:center;gap:8px;}
+.wgp-qbtn{margin:0;width:32px;height:30px;border:0;border-radius:7px;background:var(--wgp);color:#fff;font-size:20px;font-weight:700;line-height:1;padding:0;cursor:pointer;box-shadow:none;display:flex;align-items:center;justify-content:center;}
+.wgp-qinput{width:96px;height:30px;margin:0;padding:0 6px;text-align:center;background:#2c313b;border:1px solid #9ba1a9;border-radius:2px;color:#fff;font-size:15px;font-weight:600;outline:none;-webkit-user-select:text;user-select:text;-moz-appearance:textfield;}
+.wgp-qinput::-webkit-outer-spin-button,.wgp-qinput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.wgp-qinput:focus{border-color:var(--wgp);}
+.wgp-agree{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;}
+.wgp-check{margin:0;width:24px;height:24px;border-radius:50%;border:2px solid #9ba1a9;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;flex:0 0 auto;cursor:pointer;box-shadow:none;}
+.wgp-check svg{opacity:0;}
+.wgp-check.on{background:var(--wgp);border-color:var(--wgp);}
+.wgp-check.on svg{opacity:1;}
+.wgp-agree-txt{color:#fff;cursor:pointer;}
+.wgp-rules{margin:0;background:none;border:0;box-shadow:none;padding:0;width:auto;color:#ff6b5e;font-size:13px;font-weight:500;cursor:pointer;}
+.wgp-foot{display:flex;height:48px;}
+.wgp-cancel,.wgp-total{margin:0;border:0;border-radius:0;box-shadow:none;font-size:14px;font-weight:600;color:#fff;cursor:pointer;height:100%;}
+.wgp-cancel{flex:1 1 0;background:#7a828b;}
+.wgp-total{flex:1.5 1 0;background:var(--wgp);text-shadow:0 1px 2px rgba(0,0,0,.2);}
+.wgp-total:disabled{opacity:.6;cursor:not-allowed;}
+@media(max-width:360px){.wgp-lbl{font-size:13px}.wgp-chip{font-size:12px;padding:7px 4px}.wgp-units .wgp-chip{min-width:38px}}
+</style>
+
+<script id="gv-banner-slider-user">
+(function(){
+    var cfg={enabled:true,intervalSec:4}, items=[], idx=0, timer=null, bound=false;
+    function safeImg(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)||/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u)?u:'';}
+    function safeLink(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
+    function stop(){if(timer){clearInterval(timer);timer=null;}}
+    function go(n){
+        var host=document.getElementById('gvBannerSlider'); if(!host||!items.length) return;
+        idx=(n+items.length)%items.length;
+        var track=host.querySelector('.gv-bn-track'); if(track) track.style.transform='translateX(-'+(idx*100)+'%)';
+        host.querySelectorAll('.gv-bn-dot').forEach(function(d,i){d.classList.toggle('on',i===idx);});
+    }
+    function play(){
+        stop();
+        if(items.length<2||document.hidden) return;
+        timer=setInterval(function(){go(idx+1);},Math.max(2,Number(cfg.intervalSec)||4)*1000);
+    }
+    function render(){
+        var host=document.getElementById('gvBannerSlider'); if(!host) return;
+        stop();
+        if(!cfg.enabled||!items.length){host.classList.add('hidden');host.innerHTML='';return;}
+        if(idx>=items.length) idx=0;
+        host.innerHTML='';
+        var track=document.createElement('div'); track.className='gv-bn-track';
+        items.forEach(function(b){
+            var s=document.createElement('div'); s.className='gv-bn-slide'+(safeLink(b.linkUrl)?' link':'');
+            var img=document.createElement('img'); img.alt=b.title||'Banner'; img.draggable=false; img.src=safeImg(b.imageUrl);
+            // A broken image is dropped so users never see an empty banner.
+            img.onerror=function(){items=items.filter(function(x){return x.id!==b.id;});render();};
+            s.appendChild(img);
+            var l=safeLink(b.linkUrl);
+            if(l) s.addEventListener('click',function(){if(host.__moved) return; window.open(l,'_blank','noopener');});
+            track.appendChild(s);
+        });
+        host.appendChild(track);
+        if(items.length>1){
+            var dots=document.createElement('div'); dots.className='gv-bn-dots';
+            items.forEach(function(){var d=document.createElement('span'); d.className='gv-bn-dot'; dots.appendChild(d);});
+            host.appendChild(dots);
+        }
+        host.classList.remove('hidden');
+        go(idx); play();
+        if(!host.__bound){
+            host.__bound=true; var x0=0,dx=0,down=false;
+            host.addEventListener('touchstart',function(e){down=true;dx=0;host.__moved=false;x0=e.touches[0].clientX;stop();},{passive:true});
+            host.addEventListener('touchmove',function(e){if(down) dx=e.touches[0].clientX-x0;},{passive:true});
+            host.addEventListener('touchend',function(){
+                if(down&&Math.abs(dx)>40){host.__moved=true;go(dx<0?idx+1:idx-1);}
+                down=false; play(); setTimeout(function(){host.__moved=false;},50);
+            });
+        }
+    }
+    function apply(v){
+        v=v||{}; cfg.enabled=v.enabled!==false; cfg.intervalSec=Number(v.intervalSec)||4;
+        var all=v.items||{};
+        items=Object.keys(all).map(function(k){return Object.assign({id:k},all[k]);})
+            .filter(function(b){return b&&b.enabled!==false&&safeImg(b.imageUrl);})
+            .sort(function(a,b){return (Number(a.order)||0)-(Number(b.order)||0)||(Number(a.createdAt)||0)-(Number(b.createdAt)||0);});
+        render();
+    }
+    function start(){
+        if(bound) return;
+        if(typeof db==='undefined'||!db){setTimeout(start,300);return;}
+        bound=true;
+        db.ref('control/bannerSlider').on('value',function(s){apply(s.val());},function(){apply(null);});
+        document.addEventListener('visibilitychange',function(){if(document.hidden) stop(); else play();});
+    }
+    start();
+})();
+</script>
