@@ -1723,6 +1723,151 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
 <script>
 </script>
+<style id="gv-rocket-live-v1">
+/* ===== ROCKET JUMP LIVE (continuous shared rounds, Aviator-style) ===== */
+.rjx{display:grid;gap:9px;text-align:left;-webkit-user-select:none;user-select:none}
+.rjx input{-webkit-user-select:text;user-select:text}
+.rjx-hist{display:flex;gap:6px;overflow-x:auto;padding:7px 9px;border-radius:12px;background:#0b0d12;border:1px solid rgba(255,255,255,.08);scrollbar-width:none;min-height:34px;align-items:center}
+.rjx-hist::-webkit-scrollbar{display:none}
+.rjx-chip{flex:0 0 auto;font-size:11px;font-weight:900;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.06);letter-spacing:.2px}
+.rjx-chip.lo{color:#38bdf8}.rjx-chip.mid{color:#a78bfa}.rjx-chip.hi{color:#f472b6}
+.rjx-chip-empty{font-size:10px;color:#6b7280;font-weight:700}
+.rjx-stage{position:relative;width:100%;max-width:100%;height:clamp(210px,56vw,300px);min-width:0;border-radius:16px;overflow:hidden;background:#0a0b0f;border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 0 60px rgba(0,0,0,.55)}
+.rjx-stage canvas{position:absolute;inset:0;width:100%;height:100%;max-width:100%;display:block}
+.rjx-row,.rjx-left,.rjx-amt,.rjx-panels,.rjx-bets{min-width:0}
+.rjx-row{grid-template-columns:minmax(0,1fr) minmax(96px,128px)}
+.rjx-btn{min-width:0;max-width:100%}
+@media(max-width:360px){
+  .rjx-row{grid-template-columns:minmax(0,1fr) 100px;gap:6px}
+  .rjx-btn .t{font-size:16px}
+  .rjx-btn .s{font-size:11px}
+  .rjx-panel{padding:8px}
+}
+.rjx-center{position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);text-align:center;pointer-events:none;z-index:3;padding:0 14px}
+.rjx-mult{font-size:clamp(44px,15vw,74px);font-weight:900;letter-spacing:-2px;line-height:1;color:#fff;text-shadow:0 0 28px rgba(80,160,255,.45);font-variant-numeric:tabular-nums}
+.rjx-mult.crash{color:#ef4444;text-shadow:0 0 28px rgba(239,68,68,.45)}
+.rjx-mult.big{color:#f472b6;text-shadow:0 0 28px rgba(244,114,182,.5)}
+.rjx-mult.small{font-size:clamp(22px,7vw,32px);letter-spacing:.5px;text-shadow:none}
+.rjx-sub{margin-top:8px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#cbd5e1}
+.rjx-sub.crash{color:#ef4444;font-size:15px}
+.rjx-bar{width:min(190px,60%);height:5px;border-radius:99px;background:rgba(255,255,255,.14);margin:12px auto 0;overflow:hidden}
+.rjx-bar i{display:block;height:100%;width:100%;background:#e5173f;border-radius:99px;transition:width .2s linear}
+.rjx-live{position:absolute;left:10px;top:9px;z-index:4;font-size:9px;font-weight:900;letter-spacing:1.2px;color:#34d399;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:99px;border:1px solid rgba(52,211,153,.35)}
+.rjx-live.off{color:#f87171;border-color:rgba(248,113,113,.35)}
+.rjx-round{position:absolute;right:10px;top:9px;z-index:4;font-size:9px;font-weight:900;letter-spacing:1px;color:#94a3b8;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:99px}
+.rjx-panels{display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:640px){.rjx-panels{grid-template-columns:1fr 1fr}}
+.rjx-panel{padding:10px;border-radius:14px;background:#13151b;border:1px solid rgba(255,255,255,.09);display:grid;gap:8px}
+.rjx-row{display:grid;grid-template-columns:minmax(0,1fr) 108px;gap:8px;align-items:stretch}
+.rjx-left{display:grid;gap:7px;align-content:start}
+.rjx-amt{display:grid;grid-template-columns:34px 1fr 34px;gap:5px;align-items:center;background:#0a0b0f;border-radius:99px;padding:3px;border:1px solid rgba(255,255,255,.08)}
+.rjx-amt button{width:34px;height:34px;border-radius:50%;border:0;background:#2a2d36;color:#fff;font-size:18px;font-weight:900;line-height:1;padding:0;cursor:pointer}
+.rjx-amt input{width:100%!important;margin:0!important;border:0!important;background:transparent!important;text-align:center;font-size:16px!important;font-weight:900;color:#fff!important;padding:0!important;height:34px;box-shadow:none!important;outline:none}
+.rjx-chips{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.rjx-chips button{border:0;border-radius:99px;background:#22252e;color:#d1d5db;font-size:12px;font-weight:800;padding:7px 0;cursor:pointer}
+.rjx-fixed .rjx-chips,.rjx-fixed .rjx-amt button{display:none}
+.rjx-fixed .rjx-amt{grid-template-columns:1fr}
+.rjx-btn{border:0;border-radius:14px;color:#fff;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;width:100%;max-width:108px;min-width:0;min-height:72px;height:72px;padding:5px 4px;box-sizing:border-box;box-shadow:0 0 0 2px rgba(255,255,255,.18) inset;overflow:hidden}
+.rjx-btn .t{font-size:18px;line-height:1.05;white-space:nowrap}.rjx-btn .s{font-size:12px;font-weight:800;opacity:.95;text-align:center;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.rjx-btn.bet{background:linear-gradient(#35c61f,#1f9d10)}
+/* After a bet is placed, keep that same bet control visibly selected in yellow. */
+.rjx-btn.active,.rjx-btn.active.cancel,.rjx-btn.active.cash{background:linear-gradient(#facc15,#eab308)!important;color:#171717!important;box-shadow:0 0 0 2px rgba(250,204,21,.48) inset,0 0 18px rgba(250,204,21,.22)!important}
+.rjx-btn.cash{background:linear-gradient(#facc15,#eab308);color:#171717;animation:rjxPulse 1s ease-in-out infinite alternate}
+.rjx-btn.cancel{background:linear-gradient(#facc15,#eab308);color:#171717}
+.rjx-btn.won{background:linear-gradient(#16a34a,#166534)}
+.rjx-btn.lost{background:linear-gradient(#4b5563,#374151)}
+.rjx-btn.wait{background:#2a2d36;color:#9ca3af;box-shadow:none}
+.rjx-btn:disabled{cursor:not-allowed;opacity:.9}
+@keyframes rjxPulse{from{filter:brightness(1)}to{filter:brightness(1.18)}}
+.rjx-auto{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:#9ca3af}
+.rjx-auto input{width:78px!important;margin:0!important;padding:6px 8px!important;border-radius:99px!important;background:#0a0b0f!important;border:1px solid rgba(255,255,255,.1)!important;color:#fff!important;text-align:center;font-size:13px!important;font-weight:800;height:30px}
+.rjx-msg{font-size:11px;font-weight:800;min-height:14px;text-align:center}
+.rjx-msg.bad{color:#f87171}.rjx-msg.good{color:#34d399}
+.rjx-bets{border-radius:14px;background:#0f1116;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.rjx-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px;background:#0a0b0f}
+.rjx-tabs button{border:0;border-radius:99px;background:transparent;color:#9ca3af;font-size:12px;font-weight:800;padding:8px 0;cursor:pointer}
+.rjx-tabs button.on{background:#2a2d36;color:#fff}
+.rjx-sum{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:11px;font-weight:800;color:#9ca3af;border-bottom:1px solid rgba(255,255,255,.06)}
+.rjx-sum b{color:#fff}
+.rjx-head,.rjx-r{display:grid;grid-template-columns:1.1fr 1fr .8fr 1fr;gap:6px;padding:7px 12px;font-size:11.5px;align-items:center}
+.rjx-head{color:#6b7280;font-weight:800;font-size:10px;letter-spacing:.6px;text-transform:uppercase}
+.rjx-r{font-weight:800;color:#e5e7eb;border-top:1px solid rgba(255,255,255,.04);font-variant-numeric:tabular-nums}
+.rjx-r.mine{background:rgba(52,211,153,.08)}
+.rjx-r.win{background:rgba(52,211,153,.07)}
+.rjx-r.lose{color:#9ca3af}
+.rjx-r .x{color:#a78bfa}.rjx-r .w{color:#34d399;text-align:right}.rjx-head span:last-child{text-align:right}
+.rjx-list{max-height:330px;overflow-y:auto}
+.rjx-empty{padding:18px;text-align:center;font-size:12px;color:#6b7280;font-weight:700}
+
+/* Final Rocket Jump bet-button sizing and selected-bet highlight. */
+.rjx-panels .rjx-row .rjx-btn{width:100%;max-width:108px;min-width:0;height:72px;min-height:72px;padding:5px 4px;box-sizing:border-box;}
+.rjx-panels .rjx-row .rjx-btn.active,.rjx-panels .rjx-row .rjx-btn.active.cancel,.rjx-panels .rjx-row .rjx-btn.active.cash{background:linear-gradient(#facc15,#eab308)!important;color:#171717!important;}
+@media(max-width:360px){
+  .rjx-row{grid-template-columns:minmax(0,1fr) 100px!important;gap:6px!important}
+  .rjx-panels .rjx-row .rjx-btn{max-width:100px;height:68px;min-height:68px;}
+  .rjx-panels .rjx-row .rjx-btn .t{font-size:16px}
+  .rjx-panels .rjx-row .rjx-btn .s{font-size:11px}
+}
+</style>
+<style id="gv-rocket-jump-final-layout-fix">
+/* Compact +/- controls: stack them vertically so both controls stay visible on narrow phones. */
+.rjx-panel .rjx-amt{
+  grid-template-columns:30px minmax(0,1fr) !important;
+  grid-template-rows:1fr 1fr !important;
+  gap:4px !important;
+  padding:3px !important;
+  min-width:0 !important;
+  min-height:64px !important;
+  border-radius:14px !important;
+}
+.rjx-panel .rjx-amt button{
+  width:30px !important;
+  height:28px !important;
+  min-width:30px !important;
+  min-height:28px !important;
+  border-radius:9px !important;
+  font-size:17px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  line-height:1 !important;
+}
+.rjx-panel .rjx-amt button:first-child{grid-column:1;grid-row:1;}
+.rjx-panel .rjx-amt button:last-child{grid-column:1;grid-row:2;}
+.rjx-panel .rjx-amt input{
+  grid-column:2 !important;
+  grid-row:1 / span 2 !important;
+  width:100% !important;
+  min-width:0 !important;
+  height:56px !important;
+  font-size:15px !important;
+}
+.rjx-panel .rjx-fixed .rjx-amt{
+  grid-template-columns:1fr !important;
+  grid-template-rows:1fr !important;
+  min-height:56px !important;
+}
+.rjx-panel .rjx-fixed .rjx-amt input{grid-column:1 !important;grid-row:1 !important;height:50px !important;}
+.rjx-panel .rjx-fixed .rjx-amt button{display:none !important;}
+
+/* Keep the selected/placed bet visibly yellow. */
+.rjx-panel .rjx-btn.cancel,
+.rjx-panel .rjx-btn.cash,
+.rjx-panel .rjx-btn.active{
+  background:linear-gradient(180deg,#fde047,#eab308) !important;
+  color:#171717 !important;
+  box-shadow:0 0 0 2px rgba(250,204,21,.48) inset,0 0 16px rgba(250,204,21,.22) !important;
+}
+
+/* Never crop an admin banner image. */
+.gv-bn,.gv-bn-track,.gv-bn-slide{background:#0a0a0c;}
+.gv-bn-slide img{object-fit:contain !important;object-position:center center !important;}
+@media(max-width:360px){
+  .rjx-panel .rjx-amt{grid-template-columns:28px minmax(0,1fr) !important;min-height:60px !important;}
+  .rjx-panel .rjx-amt button{width:28px !important;height:26px !important;min-width:28px !important;min-height:26px !important;font-size:16px !important;}
+  .rjx-panel .rjx-amt input{height:52px !important;font-size:14px !important;}
+}
+</style>
 </head>
 <body class="auth-mode">
 
@@ -2664,11 +2809,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         let investPlansCache = [];
         let selectedInvestPlan = null;
 
-        let rocketInterval = null;
-        let currentRocketMultiplier = 1.00;
-        let rocketCrashPoint = 2.00;
-        let rocketWalletListenerRef = null;
-        let isRocketCashedOut = false;
 
         let minesConfig = { enabled: true, minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000, minMines: 1, maxMines: 10, rtpPercent: 95 };
         let minesState = null;
@@ -3302,6 +3442,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             loadUserMemberships(uid);
             loadUserInvestments(uid);
             ensureColourClashEngine();
+            if (typeof ensureRocketEngine === 'function') ensureRocketEngine();
             
             db.ref('games').once('value', snap => {
                 if (snap.hasChild('rocket_crash')) {
@@ -3309,7 +3450,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 }
                 if(!snap.exists() || !snap.hasChild('rocket_jump')) {
                     db.ref('games').update({
-                        'rocket_jump': { name: 'Rocket Jump', prize: 0, entryFee: 10, crashRange: '2.20 - 5.00', status: 'active', allowUserAmount: false },
+                        'rocket_jump': { name: 'Rocket Jump', prize: 0, entryFee: 10, crashRange: '2.20 - 5.00', status: 'active', allowUserAmount: true, tickMs: 90, multiplierStep: 0.03, maxMultiplierCap: 100, bettingSeconds: 10, crashPauseSeconds: 4, maxFlightSeconds: 90, instantCrashPercent: 0, autoRun: true },
                         'spin_wheel': { name: 'Fortune Wheel', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
                         'coin_flip': { name: 'Lucky Coin Flip', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
                         'number_guess': { name: 'Number Master', entryFee: 10, status: 'active', allowUserAmount: true, winChancePercent: 50 },
@@ -4418,7 +4559,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         }
 
         function backToDashboard() {
-            if (rocketInterval) clearInterval(rocketInterval);
+            if (typeof leaveRocketLive === 'function') leaveRocketLive();
             if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
             document.getElementById('gamesHub').classList.add('hidden');
             document.getElementById('activeGameArea').classList.add('hidden');
@@ -4426,7 +4567,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         }
 
         function closeActiveGame() {
-            if (rocketInterval) clearInterval(rocketInterval);
+            if (typeof leaveRocketLive === 'function') leaveRocketLive();
             if (colourClashTimer) clearInterval(colourClashTimer);
             minesState = null;
             if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
@@ -6499,7 +6640,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     const feeVal = Number(g.entryFee) || 0;
                     const feeDisplay = g.allowUserAmount ? 'Custom Amount' : (feeVal === 0 ? 'Free' : `₹${feeVal}`);
                     const isDoubleOrNothing = (gameId === 'high_card' || gameId === 'coin_flip' || gameId === 'number_guess' || gameId === 'spin_wheel');
-                    const prizeDisplay = gameId === 'rocket_jump' ? 'Multiplied Multiplier' : (isDoubleOrNothing ? '2x Your Bet' : `₹${g.prize || 0}`);
+                    const prizeDisplay = gameId === 'rocket_jump' ? 'Live rounds • cash out anytime' : (isDoubleOrNothing ? '2x Your Bet' : `₹${g.prize || 0}`);
                     const gameTitleName = g.name || (gameId === 'rocket_jump' ? 'Rocket Jump' : gameId);
                     const winChanceVal = Number(g.winChancePercent);
                     const winChance = isNaN(winChanceVal) ? 50 : winChanceVal;
@@ -6566,32 +6707,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
 
             if (gameId === 'rocket_jump') {
-                contentBox.innerHTML = `
-                    <div class="rocket-v3-shell" data-allow-user-amount="${allowUserAmount ? 'true' : 'false'}">
-                      <div class="rocket-v3-head">
-                        <div><div class="rocket-v3-title">🚀 Rocket Jump</div><div class="rocket-v3-sub">Set your bet • launch • cash out before the crash</div></div>
-                        <div id="rocketLiveWallet" class="rocket-v3-wallet">${gameMoney(gameCurrencyAmount(), activeGameCurrency)}</div>
-                      </div>
-                      <div class="rocket-v3-amount">
-                        <button type="button" class="btn-gray" onclick="adjustRocketBet(-1)">−</button>
-                        <input id="rocketBetAmount" type="number" min="0" step="0.01" placeholder="Enter your bet">
-                        <button type="button" class="btn-gray" onclick="adjustRocketBet(1)">+</button>
-                      </div>
-                      <div class="rocket-v3-limits"><span id="rocketBetLimits">Minimum —</span><span id="rocketBetMax">Maximum —</span></div>
-                      <div class="rocket-v3-stage" id="rocketFlightStage">
-                        <div class="rocket-v3-grid"></div><div class="rocket-v3-orbit"></div><div class="rocket-v3-planet"></div>
-                        <div class="rocket-v3-mult"><strong id="rocketMultiplierDisplay">1.00x</strong><span>live multiplier</span></div>
-                        <div id="rocketShip" class="rocket-v3-ship"><span class="nose"></span><span class="body"></span><span class="window"></span><span class="fin l"></span><span class="fin r"></span><span class="flame"></span><span class="exhaust"></span></div>
-                        <div id="rocketStatusDisplay" class="rocket-v3-status" style="position:absolute;left:0;right:0;bottom:14px;z-index:6;">Ready for launch</div>
-                      </div>
-                      <div class="rocket-v3-control">
-                        <button id="rocketStartBtn" onclick="initRocketJump(${entryFee}, ${allowUserAmount})" class="btn-green">🚀 START FLIGHT</button>
-                        <button id="rocketCashoutBtn" onclick="cashoutRocketJump()" class="btn-yellow hidden">💰 CASH OUT</button>
-                      </div>
-                    </div>
-                `;
-                startRocketWalletListener();
-                setTimeout(()=>setupRocketBetEditor(),0);
+                renderRocketLive();
             } else if (gameId === 'spin_wheel') {
                 contentBox.innerHTML = `
                     <p style="margin-top:0; color:var(--text-muted);">🎡 Spin the wheel — land on 🎉 to win 2x your bet!</p>
@@ -7114,180 +7230,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const backBtn = document.getElementById('activeGameBackBtn');
             if (backBtn) backBtn.classList.remove('hidden');
             activeGameCurrentFee = 0;
-        }
-
-        function stopRocketWalletListener(){
-            if(rocketWalletListenerRef){ try{rocketWalletListenerRef.off('value', rocketWalletListenerRef._gvRocketWalletHandler); }catch(e){} rocketWalletListenerRef=null; }
-        }
-
-        function prepareRocketForRestart() {
-            stopRocketWalletListener();
-            const startBtn = document.getElementById('rocketStartBtn');
-            const cashoutBtn = document.getElementById('rocketCashoutBtn');
-            const customEl = document.getElementById('userCustomPlayAmount');
-            if (startBtn) {
-                startBtn.classList.remove('hidden');
-                startBtn.disabled = false;
-                startBtn.innerText = '🔄 Play Again';
-            }
-            if (cashoutBtn) cashoutBtn.classList.add('hidden');
-            if (customEl) customEl.disabled = false;
-            refreshGameWalletPanel();
-            const info = document.getElementById('activeGameInfo');
-            if (info) {
-                const c = activeGameCurrency;
-                const fee = Number(info.dataset.entryFee) || 0;
-                const custom = info.dataset.allowUserAmount === 'true';
-                info.dataset.baseInfo = custom ? 'Mode: Set Your Own Amount' : `Entry Fee: ${fee === 0 ? 'Free' : gameMoney(fee, c)}`;
-                info.innerText = `${info.dataset.baseInfo} • ${gameMoney(gameCurrencyAmount(c), c)} wallet`;
-            }
-        }
-
-        function setupRocketBetEditor(){
-            const src=document.getElementById('userCustomPlayAmount'), target=document.getElementById('rocketBetAmount');
-            if(src && target){
-                target.value=src.value||'';
-                src.style.display='none';
-                src.addEventListener('input',()=>{target.value=src.value;});
-                target.addEventListener('input',()=>{src.value=target.value;});
-            }
-            const c=activeGameCurrency, lim=window.activeGameLimits||{};
-            const min=c==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0), max=c==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0);
-            const lo=document.getElementById('rocketBetLimits'), hi=document.getElementById('rocketBetMax');
-            if(lo)lo.textContent=`Minimum ${gameMoney(min,c)}`; if(hi)hi.textContent=`Maximum ${gameMoney(max,c)}`;
-            if(target){target.min=min||0;target.max=max||'';target.step=c==='USDT'?'0.0001':'0.01'; if(!target.value&&min)target.value=min; const shell=document.querySelector('.rocket-v3-shell'); const custom=shell&&shell.dataset.allowUserAmount==='true'; target.disabled=!custom; if(!custom)target.value='';}
-        }
-        function adjustRocketBet(direction){
-            const input=document.getElementById('rocketBetAmount'); if(!input)return;
-            const c=activeGameCurrency, lim=window.activeGameLimits||{};
-            const min=c==='USDT'?Number(lim.minUSDT||0):Number(lim.minINR||0), max=c==='USDT'?Number(lim.maxUSDT||0):Number(lim.maxINR||0);
-            const step=c==='USDT'?0.1:10, current=Number(input.value)||min||0;
-            const next=Math.min(max||Infinity,Math.max(min||0,current+direction*step)); input.value=next.toFixed(c==='USDT'?4:2); const src=document.getElementById('userCustomPlayAmount'); if(src)src.value=input.value;
-        }
-
-        function startRocketWalletListener(){
-            stopRocketWalletListener();
-            if(!currentUid)return;
-            rocketWalletListenerRef=db.ref('users/'+currentUid);
-            rocketWalletListenerRef._gvRocketWalletHandler=snap=>{
-                const d=snap.val()||{}; currentBalance=Number(d.balance)||0; currentUsdtBalance=Number(d.usdtBalance)||0; refreshGameWalletPanel();
-            };
-            rocketWalletListenerRef.on('value',rocketWalletListenerRef._gvRocketWalletHandler);
-        }
-
-        function initRocketJump(defaultFee, allowUserAmount) {
-            const fee = getDeductedFee(defaultFee, allowUserAmount);
-            if (fee === null) return;
-            const rocketDeduction = window.__gvRocketDeductionPromise || Promise.resolve();
-            window.__gvRocketDeductionPromise = null;
-            rocketDeduction.catch(err=>{ alert(err.message||'Bet could not be placed.'); prepareRocketForRestart(); });
-            activeGameCurrentFee = fee;
-            startRocketWalletListener();
-            const startBtn = document.getElementById('rocketStartBtn');
-            const cashoutBtn = document.getElementById('rocketCashoutBtn');
-            if (startBtn) { startBtn.classList.add('hidden'); startBtn.disabled = true; }
-            if (cashoutBtn) { cashoutBtn.classList.remove('hidden'); cashoutBtn.disabled = false; }
-
-            if (allowUserAmount) {
-                const customEl = document.getElementById('userCustomPlayAmount');
-                if (customEl) customEl.disabled = true;
-            }
-
-            db.ref('games/rocket_jump').once('value', snap => {
-                const data = snap.val() || {};
-                let rangeStr = String(data.crashRange || '2.20 - 5.00').trim();
-                let min = 2.20;
-                let max = 5.00;
-
-                if (rangeStr.includes('-')) {
-                    let parts = rangeStr.split('-');
-                    min = parseFloat(parts[0].trim());
-                    max = parseFloat(parts[1].trim());
-                } else {
-                    min = parseFloat(rangeStr);
-                    max = min;
-                }
-
-                if (isNaN(min)) min = 2.20;
-                if (isNaN(max)) max = 5.00;
-                if (min > max) { let temp = min; min = max; max = temp; }
-
-                rocketCrashPoint = parseFloat((Math.random() * (max - min) + min).toFixed(2));
-                const tickMs=Math.max(40,Number(data.tickMs)||90);
-                const multiplierStep=Math.max(0.001,Number(data.multiplierStep)||0.03);
-                const maxCap=Math.max(1,Number(data.maxMultiplierCap)||100);
-                rocketCrashPoint=Math.min(rocketCrashPoint,maxCap);
-                currentRocketMultiplier = 1.00;
-                isRocketCashedOut = false;
-
-                const rocketStage = document.getElementById('rocketFlightStage');
-                const rocketShip = document.getElementById('rocketShip');
-                if (rocketStage) { rocketStage.classList.remove('rocket-crashed'); rocketStage.classList.add('rocket-launching'); }
-                if (rocketShip) { rocketShip.style.left = '50%'; rocketShip.style.bottom = '18px'; }
-                document.getElementById('rocketStatusDisplay').innerText = '🚀 Flying...';
-                document.getElementById('rocketStatusDisplay').style.color = 'var(--blue)';
-
-                rocketInterval = setInterval(() => {
-                    currentRocketMultiplier += multiplierStep;
-                    currentRocketMultiplier = parseFloat(currentRocketMultiplier.toFixed(2));
-
-                    const multDisp = document.getElementById('rocketMultiplierDisplay');
-                    const cashoutBtn = document.getElementById('rocketCashoutBtn');
-
-                    if (multDisp) multDisp.innerText = `${currentRocketMultiplier.toFixed(2)}x`;
-                    if (rocketShip) {
-                        const progress = Math.min(1, Math.max(0, (currentRocketMultiplier - 1) / Math.max(.01, rocketCrashPoint - 1)));
-                        rocketShip.style.bottom = (22 + progress * 315) + 'px';
-                        rocketShip.style.left = (46 + progress * 42 + Math.sin(currentRocketMultiplier * 1.6) * 5) + '%';
-                    }
-                    const potentialWin = Number((Number(activeGameCurrentFee || 0) * Number(currentRocketMultiplier || 0)).toFixed(2));
-                    if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (${gameMoney(potentialWin, activeGameCurrency)})`;
-
-                    if (currentRocketMultiplier >= rocketCrashPoint) {
-                        clearInterval(rocketInterval);
-                        if (document.getElementById('rocketFlightStage')) document.getElementById('rocketFlightStage').classList.add('rocket-crashed');
-                        if (document.getElementById('rocketStatusDisplay')) {
-                            document.getElementById('rocketStatusDisplay').innerText = '💥 CRASHED!';
-                            document.getElementById('rocketStatusDisplay').style.color = '#ef4444';
-                        }
-                        if (multDisp) multDisp.style.color = '#ef4444';
-                        if (cashoutBtn) cashoutBtn.classList.add('hidden');
-                        logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, 0, 'loss');
-                        alert(`💥 Rocket crashed at ${rocketCrashPoint.toFixed(2)}x! You lost.`);
-                        lockBackToMenu();
-                        prepareRocketForRestart();
-                    }
-                }, tickMs);
-            });
-        }
-
-        function cashoutRocketJump() {
-            if (isRocketCashedOut || currentRocketMultiplier >= rocketCrashPoint) return;
-            isRocketCashedOut = true;
-            clearInterval(rocketInterval);
-
-            const winAmount = Number((Number(activeGameCurrentFee || 0) * Number(currentRocketMultiplier || 0)).toFixed(2));
-            if (activeGameCurrency === 'USDT') currentUsdtBalance = Number((Number(currentUsdtBalance || 0) + winAmount).toFixed(4)); else currentBalance = Number((Number(currentBalance || 0) + winAmount).toFixed(2));
-            const updatedWallet = { usdtBalance: Number(currentUsdtBalance || 0), balance: Number(currentBalance || 0) };
-            db.ref('users/' + currentUid).update(updatedWallet).then(() => {
-                refreshGameWalletPanel();
-                stopRocketWalletListener();
-                const info = document.getElementById('activeGameInfo');
-                if (info) info.innerText = `${info.dataset.baseInfo || ''} • ${gameMoney(gameCurrencyAmount(), activeGameCurrency)} wallet`.replace(/^ • /, '');
-                updateWalletCurrencyUI();
-                document.getElementById('rocketStatusDisplay').innerText = '✅ CASHED OUT!';
-                document.getElementById('rocketStatusDisplay').style.color = '#34d399';
-                document.getElementById('rocketCashoutBtn').classList.add('hidden');
-                logGameRound('rocket_jump', 'Rocket Jump', activeGameCurrentFee, winAmount, 'win');
-                alert(`🎉 Successfully cashed out at ${currentRocketMultiplier.toFixed(2)}x! Won ${gameMoney(winAmount, activeGameCurrency)}.`);
-                lockBackToMenu();
-                prepareRocketForRestart();
-            }).catch(err => {
-                isRocketCashedOut = false;
-                if (document.getElementById('rocketCashoutBtn')) document.getElementById('rocketCashoutBtn').classList.remove('hidden');
-                console.error('Rocket Jump cashout wallet update failed:', err);
-                alert('Cash out could not be completed. Please try again.');
-            });
         }
 
         /* --- MINES GAME --- */
@@ -9017,14 +8959,15 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 @media (max-width:340px){.gv-sq-grid{gap:8px;}.gv-sq-grid .game-thumb{width:36px;height:36px;font-size:19px;}.gv-sq-grid .gh-meta{font-size:8.5px;}}
 
 /* ===== Home banner slider (controlled from Admin > Notifications) ===== */
-.gv-bn{position:relative;margin:0 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:16/7;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;}
-.gv-bn-track{display:flex;height:100%;transition:transform .45s ease;will-change:transform;}
-.gv-bn-slide{flex:0 0 100%;height:100%;position:relative;}
-.gv-bn-slide.link{cursor:pointer;}
-.gv-bn-slide img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none;pointer-events:none;}
-.gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;}
+/* Banner is always rendered at the image's natural aspect ratio: full image, no crop, no contain-shrink. */
+.gv-bn{position:relative;width:100%;margin:0 0 12px;border-radius:18px;overflow:hidden;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;line-height:0;}
+.gv-bn-track{display:flex;width:100%;height:auto;margin:0;padding:0;transition:transform .45s ease;will-change:transform;}
+.gv-bn-slide{flex:0 0 100%;width:100%;height:auto;min-width:100%;position:relative;margin:0;padding:0;line-height:0;overflow:hidden;}
+.gv-bn-slide img{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;min-width:100%;object-fit:fill!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;background:#0a0a0c;-webkit-user-drag:none;user-select:none;pointer-events:none;}
+.gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;line-height:0;}
 .gv-bn-dot{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .25s,background .25s;}
 .gv-bn-dot.on{width:16px;background:#fff;}
+@media(max-width:480px){.gv-bn{border-radius:16px;}.gv-bn-dots{bottom:6px;}}
 </style>
 <style id="gv-compact-wallet-and-wingo-popup">
 /* ===== Compact wallet card (all inner sizes reduced; balance + currency switch share one row) ===== */
@@ -9084,11 +9027,30 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
     function safeImg(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)||/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u)?u:'';}
     function safeLink(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
     function stop(){if(timer){clearInterval(timer);timer=null;}}
+    function setNaturalHeight(){
+        var host=document.getElementById('gvBannerSlider');
+        if(!host||!items.length) return;
+        var slides=host.querySelectorAll('.gv-bn-slide');
+        var slide=slides[idx], img=slide&&slide.querySelector('img');
+        if(!img) return;
+        function apply(){
+            var w=host.clientWidth||img.clientWidth||0;
+            if(!w) return;
+            if(img.naturalWidth>0 && img.naturalHeight>0){
+                host.style.height=Math.round(w*img.naturalHeight/img.naturalWidth)+'px';
+            }else if(img.offsetHeight>0){
+                host.style.height=img.offsetHeight+'px';
+            }
+        }
+        if(img.complete) apply(); else img.addEventListener('load',apply,{once:true});
+    }
     function go(n){
         var host=document.getElementById('gvBannerSlider'); if(!host||!items.length) return;
         idx=(n+items.length)%items.length;
-        var track=host.querySelector('.gv-bn-track'); if(track) track.style.transform='translateX(-'+(idx*100)+'%)';
+        var track=host.querySelector('.gv-bn-track');
+        if(track) track.style.transform='translate3d(-'+(idx*100)+'%,0,0)';
         host.querySelectorAll('.gv-bn-dot').forEach(function(d,i){d.classList.toggle('on',i===idx);});
+        setNaturalHeight();
     }
     function play(){
         stop();
@@ -9098,14 +9060,14 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
     function render(){
         var host=document.getElementById('gvBannerSlider'); if(!host) return;
         stop();
-        if(!cfg.enabled||!items.length){host.classList.add('hidden');host.innerHTML='';return;}
+        if(!cfg.enabled||!items.length){host.classList.add('hidden');host.innerHTML='';host.style.height='';return;}
         if(idx>=items.length) idx=0;
         host.innerHTML='';
         var track=document.createElement('div'); track.className='gv-bn-track';
         items.forEach(function(b){
             var s=document.createElement('div'); s.className='gv-bn-slide'+(safeLink(b.linkUrl)?' link':'');
             var img=document.createElement('img'); img.alt=b.title||'Banner'; img.draggable=false; img.src=safeImg(b.imageUrl);
-            // A broken image is dropped so users never see an empty banner.
+            img.onload=function(){if(items[idx]===b){setNaturalHeight();}};
             img.onerror=function(){items=items.filter(function(x){return x.id!==b.id;});render();};
             s.appendChild(img);
             var l=safeLink(b.linkUrl);
@@ -9119,7 +9081,7 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
             host.appendChild(dots);
         }
         host.classList.remove('hidden');
-        go(idx); play();
+        go(idx); setNaturalHeight(); play();
         if(!host.__bound){
             host.__bound=true; var x0=0,dx=0,down=false;
             host.addEventListener('touchstart',function(e){down=true;dx=0;host.__moved=false;x0=e.touches[0].clientX;stop();},{passive:true});
@@ -9128,6 +9090,8 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
                 if(down&&Math.abs(dx)>40){host.__moved=true;go(dx<0?idx+1:idx-1);}
                 down=false; play(); setTimeout(function(){host.__moved=false;},50);
             });
+            window.addEventListener('resize',function(){setNaturalHeight();});
+            window.addEventListener('orientationchange',function(){setTimeout(setNaturalHeight,150);});
         }
     }
     function apply(v){
@@ -9147,4 +9111,656 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
     }
     start();
 })();
+</script>
+
+<script>
+/* ===== ROCKET JUMP LIVE v1 — ENGINE (continuous shared rounds, like WINGO) =====
+   Firebase layout:
+     games/rocket_jump            admin config (existing node, new fields added)
+     rocket_live/current          the round that is running right now
+     rocket_live/rounds/{id}      every round (crash point, timings, settledAt)
+     rocket_live/bets/{betId}     every bet (status: active | cashed | win | loss | refunded | cancelled)
+   Any logged-in client can start the next round / settle a finished one. Firebase
+   transactions make sure only one client wins each step, and each payout is credited at
+   most once through a guard stored on the user record (rocketPayouts). */
+var rjxCfg=null, rjxCfgReady=false, rjxOffset=0;
+var rjxRound=null, rjxRoundLoaded=false;
+var rjxEngineStarted=false, rjxEngineTimer=null, rjxStarting=false, rjxBackfilled=false;
+var rjxSettling={}, rjxSettled={};
+
+function rjxNow(){ return Date.now()+rjxOffset; }
+function rjxClamp(n,lo,hi,def){ n=Number(n); if(!isFinite(n)) n=def; return Math.min(hi,Math.max(lo,n)); }
+function rjxDec(cur){ return String(cur).toUpperCase()==='USDT'?4:2; }
+
+function rjxNormCfg(d){
+    d=d||{};
+    let lo=2.2, hi=5;
+    const m=String(d.crashRange==null?'2.20 - 5.00':d.crashRange).match(/^\s*(\d+(?:\.\d+)?)\s*(?:(?:-|–|to)\s*(\d+(?:\.\d+)?))?\s*$/i);
+    if(m){ lo=parseFloat(m[1]); hi=m[2]!==undefined?parseFloat(m[2]):lo; }
+    if(!(lo>=1)) lo=1; if(!(hi>=1)) hi=lo; if(lo>hi){ const t=lo; lo=hi; hi=t; }
+    return {
+        status:d.status||'active',
+        allowUserAmount:d.allowUserAmount===true,
+        entryFee:(Number(d.entryFee)||0)>0?Number(d.entryFee):10,
+        usdtEntryFee:(Number(d.usdtEntryFee||d.entryFeeUsdt)||0)>0?Number(d.usdtEntryFee||d.entryFeeUsdt):0.1,
+        minBetINR:Math.max(0,Number(d.minBetINR??d.minBet)||0), maxBetINR:Math.max(0,Number(d.maxBetINR??d.maxBet)||0),
+        minBetUSDT:Math.max(0,Number(d.minBetUSDT)||0), maxBetUSDT:Math.max(0,Number(d.maxBetUSDT)||0),
+        crashMin:lo, crashMax:hi,
+        tickMs:rjxClamp(d.tickMs,40,1000,90), step:rjxClamp(d.multiplierStep,0.001,1,0.03), cap:rjxClamp(d.maxMultiplierCap,1,10000,100),
+        bettingSeconds:rjxClamp(d.bettingSeconds,3,60,10), crashPauseSeconds:rjxClamp(d.crashPauseSeconds,2,30,4),
+        maxFlightSeconds:rjxClamp(d.maxFlightSeconds,5,600,90),
+        autoRun:d.autoRun!==false, instantCrashPercent:rjxClamp(d.instantCrashPercent,0,50,0),
+        nextCrashOverride:Number(d.nextCrashOverride)>=1?Number(d.nextCrashOverride):0
+    };
+}
+function rjxEnabled(){ return !globalGamesPaused && !!rjxCfg && rjxCfg.status==='active'; }
+function rjxLimits(cur){ const c=rjxCfg||rjxNormCfg({}); return String(cur).toUpperCase()==='USDT'?{min:c.minBetUSDT,max:c.maxBetUSDT}:{min:c.minBetINR,max:c.maxBetINR}; }
+function rjxFixedAmount(cur){ const c=rjxCfg||rjxNormCfg({}); return String(cur).toUpperCase()==='USDT'?c.usdtEntryFee:c.entryFee; }
+
+/* ---- timeline helpers ---- */
+function rjxPhase(r,now){
+    if(!r||!r.launchAt) return 'none';
+    if(now<r.launchAt) return 'betting';
+    if(now<r.crashAt) return 'flying';
+    if(now<r.endAt) return 'crashed';
+    return 'ended';
+}
+function rjxMult(r,t){ if(!r||t<=0) return 1; return Math.max(1,Math.min(Number(r.crashPoint),1+(t/r.tickMs)*r.step)); }
+function rjxFloor2(x){ return Math.floor(x*100+1e-9)/100; }
+
+/* ---- crash point (secure RNG; admin range / instant-crash chance / one-shot override) ---- */
+function rjxRand01(){ try{ return ccSecureRandomInt(1000000)/1000000; }catch(e){ return Math.random(); } }
+function rjxGenCrash(cfg,override){
+    const byFlight=1+cfg.step*(cfg.maxFlightSeconds*1000/cfg.tickMs);
+    const maxAllowed=Math.max(1,Math.min(cfg.cap,byFlight));
+    let v;
+    if(override>=1) v=override;
+    else if(cfg.instantCrashPercent>0 && rjxRand01()*100<cfg.instantCrashPercent) v=1;
+    else v=cfg.crashMin+(cfg.crashMax-cfg.crashMin)*rjxRand01();
+    v=Math.max(1,Math.min(v,maxAllowed));
+    return Number(v.toFixed(2));
+}
+
+/* ---- engine bootstrap (called once after login) ---- */
+function ensureRocketEngine(){
+    if(rjxEngineStarted) return;
+    rjxEngineStarted=true;
+    const noop=function(){};
+    db.ref('.info/serverTimeOffset').on('value',function(s){ rjxOffset=Number(s.val())||0; },noop);
+    db.ref('games/rocket_jump').on('value',function(s){ rjxCfg=rjxNormCfg(s.val()); rjxCfgReady=true; },noop);
+    db.ref('rocket_live/current').on('value',function(s){
+        const prevId=rjxRound&&rjxRound.id;
+        rjxRound=s.val(); rjxRoundLoaded=true;
+        if((rjxRound&&rjxRound.id)!==prevId) rjxOnRoundChange();
+    },noop);
+    rjxEngineTimer=setInterval(rjxEngineTick,1000);
+    setTimeout(rjxEngineTick,1500);
+}
+async function rjxEngineTick(){
+    if(!currentUid||!rjxCfgReady||!rjxRoundLoaded) return;
+    try{
+        const r=rjxRound;
+        const canRun=rjxEnabled() && rjxCfg.autoRun!==false;
+        if(canRun && (!r || rjxNow()>=r.endAt)) await rjxStartNextRound();
+        const cur=rjxRound;
+        if(cur && rjxNow()>=cur.crashAt) rjxSettleRound(cur);
+        if(!rjxBackfilled){ rjxBackfilled=true; rjxBackfill(); }
+    }catch(e){}
+}
+async function rjxStartNextRound(){
+    if(rjxStarting) return;
+    rjxStarting=true;
+    try{
+        const cfg=rjxCfg;
+        const override=cfg.nextCrashOverride>=1?cfg.nextCrashOverride:0;
+        const crash=rjxGenCrash(cfg,override);
+        const flightMs=Math.round(Math.max(0,(crash-1)/cfg.step)*cfg.tickMs);
+        const res=await db.ref('rocket_live/current').transaction(function(cur){
+            const n=rjxNow();
+            if(cur && cur.endAt && n<cur.endAt) return;            // another client already started it
+            const id=(cur&&Number(cur.id)>0?Number(cur.id):0)+1;
+            const start=(cur&&cur.endAt&&n-cur.endAt<2500)?cur.endAt:n;
+            const launchAt=start+Math.round(cfg.bettingSeconds*1000);
+            const crashAt=launchAt+flightMs;
+            const endAt=crashAt+Math.round(cfg.crashPauseSeconds*1000);
+            return {id:id,bettingStart:start,launchAt:launchAt,crashAt:crashAt,endAt:endAt,crashPoint:crash,tickMs:cfg.tickMs,step:cfg.step,overridden:!!override,createdAt:n};
+        });
+        if(res.committed){
+            const v=res.snapshot.val();
+            if(v){
+                db.ref('rocket_live/rounds/'+v.id).set(v).catch(function(){});
+                if(v.overridden){
+                    db.ref('games/rocket_jump/nextCrashOverride').once('value').then(function(s){ if(Number(s.val())===override) s.ref.remove(); }).catch(function(){});
+                }
+            }
+        }
+    }catch(e){}
+    finally{ rjxStarting=false; }
+}
+
+/* ---- settlement ---- */
+async function rjxBackfill(){
+    try{
+        const snap=await db.ref('rocket_live/rounds').limitToLast(15).once('value');
+        const now=rjxNow(), arr=[];
+        snap.forEach(function(ch){ arr.push(ch.val()); });
+        arr.forEach(function(r){ if(r && r.crashAt && r.crashAt<=now && !r.settledAt) rjxSettleRound(r); });
+    }catch(e){}
+}
+async function rjxSettleRound(round){
+    const id=String(round.id);
+    if(rjxSettled[id]||rjxSettling[id]) return;
+    rjxSettling[id]=true;
+    try{
+        await db.ref('rocket_live/rounds/'+id).transaction(function(c){ return c||round; });
+        const snap=await db.ref('rocket_live/bets').orderByChild('roundId').equalTo(Number(round.id)).once('value');
+        const jobs=[];
+        snap.forEach(function(ch){ jobs.push(rjxSettleBet(ch.key,ch.val(),round)); });
+        const results=await Promise.all(jobs);
+        if(results.every(function(x){ return x!==false; })){
+            await db.ref('rocket_live/rounds/'+id+'/settledAt').transaction(function(v){ return v||Date.now(); });
+            rjxSettled[id]=true;
+        }
+    }catch(e){}
+    finally{ delete rjxSettling[id]; }
+}
+async function rjxSettleBet(id,bet,round){
+    try{
+        const st=bet.status, ref=db.ref('rocket_live/bets/'+id);
+        if(st==='win'||st==='loss'||st==='refunded'||st==='cancelled') return true;
+        if(st==='cashed'){ await rjxFinalizeCashed(id,bet); return true; }
+        if(st!=='active') return true;
+        const cur=String(bet.currency||'INR').toUpperCase(), dec=rjxDec(cur);
+        // a bet that somehow landed after lift-off is refunded, never played
+        if(Number(bet.placedAt)>Number(round.launchAt)+1500){
+            const r=await ref.transaction(function(c){ if(!c||c.status!=='active') return c; return Object.assign({},c,{status:'refunded',settledAt:Date.now()}); });
+            const v=r.snapshot.val();
+            if(v&&v.status==='refunded') await rjxCreditOnce('rf_'+id,bet.userId,cur,bet.amount);
+            return true;
+        }
+        // auto cash-out target reached before the crash -> honoured even if the player went offline
+        const auto=Number(bet.autoCashout)||0;
+        if(auto>=1.01 && auto<=Number(round.crashPoint)+1e-9){
+            const win=Number((Number(bet.amount)*auto).toFixed(dec));
+            const r=await ref.transaction(function(c){ if(!c||c.status!=='active') return c; return Object.assign({},c,{status:'cashed',cashoutMultiplier:auto,winAmount:win,cashedAt:Date.now(),auto:true}); });
+            const v=r.snapshot.val();
+            if(v&&v.status==='cashed') await rjxFinalizeCashed(id,v);
+            return true;
+        }
+        const r=await ref.transaction(function(c){ if(!c||c.status!=='active') return c; return Object.assign({},c,{status:'loss',winAmount:0,settledAt:Date.now()}); });
+        const v=r.snapshot.val();
+        if(v&&v.status==='loss') rjxLogRound(id,v,0,'loss');
+        return true;
+    }catch(e){ return false; }
+}
+async function rjxFinalizeCashed(id,bet){
+    const win=Number(bet.winAmount)||0;
+    await rjxCreditOnce(id,bet.userId,bet.currency,win);
+    await db.ref('rocket_live/bets/'+id).transaction(function(c){ if(!c||c.status!=='cashed') return c; return Object.assign({},c,{status:'win',creditedAt:Date.now()}); });
+    rjxLogRound(id,bet,win,'win');
+}
+/* Credits a wallet at most once per key: guard + balance change happen in ONE transaction on the user record. */
+function rjxCreditOnce(key,userId,currency,amount){
+    amount=Number(amount)||0;
+    if(!key||!userId||amount<=0) return Promise.resolve(false);
+    const cur=String(currency||'INR').toUpperCase()==='USDT'?'USDT':'INR';
+    const field=walletField(cur), dec=rjxDec(cur);
+    return db.ref('users/'+userId).transaction(function(user){
+        if(!user) return user;
+        const guards=(user.rocketPayouts&&typeof user.rocketPayouts==='object')?user.rocketPayouts:{};
+        if(guards[key]) return user;
+        const next=Object.assign({},user);
+        next[field]=Number((Number(user[field]||0)+amount).toFixed(dec));
+        next.rocketPayouts=Object.assign({},guards,{[key]:{amount:Number(amount.toFixed(dec)),currency:cur,creditedAt:Date.now()}});
+        return next;
+    }).then(function(res){
+        if(res.committed && userId===currentUid){
+            const v=res.snapshot.val()||{};
+            currentBalance=Number(v.balance)||0; currentUsdtBalance=Number(v.usdtBalance)||0;
+            try{ updateWalletCurrencyUI(); refreshGameWalletPanel(); }catch(e){}
+        }
+        return res.committed;
+    });
+}
+/* One game_rounds record per bet (deterministic key) so the admin dashboards/stats keep working. */
+function rjxLogRound(betId,bet,win,result){
+    try{
+        db.ref('game_rounds/rj_'+betId).set({
+            userId:bet.userId, customUid:bet.customUid||'', gameId:'rocket_jump', gameName:'Rocket Jump',
+            betAmount:Number(bet.amount)||0, winAmount:Number(win)||0, result:result,
+            currency:String(bet.currency||'INR').toUpperCase(), timestamp:Date.now(),
+            rocketRound:Number(bet.roundId)||0, cashoutMultiplier:Number(bet.cashoutMultiplier)||0
+        }).catch(function(){});
+    }catch(e){}
+}
+
+/* ---- wallet helpers (per-currency) ---- */
+function rjxDebit(amount,cur){
+    const field=walletField(cur), dec=rjxDec(cur);
+    return db.ref('users/'+currentUid+'/'+field).transaction(function(b){
+        if(b===null) return b;
+        const c=Number(b)||0;
+        if(c<amount) return;                       // abort -> not committed
+        return Number((c-amount).toFixed(dec));
+    }).then(function(res){
+        if(!res.committed||res.snapshot.val()===null) throw new Error('Insufficient wallet balance.');
+        const v=Number(res.snapshot.val()||0);
+        if(cur==='USDT') currentUsdtBalance=v; else currentBalance=v;
+        try{ updateWalletCurrencyUI(); refreshGameWalletPanel(); }catch(e){}
+    });
+}
+function rjxRefundWallet(amount,cur){
+    const field=walletField(cur), dec=rjxDec(cur);
+    return db.ref('users/'+currentUid+'/'+field).transaction(function(b){ return Number((Number(b||0)+Number(amount||0)).toFixed(dec)); }).then(function(res){
+        if(res.committed){ const v=Number(res.snapshot.val()||0); if(cur==='USDT') currentUsdtBalance=v; else currentBalance=v; try{ updateWalletCurrencyUI(); refreshGameWalletPanel(); }catch(e){} }
+    });
+}
+
+/* ===== ROCKET JUMP LIVE v1 — SCREEN ===== */
+var rjxBets={}, rjxBetsRef=null, rjxBetsHandler=null, rjxBetsRoundId=null, rjxBetsDirty=true;
+var rjxRoundsCache=[], rjxRoundsRef=null, rjxRoundsHandler=null, rjxHistDirty=true;
+var rjxPrevBets=[], rjxMyHist=[], rjxTab='all';
+var rjxWalletRef=null, rjxWalletHandler=null;
+var rjxRaf=null, rjxLastUi=0, rjxLastList=0, rjxLastPhase='', rjxUiSig='';
+var rjxSlot={1:{busy:false,msg:'',type:'',autoFired:false},2:{busy:false,msg:'',type:'',autoFired:false}};
+
+function rjxEsc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function rjxCur(){ return gameCurrencyLabel(activeGameCurrency); }
+function rjxMoney(n,cur){ return gameMoney(n,cur||rjxCur()); }
+function rjxSetText(el,txt){ if(el && el.textContent!==txt) el.textContent=txt; }
+function rjxMsg(slot,text,type){ rjxSlot[slot].msg=text||''; rjxSlot[slot].type=type||''; }
+
+/* ---- render ---- */
+function rjxPanelHtml(n){
+    return '<div class="rjx-panel" id="rjxP'+n+'"><div class="rjx-row"><div class="rjx-left">'
+      +'<div class="rjx-amt"><button type="button" onclick="rjxAdj('+n+',-1)">−</button><input id="rjxAmt'+n+'" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Amount"><button type="button" onclick="rjxAdj('+n+',1)">+</button></div>'
+      +'<div class="rjx-chips" id="rjxChips'+n+'"></div>'
+      +'</div><button type="button" class="rjx-btn wait" id="rjxBtn'+n+'" onclick="rjxMainBtn('+n+')" disabled><span class="t">Bet</span><span class="s">—</span></button></div>'
+      +'<div class="rjx-auto"><span>Auto cash out at</span><input id="rjxAuto'+n+'" type="number" inputmode="decimal" min="1.01" step="0.01" placeholder="off"><span>x</span></div>'
+      +'<div class="rjx-msg" id="rjxMsg'+n+'"></div></div>';
+}
+function renderRocketLive(){
+    const box=document.getElementById('gameContentBox'); if(!box) return;
+    rjxScreenStop();
+    box.innerHTML=gameCurrencySwitcherHtml()
+      +'<div class="rjx" id="rjxRoot">'
+      +'<div class="rjx-hist" id="rjxHist"><span class="rjx-chip-empty">Waiting for rounds…</span></div>'
+      +'<div class="rjx-stage" id="rjxStage"><canvas id="rjxCanvas"></canvas>'
+      +'<div class="rjx-live" id="rjxLive">● LIVE</div><div class="rjx-round" id="rjxRoundNo"></div>'
+      +'<div class="rjx-center"><div class="rjx-mult small" id="rjxMult">Connecting…</div><div class="rjx-sub" id="rjxSub"></div><div class="rjx-bar" id="rjxBarWrap" style="display:none"><i id="rjxBar"></i></div></div></div>'
+      +'<div class="rjx-panels">'+rjxPanelHtml(1)+rjxPanelHtml(2)+'</div>'
+      +'<div class="rjx-bets"><div class="rjx-tabs"><button type="button" class="on" id="rjxTab_all" onclick="rjxSetTab(\'all\')">All Bets</button><button type="button" id="rjxTab_prev" onclick="rjxSetTab(\'prev\')">Previous</button><button type="button" id="rjxTab_mine" onclick="rjxSetTab(\'mine\')">My Bets</button></div>'
+      +'<div class="rjx-sum"><span id="rjxSumL">0 bets</span><span id="rjxSumR"></span></div>'
+      +'<div class="rjx-head" id="rjxHead"><span>Player</span><span>Bet</span><span>X</span><span>Win</span></div>'
+      +'<div class="rjx-list" id="rjxBetList"></div></div></div>';
+    const info=document.getElementById('activeGameInfo');
+    if(info){ info.dataset.baseInfo='Live rounds • cash out before the crash'; info.innerText=info.dataset.baseInfo+' • '+gameMoney(gameCurrencyAmount(),activeGameCurrency)+' wallet'; }
+    rjxTab='all'; rjxUiSig=''; rjxBetsDirty=true; rjxHistDirty=true; rjxLastPhase='';
+    rjxSlot[1]={busy:false,msg:'',type:'',autoFired:false}; rjxSlot[2]={busy:false,msg:'',type:'',autoFired:false};
+    rjxScreenStart();
+}
+function rjxScreenStart(){
+    ensureRocketEngine();
+    rjxAttachBets(); rjxAttachRounds(); rjxAttachWallet(); rjxLoadPrev();
+    rjxRaf=requestAnimationFrame(rjxFrame);
+}
+function rjxScreenStop(){
+    if(rjxRaf){ cancelAnimationFrame(rjxRaf); rjxRaf=null; }
+    try{ if(rjxBetsRef&&rjxBetsHandler) rjxBetsRef.off('value',rjxBetsHandler); }catch(e){}
+    try{ if(rjxRoundsRef&&rjxRoundsHandler) rjxRoundsRef.off('value',rjxRoundsHandler); }catch(e){}
+    try{ if(rjxWalletRef&&rjxWalletHandler) rjxWalletRef.off('value',rjxWalletHandler); }catch(e){}
+    rjxBetsRef=rjxBetsHandler=rjxRoundsRef=rjxRoundsHandler=rjxWalletRef=rjxWalletHandler=null; rjxBetsRoundId=null;
+}
+function leaveRocketLive(){ rjxScreenStop(); }
+
+function rjxAttachBets(){
+    const id=rjxRound&&rjxRound.id;
+    if(rjxBetsRef&&rjxBetsRoundId===id) return;
+    try{ if(rjxBetsRef&&rjxBetsHandler) rjxBetsRef.off('value',rjxBetsHandler); }catch(e){}
+    rjxBetsRef=null; rjxBetsHandler=null; rjxBets={}; rjxBetsDirty=true; rjxBetsRoundId=id;
+    if(!id) return;
+    rjxBetsRef=db.ref('rocket_live/bets').orderByChild('roundId').equalTo(Number(id));
+    rjxBetsHandler=function(snap){ const o={}; snap.forEach(function(ch){ o[ch.key]=ch.val(); }); rjxBets=o; rjxBetsDirty=true; };
+    rjxBetsRef.on('value',rjxBetsHandler,function(){});
+}
+function rjxAttachRounds(){
+    if(rjxRoundsRef) return;
+    rjxRoundsRef=db.ref('rocket_live/rounds').limitToLast(30);
+    rjxRoundsHandler=function(snap){ const a=[]; snap.forEach(function(ch){ a.push(ch.val()); }); rjxRoundsCache=a; rjxHistDirty=true; };
+    rjxRoundsRef.on('value',rjxRoundsHandler,function(){});
+}
+function rjxAttachWallet(){
+    if(rjxWalletRef||!currentUid) return;
+    rjxWalletRef=db.ref('users/'+currentUid);
+    rjxWalletHandler=function(snap){ const d=snap.val()||{}; currentBalance=Number(d.balance)||0; currentUsdtBalance=Number(d.usdtBalance)||0; try{ updateWalletCurrencyUI(); refreshGameWalletPanel(); }catch(e){} };
+    rjxWalletRef.on('value',rjxWalletHandler,function(){});
+}
+function rjxLoadPrev(){
+    const id=rjxRound&&Number(rjxRound.id);
+    if(!id||id<2){ rjxPrevBets=[]; return; }
+    db.ref('rocket_live/bets').orderByChild('roundId').equalTo(id-1).once('value').then(function(snap){
+        const a=[]; snap.forEach(function(ch){ a.push(ch.val()); }); rjxPrevBets=a; rjxBetsDirty=true;
+    }).catch(function(){});
+}
+function rjxLoadMine(){
+    if(!currentUid) return;
+    db.ref('rocket_live/bets').orderByChild('userId').equalTo(currentUid).limitToLast(30).once('value').then(function(snap){
+        const a=[]; snap.forEach(function(ch){ a.push(ch.val()); });
+        rjxMyHist=a.filter(function(b){ return b.status!=='cancelled'; }).sort(function(x,y){ return (y.timestamp||0)-(x.timestamp||0); }); rjxBetsDirty=true;
+    }).catch(function(){});
+}
+function rjxOnRoundChange(){
+    rjxSlot[1].autoFired=false; rjxSlot[2].autoFired=false;
+    if(document.getElementById('rjxCanvas')){
+        rjxSlot[1].msg=''; rjxSlot[2].msg='';
+        rjxAttachBets(); rjxLoadPrev(); if(rjxTab==='mine') rjxLoadMine();
+    }
+    rjxBackfill();
+}
+function rjxSetTab(t){
+    rjxTab=t;
+    ['all','prev','mine'].forEach(function(k){ const b=document.getElementById('rjxTab_'+k); if(b) b.classList.toggle('on',k===t); });
+    const h=document.getElementById('rjxHead'); if(h) h.innerHTML=t==='mine'?'<span>Round</span><span>Bet</span><span>X</span><span>Win</span>':'<span>Player</span><span>Bet</span><span>X</span><span>Win</span>';
+    if(t==='mine') rjxLoadMine(); if(t==='prev') rjxLoadPrev();
+    rjxBetsDirty=true;
+}
+
+/* ---- my bets ---- */
+function rjxMine(slot){
+    const rid=rjxRound&&Number(rjxRound.id); let found=null;
+    for(const k in rjxBets){
+        const b=rjxBets[k];
+        if(b.userId!==currentUid||Number(b.slot)!==slot||Number(b.roundId)!==rid||b.status==='cancelled') continue;
+        found={id:k,bet:b};
+    }
+    return found;
+}
+
+/* ---- controls ---- */
+function rjxAmountFor(slot,cur){
+    if(!rjxCfg) return 0;
+    if(rjxCfg.allowUserAmount){ const el=document.getElementById('rjxAmt'+slot); return Number(el&&el.value)||0; }
+    return rjxFixedAmount(cur);
+}
+function rjxSetAmt(slot,val){ if(!rjxCfg||!rjxCfg.allowUserAmount) return; const el=document.getElementById('rjxAmt'+slot); if(el){ el.value=String(val); rjxUiSig=''; } }
+function rjxAdj(slot,dir){
+    if(!rjxCfg||!rjxCfg.allowUserAmount) return;
+    const el=document.getElementById('rjxAmt'+slot); if(!el) return;
+    const cur=rjxCur(), lim=rjxLimits(cur), step=cur==='USDT'?0.1:10, v=Number(el.value)||lim.min||0;
+    let n=v+dir*step; if(lim.min>0) n=Math.max(lim.min,n); n=Math.max(0,n); if(lim.max>0) n=Math.min(lim.max,n);
+    el.value=n.toFixed(rjxDec(cur));
+}
+function rjxSyncControls(){
+    if(!rjxCfg) return;
+    const cur=rjxCur(), lim=rjxLimits(cur);
+    const sig=[cur,rjxCfg.allowUserAmount,rjxCfg.entryFee,rjxCfg.usdtEntryFee,lim.min,lim.max].join('|');
+    if(sig===rjxUiSig) return;
+    rjxUiSig=sig;
+    const chips=cur==='USDT'?[0.1,1,10,100]:[10,100,500,1000];
+    [1,2].forEach(function(n){
+        const p=document.getElementById('rjxP'+n); if(!p) return;
+        p.classList.toggle('rjx-fixed',!rjxCfg.allowUserAmount);
+        const ch=document.getElementById('rjxChips'+n);
+        if(ch) ch.innerHTML=chips.map(function(c){ return '<button type="button" onclick="rjxSetAmt('+n+','+c+')">'+(cur==='USDT'?c:c.toLocaleString('en-IN'))+'</button>'; }).join('');
+        const el=document.getElementById('rjxAmt'+n); if(!el) return;
+        el.min=lim.min||0; if(lim.max>0) el.max=lim.max; el.step=cur==='USDT'?'0.0001':'0.01';
+        if(rjxCfg.allowUserAmount){
+            el.readOnly=false;
+            const v=Number(el.value)||0;
+            if(!v||(lim.min>0&&v<lim.min)||(lim.max>0&&v>lim.max)) el.value=String(lim.min>0?lim.min:(cur==='USDT'?0.1:10));
+        }else{ el.readOnly=true; el.value=String(rjxFixedAmount(cur)); }
+    });
+}
+
+/* ---- actions ---- */
+function rjxMainBtn(slot){
+    const r=rjxRound, ph=rjxPhase(r,rjxNow()), mine=rjxMine(slot);
+    if(mine&&mine.bet.status==='active'){ if(ph==='betting') return rjxCancel(slot); if(ph==='flying') return rjxCashout(slot); return; }
+    if(!mine&&ph==='betting') return rjxPlace(slot);
+}
+async function rjxPlace(slot){
+    const st=rjxSlot[slot]; if(st.busy) return;
+    if(!currentUid){ return rjxMsg(slot,'Please login first.','bad'); }
+    if(!rjxEnabled()){ return rjxMsg(slot,'Rocket Jump is currently unavailable.','bad'); }
+    const r=rjxRound;
+    if(!r||rjxPhase(r,rjxNow())!=='betting'||rjxNow()>r.launchAt-400) return rjxMsg(slot,'Betting is closed — wait for the next round.','bad');
+    const cur=rjxCur(), dec=rjxDec(cur), lim=rjxLimits(cur);
+    let amount=Number(Number(rjxAmountFor(slot,cur)).toFixed(dec));
+    if(!(amount>0)) return rjxMsg(slot,'Enter a valid bet amount.','bad');
+    if(rjxCfg.allowUserAmount){
+        if(lim.min>0&&amount<lim.min) return rjxMsg(slot,'Minimum bet is '+rjxMoney(lim.min,cur)+'.','bad');
+        if(lim.max>0&&amount>lim.max) return rjxMsg(slot,'Maximum bet is '+rjxMoney(lim.max,cur)+'.','bad');
+    }
+    if(gameCurrencyAmount(cur)<amount) return rjxMsg(slot,'Insufficient '+cur+' balance. Please deposit funds.','bad');
+    if(typeof gvSafetyCheckCC==='function' && !gvSafetyCheckCC(amount)) return;
+    const autoEl=document.getElementById('rjxAuto'+slot); const autoRaw=autoEl?String(autoEl.value).trim():'';
+    let auto=autoRaw===''?0:Number(autoRaw);
+    if(autoRaw!=='' && !(auto>=1.01)) return rjxMsg(slot,'Auto cash-out must be at least 1.01x.','bad');
+    st.busy=true; rjxMsg(slot,'','');
+    try{
+        await rjxDebit(amount,cur);
+        const r2=rjxRound;
+        if(!r2||r2.id!==r.id||rjxNow()>=r2.launchAt-100){ await rjxRefundWallet(amount,cur); throw new Error('Betting closed just before your bet was placed. Your wallet was refunded.'); }
+        const ref=db.ref('rocket_live/bets').push();
+        try{
+            await ref.set({roundId:Number(r.id),userId:currentUid,customUid:userCustomUid||'',slot:slot,amount:amount,currency:cur,status:'active',autoCashout:auto>=1.01?Number(auto.toFixed(2)):0,placedAt:rjxNow(),timestamp:Date.now()});
+        }catch(err){ await rjxRefundWallet(amount,cur); throw err; }
+        try{ trackMissionEvent('bet_placed',1); trackMissionEvent('wager_amount',amount); }catch(e){}
+        try{ if(typeof safetyUserStats==='object'&&safetyUserStats){ safetyUserStats.todayBets=Number(safetyUserStats.todayBets||0)+1; setTimeout(function(){ try{ loadSafetyUserStats().catch(function(){}); }catch(e){} },500); } }catch(e){}
+    }catch(e){ rjxMsg(slot,e.message||'Could not place bet.','bad'); }
+    finally{ st.busy=false; }
+}
+async function rjxCancel(slot){
+    const mine=rjxMine(slot), st=rjxSlot[slot];
+    if(!mine||mine.bet.status!=='active'||st.busy) return;
+    const r=rjxRound;
+    if(!r||rjxNow()>=r.launchAt-300) return rjxMsg(slot,'Too late to cancel.','bad');
+    st.busy=true;
+    try{
+        const res=await db.ref('rocket_live/bets/'+mine.id).transaction(function(c){
+            if(!c) return c; if(c.status!=='active') return; if(rjxNow()>=r.launchAt-300) return;
+            return Object.assign({},c,{status:'cancelled',settledAt:Date.now()});
+        });
+        const v=res.snapshot.val();
+        if(res.committed&&v&&v.status==='cancelled') await rjxCreditOnce('cx_'+mine.id,currentUid,mine.bet.currency,mine.bet.amount);
+        else rjxMsg(slot,'Could not cancel this bet.','bad');
+    }catch(e){ rjxMsg(slot,'Could not cancel this bet.','bad'); }
+    finally{ st.busy=false; }
+}
+async function rjxCashout(slot,forced){
+    const mine=rjxMine(slot), st=rjxSlot[slot];
+    if(!mine||mine.bet.status!=='active'||st.busy) return;
+    const r=rjxRound, now=rjxNow();
+    if(!r||rjxPhase(r,now)!=='flying') return;
+    const bet=mine.bet, cur=String(bet.currency||'INR').toUpperCase(), dec=rjxDec(cur);
+    const m=forced?Number(forced):rjxFloor2(rjxMult(r,now-r.launchAt));
+    if(!(m>=1.01)||m>Number(r.crashPoint)) return;
+    const win=Number((Number(bet.amount)*m).toFixed(dec));
+    st.busy=true;
+    try{
+        const res=await db.ref('rocket_live/bets/'+mine.id).transaction(function(c){
+            if(!c) return c; if(c.status!=='active') return; if(rjxNow()>=r.crashAt) return;
+            return Object.assign({},c,{status:'cashed',cashoutMultiplier:m,winAmount:win,cashedAt:rjxNow()});
+        });
+        const v=res.snapshot.val();
+        if(res.committed&&v&&v.status==='cashed'){
+            await rjxFinalizeCashed(mine.id,v);
+            rjxMsg(slot,'Cashed out at '+m.toFixed(2)+'x — won '+rjxMoney(win,cur),'good');
+        }else rjxMsg(slot,'Too late — the rocket already crashed.','bad');
+    }catch(e){ rjxMsg(slot,'Cash out failed. Please check your connection.','bad'); }
+    finally{ st.busy=false; }
+}
+
+/* ---- per-frame UI ---- */
+function rjxFrame(ts){
+    if(!document.getElementById('rjxCanvas')){ rjxScreenStop(); return; }
+    rjxRaf=requestAnimationFrame(rjxFrame);
+    const now=rjxNow(), r=rjxRound, ph=rjxPhase(r,now);
+    rjxDraw(ts,r,now,ph);
+    rjxCenter(r,now,ph);
+    // auto cash-out for the player's own open bets (settlement also honours it if this tab is closed)
+    if(ph==='flying'){
+        [1,2].forEach(function(n){
+            const mine=rjxMine(n); if(!mine||mine.bet.status!=='active') return;
+            const a=Number(mine.bet.autoCashout)||0;
+            if(a>=1.01 && !rjxSlot[n].autoFired && rjxMult(r,now-r.launchAt)>=a){ rjxSlot[n].autoFired=true; rjxCashout(n,a); }
+        });
+    }
+    // cash-out button label should tick every frame
+    if(ph==='flying'){ [1,2].forEach(function(n){ const m=rjxMine(n); if(m&&m.bet.status==='active'&&!rjxSlot[n].busy) rjxPanel(n,r,now,ph); }); }
+    if(ts-rjxLastUi>200){
+        rjxLastUi=ts;
+        rjxSyncControls();
+        [1,2].forEach(function(n){ rjxPanel(n,r,now,ph); });
+        if(ph!==rjxLastPhase){
+            if(ph==='crashed'){ rjxHistDirty=true; rjxBetsDirty=true; if(rjxTab==='mine') rjxLoadMine(); try{ refreshGameWalletPanel(); }catch(e){} }
+            rjxLastPhase=ph;
+        }
+        if(rjxHistDirty){ rjxHistDirty=false; rjxRenderHist(); }
+        if(rjxBetsDirty||ts-rjxLastList>1000){ rjxBetsDirty=false; rjxLastList=ts; rjxRenderBets(); }
+    }
+}
+function rjxPanel(n,r,now,ph){
+    const btn=document.getElementById('rjxBtn'+n); if(!btn) return;
+    const mine=rjxMine(n), st=rjxSlot[n], cur=mine?String(mine.bet.currency||'INR').toUpperCase():rjxCur();
+    let cls='wait', t='Bet', s='', dis=true;
+    if(mine){
+        const b=mine.bet, amt=Number(b.amount)||0;
+        if(b.status==='active'){
+            if(ph==='betting'){ cls='active cancel'; t='Cancel'; s='Bet '+rjxMoney(amt,cur); dis=st.busy; }
+            else if(ph==='flying'){ cls='active cash'; t='Cash Out'; s=rjxMoney(Number((amt*rjxFloor2(rjxMult(r,now-r.launchAt))).toFixed(rjxDec(cur))),cur); dis=st.busy; }
+            else { cls='wait'; t='Settling…'; s=''; }
+        }else if(b.status==='cashed'||b.status==='win'){ cls='won'; t='Won '+Number(b.cashoutMultiplier||0).toFixed(2)+'x'; s=rjxMoney(Number(b.winAmount)||0,cur); }
+        else if(b.status==='loss'){ cls='lost'; t='Lost'; s='-'+rjxMoney(amt,cur); }
+        else if(b.status==='refunded'){ cls='wait'; t='Refunded'; s=rjxMoney(amt,cur); }
+    }else{
+        if(ph==='betting'){ cls='bet'; t=st.busy?'Placing…':'Bet'; s=rjxMoney(rjxAmountFor(n,cur),cur); dis=st.busy||!rjxEnabled(); }
+        else if(ph==='flying'){ cls='wait'; t='Next round'; s='Flight in progress'; }
+        else { cls='wait'; t=rjxEnabled()?'Next round':'Paused'; s=rjxEnabled()?'Starting soon':''; }
+    }
+    const key=cls+'|'+t+'|'+s+'|'+dis;
+    if(btn.dataset.k!==key){ btn.dataset.k=key; btn.className='rjx-btn '+cls; btn.disabled=dis; btn.innerHTML='<span class="t">'+rjxEsc(t)+'</span><span class="s">'+rjxEsc(s)+'</span>'; }
+    const locked=!!(mine&&mine.bet.status==='active');
+    const a=document.getElementById('rjxAmt'+n); if(a) a.disabled=locked;
+    const au=document.getElementById('rjxAuto'+n); if(au) au.disabled=locked;
+    const m=document.getElementById('rjxMsg'+n);
+    if(m){ rjxSetText(m,st.msg); const c='rjx-msg'+(st.type?' '+st.type:''); if(m.className!==c) m.className=c; }
+}
+function rjxCenter(r,now,ph){
+    const mult=document.getElementById('rjxMult'), sub=document.getElementById('rjxSub'), bw=document.getElementById('rjxBarWrap'), bar=document.getElementById('rjxBar');
+    const live=document.getElementById('rjxLive'), rn=document.getElementById('rjxRoundNo');
+    if(!mult) return;
+    const on=rjxEnabled()&&rjxCfg&&rjxCfg.autoRun!==false;
+    if(live){ rjxSetText(live,on?'● LIVE':'● PAUSED'); live.classList.toggle('off',!on); }
+    if(rn) rjxSetText(rn,r?('ROUND #'+r.id):'');
+    let mc='rjx-mult', sc='rjx-sub', mt='', st='', showBar=false, pct=100;
+    if(ph==='betting'){
+        mc+=' small'; mt='PLACE YOUR BETS'; const left=Math.max(0,r.launchAt-now); st='Lift-off in '+Math.ceil(left/1000)+'s'; showBar=true; pct=Math.max(0,Math.min(100,left/Math.max(1,r.launchAt-r.bettingStart)*100));
+    }else if(ph==='flying'){
+        const m=rjxFloor2(rjxMult(r,now-r.launchAt)); mt=m.toFixed(2)+'x'; if(m>=10) mc+=' big';
+    }else if(ph==='crashed'){
+        mc+=' crash'; mt=Number(r.crashPoint).toFixed(2)+'x'; sc+=' crash'; st='💥 CRASHED';
+    }else{
+        mc+=' small'; mt=r?(on?'NEXT ROUND SOON':'GAME PAUSED'):(on?'CONNECTING…':'GAME PAUSED'); st=on?'':'Rounds are paused by the administrator';
+    }
+    if(mult.className!==mc) mult.className=mc; rjxSetText(mult,mt);
+    if(sub){ if(sub.className!==sc) sub.className=sc; rjxSetText(sub,st); }
+    if(bw){ const d=showBar?'block':'none'; if(bw.style.display!==d) bw.style.display=d; if(showBar&&bar) bar.style.width=pct.toFixed(1)+'%'; }
+}
+function rjxRenderHist(){
+    const el=document.getElementById('rjxHist'); if(!el) return;
+    const now=rjxNow();
+    const done=rjxRoundsCache.filter(function(r){ return r&&r.crashAt&&r.crashAt<=now; }).slice(-25).reverse();
+    el.innerHTML=done.length?done.map(function(r){ const v=Number(r.crashPoint)||1; const c=v<2?'lo':(v<10?'mid':'hi'); return '<span class="rjx-chip '+c+'">'+v.toFixed(2)+'x</span>'; }).join(''):'<span class="rjx-chip-empty">No finished rounds yet</span>';
+}
+function rjxMask(b){ const s=String(b.customUid||b.userId||'?'); return s.length<=2?s+'***':s.charAt(0)+'***'+s.slice(-1); }
+function rjxRenderBets(){
+    const list=document.getElementById('rjxBetList'); if(!list) return;
+    let rows;
+    if(rjxTab==='mine') rows=rjxMyHist;
+    else if(rjxTab==='prev') rows=rjxPrevBets.slice().filter(function(b){ return b.status!=='cancelled'; }).sort(function(a,b){ return (Number(b.amount)||0)-(Number(a.amount)||0); });
+    else rows=Object.keys(rjxBets).map(function(k){ return rjxBets[k]; }).filter(function(b){ return b.status!=='cancelled'; }).sort(function(a,b){ return (Number(b.amount)||0)-(Number(a.amount)||0); });
+    let totalInr=0, totalUsdt=0, winInr=0;
+    rows.forEach(function(b){ const u=String(b.currency).toUpperCase()==='USDT'; if(u) totalUsdt+=Number(b.amount)||0; else totalInr+=Number(b.amount)||0; if((b.status==='win'||b.status==='cashed')&&!u) winInr+=Number(b.winAmount)||0; });
+    rjxSetText(document.getElementById('rjxSumL'),rows.length+(rows.length===1?' bet':' bets'));
+    rjxSetText(document.getElementById('rjxSumR'),'Wagered ₹'+totalInr.toFixed(2)+(totalUsdt>0?' • USDT '+totalUsdt.toFixed(4):'')+(winInr>0?' • Won ₹'+winInr.toFixed(2):''));
+    if(!rows.length){ list.innerHTML='<div class="rjx-empty">'+(rjxTab==='mine'?'You have not placed any Rocket Jump bets yet.':'No bets yet for this round.')+'</div>'; return; }
+    list.innerHTML=rows.slice(0,80).map(function(b){
+        const cur=String(b.currency||'INR').toUpperCase(), won=(b.status==='win'||b.status==='cashed');
+        const x=won?Number(b.cashoutMultiplier||0).toFixed(2)+'x':'', w=won?rjxMoney(Number(b.winAmount)||0,cur):(b.status==='loss'?'0':'');
+        const first=rjxTab==='mine'?('#'+rjxEsc(b.roundId)):rjxEsc(rjxMask(b));
+        const mine=b.userId===currentUid&&rjxTab!=='mine';
+        return '<div class="rjx-r'+(mine?' mine':(won?' win':(b.status==='loss'?' lose':'')))+'"><span>'+first+'</span><span>'+rjxEsc(rjxMoney(Number(b.amount)||0,cur))+'</span><span class="x">'+rjxEsc(x)+'</span><span class="w">'+rjxEsc(w)+'</span></div>';
+    }).join('');
+}
+
+/* ---- canvas scene ---- */
+function rjxRocket(ctx,x,y,ang,s,ts,flame){
+    ctx.save(); ctx.translate(x,y); ctx.rotate(ang); ctx.scale(s,s);
+    if(flame){
+        const fl=16+Math.sin(ts/55)*6, g=ctx.createLinearGradient(-20,0,-20-fl,0);
+        g.addColorStop(0,'#fff7ae'); g.addColorStop(.45,'#fb923c'); g.addColorStop(1,'rgba(239,68,68,0)');
+        ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(-19,-5.5); ctx.quadraticCurveTo(-19-fl,0,-19,5.5); ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle='#e5173f';
+    ctx.beginPath(); ctx.moveTo(-16,-6); ctx.lineTo(-27,-17); ctx.lineTo(-7,-7); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-16,6); ctx.lineTo(-27,17); ctx.lineTo(-7,7); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#f1f5f9'; ctx.beginPath(); ctx.ellipse(0,0,22,8.6,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#cbd5e1'; ctx.beginPath(); ctx.ellipse(-2,3.4,18,3.4,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#e5173f'; ctx.beginPath(); ctx.moveTo(14,-7.2); ctx.quadraticCurveTo(31,0,14,7.2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#38bdf8'; ctx.beginPath(); ctx.arc(3,-1,3.8,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.3; ctx.stroke();
+    ctx.restore();
+}
+function rjxDraw(ts,r,now,ph){
+    const cv=document.getElementById('rjxCanvas'), stage=document.getElementById('rjxStage'); if(!cv||!stage) return;
+    const dpr=Math.min(2,window.devicePixelRatio||1), w=stage.clientWidth, h=stage.clientHeight; if(!w||!h) return;
+    if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){ cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); }
+    const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+    const flying=ph==='flying', crashed=ph==='crashed';
+    ctx.fillStyle='#0a0b0f'; ctx.fillRect(0,0,w,h);
+    // rotating light rays + glow
+    ctx.save(); ctx.translate(w*.5,h*.6); ctx.rotate(ts/(flying?9000:26000));
+    const n=20, R=Math.hypot(w,h);
+    for(let i=0;i<n;i+=2){ ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,R,i*2*Math.PI/n,(i+1)*2*Math.PI/n); ctx.closePath(); ctx.fillStyle=crashed?'rgba(239,68,68,.06)':'rgba(59,130,246,.09)'; ctx.fill(); }
+    ctx.restore();
+    const g=ctx.createRadialGradient(w*.5,h*.6,0,w*.5,h*.6,Math.max(w,h)*.6);
+    g.addColorStop(0,crashed?'rgba(220,38,38,.40)':(flying?'rgba(37,99,235,.55)':'rgba(37,99,235,.28)')); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    // geometry
+    const padL=12, padB=20, W=w-padL-16, H=h-padB-24, k=2.6;
+    const shape=function(x){ return (Math.exp(k*x)-1)/(Math.exp(k)-1); };
+    const elapsed=flying?(now-r.launchAt):(crashed?(r.crashAt-r.launchAt):0);
+    const u=(flying||crashed)?Math.min(1,elapsed/6500):0;
+    const bob=(u>=1&&flying)?Math.sin(ts/320)*5:0;
+    const pt=function(x){ return {x:padL+W*.86*x,y:h-padB-H*.78*shape(x)+bob*x}; };
+    const sc=Math.max(.85,Math.min(1.5,w/380));
+    // baseline
+    ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(padL,h-padB); ctx.lineTo(w-8,h-padB); ctx.stroke();
+    if(flying||crashed){
+        const steps=44, tip=pt(u);
+        ctx.beginPath(); ctx.moveTo(padL,h-padB);
+        for(let i=0;i<=steps;i++){ const p=pt(u*i/steps); ctx.lineTo(p.x,p.y); }
+        ctx.lineTo(tip.x,h-padB); ctx.closePath();
+        const fg=ctx.createLinearGradient(0,tip.y,0,h-padB); fg.addColorStop(0,crashed?'rgba(127,29,29,.55)':'rgba(229,23,63,.62)'); fg.addColorStop(1,crashed?'rgba(127,29,29,.12)':'rgba(229,23,63,.16)'); ctx.fillStyle=fg; ctx.fill();
+        ctx.beginPath(); for(let i=0;i<=steps;i++){ const p=pt(u*i/steps); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }
+        ctx.lineWidth=4; ctx.lineCap='round'; ctx.strokeStyle=crashed?'#7f1d1d':'#ef1c3a'; ctx.stroke();
+        const p1=pt(Math.max(0,u-.02)), p2=pt(Math.min(1,u+.02)), ang=Math.atan2(p2.y-p1.y,p2.x-p1.x);
+        if(flying) rjxRocket(ctx,tip.x,tip.y,ang,sc,ts,true);
+        else{
+            const tc=now-r.crashAt;
+            if(tc<1500){
+                const e=tc/1500;
+                ctx.save(); ctx.globalAlpha=1-e;
+                ctx.strokeStyle='#fb923c'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(tip.x,tip.y,10+e*46*sc,0,Math.PI*2); ctx.stroke();
+                ctx.fillStyle='#fde047'; ctx.beginPath(); ctx.arc(tip.x,tip.y,(1-e)*16*sc,0,Math.PI*2); ctx.fill();
+                for(let i=0;i<16;i++){ const a=i*(Math.PI*2/16)+i*.37, d=e*(30+(i%4)*14)*sc; ctx.fillStyle=i%2?'#ef4444':'#fb923c'; ctx.beginPath(); ctx.arc(tip.x+Math.cos(a)*d,tip.y+Math.sin(a)*d,3.2*(1-e)+.6,0,Math.PI*2); ctx.fill(); }
+                ctx.restore();
+            }
+        }
+    }else{
+        // waiting on the launch pad
+        rjxRocket(ctx,padL+30*sc,h-padB-13*sc,-.22,sc,ts,false);
+    }
+}
+
 </script>
