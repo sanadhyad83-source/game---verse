@@ -9300,9 +9300,11 @@ button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;f
 /* ===== Home banner slider (controlled from Admin > Notifications) ===== */
 .gv-bn{position:relative;margin:0 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:16/7;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;}
 .gv-bn-track{display:flex;height:100%;transition:transform .45s ease;will-change:transform;}
-.gv-bn-slide{flex:0 0 100%;height:100%;position:relative;}
+.gv-bn-slide{flex:0 0 100%;height:100%;position:relative;overflow:hidden;background:#0a0a0c;}
+/* blurred copy of the same image fills any spare space so the full picture can be shown uncropped */
+.gv-bn-bg{position:absolute;inset:-14%;background-size:cover;background-position:center;filter:blur(18px) brightness(.55);pointer-events:none;}
 .gv-bn-slide.link{cursor:pointer;}
-.gv-bn-slide img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none;pointer-events:none;}
+.gv-bn-slide img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;-webkit-user-drag:none;user-select:none;pointer-events:none;}
 .gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;}
 .gv-bn-dot{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .25s,background .25s;}
 .gv-bn-dot.on{width:16px;background:#fff;}
@@ -9361,10 +9363,18 @@ button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;f
 
 <script id="gv-banner-slider-user">
 (function(){
-    var cfg={enabled:true,intervalSec:4}, items=[], idx=0, timer=null, bound=false;
+    var cfg={enabled:true,intervalSec:4}, items=[], idx=0, timer=null, bound=false, ratios={};
     function safeImg(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)||/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u)?u:'';}
     function safeLink(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
     function stop(){if(timer){clearInterval(timer);timer=null;}}
+    // FIX (cropped banners): the slider is no longer locked to 16:7 with object-fit:cover.
+    // Its height follows the uploaded image(s); each image is shown whole (object-fit:contain).
+    function fitHeight(){
+        var host=document.getElementById('gvBannerSlider'); if(!host) return;
+        var min=null;
+        items.forEach(function(b){var r=ratios[b.id]; if(r&&(min===null||r<min)) min=r;});
+        if(min!==null) host.style.aspectRatio=String(Math.min(3.2,Math.max(1.6,min)));
+    }
     function go(n){
         var host=document.getElementById('gvBannerSlider'); if(!host||!items.length) return;
         idx=(n+items.length)%items.length;
@@ -9385,7 +9395,12 @@ button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;f
         var track=document.createElement('div'); track.className='gv-bn-track';
         items.forEach(function(b){
             var s=document.createElement('div'); s.className='gv-bn-slide'+(safeLink(b.linkUrl)?' link':'');
-            var img=document.createElement('img'); img.alt=b.title||'Banner'; img.draggable=false; img.src=safeImg(b.imageUrl);
+            var src=safeImg(b.imageUrl);
+            var bg=document.createElement('div'); bg.className='gv-bn-bg';
+            bg.style.backgroundImage='url("'+src.replace(/\\/g,'%5C').replace(/"/g,'%22').replace(/[\r\n]/g,'')+'")';
+            s.appendChild(bg);
+            var img=document.createElement('img'); img.alt=b.title||'Banner'; img.draggable=false; img.src=src;
+            img.onload=function(){ if(img.naturalWidth&&img.naturalHeight){ratios[b.id]=img.naturalWidth/img.naturalHeight; fitHeight();} };
             // A broken image is dropped so users never see an empty banner.
             img.onerror=function(){items=items.filter(function(x){return x.id!==b.id;});render();};
             s.appendChild(img);
@@ -9400,6 +9415,7 @@ button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;f
             host.appendChild(dots);
         }
         host.classList.remove('hidden');
+        fitHeight();
         go(idx); play();
         if(!host.__bound){
             host.__bound=true; var x0=0,dx=0,down=false;
@@ -10105,6 +10121,10 @@ const k3ReconciledRounds = new Set();
 let k3ServerOffset = 0;
 try { db.ref('.info/serverTimeOffset').on('value', s => { k3ServerOffset = Number(s.val()) || 0; }, () => {}); } catch(e) {}
 function k3Now() { return Date.now() + k3ServerOffset; }
+// A period's TRUE end = end of its cooldown. Nothing about the result (dice, win/loss,
+// balance credit, history row) may be drawn-for-display or shown before this moment.
+function k3RoundEndMs(roundId) { return Number(roundId) * k3CycleMs(); }
+function k3RoundRevealed(roundId) { return k3Now() >= k3RoundEndMs(roundId); }
 let k3Config = {
   enabled: true, entrySeconds: 60, cooldownSeconds: 5,
   minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000,
@@ -10671,19 +10691,26 @@ function k3ValidDice(d) {
   return Array.isArray(d) && d.length === 3 && d.every(x => Number.isInteger(Number(x)) && Number(x) >= 1 && Number(x) <= 6);
 }
 async function resolveK3Round(roundId) {
-  if (!k3ConfigReady || !k3Config.autoResult) return;
-  // FIX: never draw a round before its entry window has ended (SERVER time).
-  // Prevents an early/fast-clock client from locking in random dice before the
-  // admin's forced dice is applied.
-  const idx = Number(roundId) - 1;
-  const entryEnd = idx * k3CycleMs() + k3Config.entrySeconds * 1000;
-  if (!(idx >= 0) || k3Now() < entryEnd) return null;
+  if (!k3ConfigReady) return null;
+  // FIX: the draw happens ONLY when the period has fully ended (after cooldown), on SERVER time.
+  // Before: it was drawn the moment betting closed -> players saw the result ~5s before the round
+  // ended AND a forced result applied by admin in that window was ignored (random dice already stored).
+  if (!(Number(roundId) >= 1) || !k3RoundRevealed(roundId)) return null;
 
   const ref = db.ref('k3/rounds/' + roundId);
+  if (!k3Config.autoResult) {
+    // Manual mode: never draw here, but still settle a round that admin already resolved.
+    const cur = (await ref.once('value')).val();
+    if (cur && (cur.status === 'resolved' || cur.status === 'settled') && cur.resultSum != null) {
+      settleK3Entries(roundId, cur);
+      return cur;
+    }
+    return null;
+  }
   const res = await ref.transaction(c => {
     if (c && (c.status === 'resolved' || c.status === 'settled') && c.resultSum != null) return; // already drawn: never overwrite
-    let dice;
-    if (!k3Config.fairRandomOnly && c && k3ValidDice(c.forcedDice)) dice = c.forcedDice.map(Number);   // admin forced
+    let dice, forced = false;
+    if (!k3Config.fairRandomOnly && c && k3ValidDice(c.forcedDice)) { dice = c.forcedDice.map(Number); forced = true; }  // admin forced
     else if (c && k3ValidDice(c.dice)) dice = c.dice.map(Number);
     else dice = k3RollDice();
     const sum = k3Sum(dice);
@@ -10694,7 +10721,7 @@ async function resolveK3Round(roundId) {
       resultSum: sum,
       size: k3SizeOf(sum),
       parity: k3ParityOf(sum),
-      source: (!k3Config.fairRandomOnly && c && k3ValidDice(c.forcedDice)) ? 'forced' : 'random',
+      source: forced ? 'forced' : 'random',
       resolvedAt: k3Now()
     });
   });
@@ -10703,6 +10730,22 @@ async function resolveK3Round(roundId) {
     settleK3Entries(roundId, round);
   }
   return round;
+}
+
+// Called when a new period starts: draw (or read) the period that JUST ended and reveal it.
+function k3RevealPrev() {
+  const r = getK3RoundState();
+  const prevId = String(Math.max(1, Number(r.roundId) - 1));
+  resolveK3Round(prevId).catch(() => null).then(round => {
+    if (round && round.resultSum != null) {
+      displayK3Result(round);
+      // keep the "last result" state so the dice roll again during the next cooldown
+      const row = document.getElementById('k3DiceRow');
+      if (row && row.dataset.rolling === 'done') row.dataset.rolling = 'prev';
+    } else k3ShowLastResult();
+    loadK3History();
+    loadK3MyHistory();
+  });
 }
 
 function settleK3Entries(roundId, round) {
@@ -10802,6 +10845,7 @@ function listenK3Result(roundId) {
   k3RoundListener = function(snap) {
     const d = snap.val();
     if (!d || (d.status !== 'resolved' && d.status !== 'settled') || d.resultSum == null) return;
+    if (!k3RoundRevealed(d.roundId || roundId)) return;   // FIX: admin early-lock must not leak the result
     displayK3Result(d);
     loadK3History();
     loadK3MyHistory();
@@ -10810,6 +10854,7 @@ function listenK3Result(roundId) {
 }
 
 function displayK3Result(d) {
+  if (d && d.roundId != null && !k3RoundRevealed(d.roundId)) return;   // never show before round end
   const row = document.getElementById('k3DiceRow');
   const badge = document.getElementById('k3SumBadge');
   if (row && d.dice && Array.isArray(d.dice)) {
@@ -10849,10 +10894,8 @@ function startK3Timer() {
       const row = document.getElementById('k3DiceRow');
       if (row) { row.dataset.rolling = ''; row.dataset.roundId = ''; }
       // Show previous period result on stage (not blank ?) while waiting for this period's draw
-      k3ShowLastAt = 0;
-      k3ShowLastResult();
-      const badge = document.getElementById('k3SumBadge');
-      if (badge && r.phase === 'cooldown') badge.textContent = 'Drawing…';
+      k3ShowLastAt = k3Now();
+      k3RevealPrev();   // draws/reads the period that just ended, then shows it
     }
 
     // while betting is open, keep showing last period result (not blank ?)
@@ -10873,10 +10916,7 @@ function startK3Timer() {
         const badge = document.getElementById('k3SumBadge');
         if (badge) badge.textContent = 'Rolling…';
       }
-      // resolve the round whose entry window just closed (current roundId during cooldown)
-      resolveK3Round(r.roundId).then(round => {
-        if (round && round.resultSum != null) displayK3Result(round);
-      }).catch(()=>{});
+      // FIX: NO draw and NO reveal here. The dice keep rolling until the period truly ends.
     }
 
     reconcileK3Settlements();
@@ -10887,11 +10927,12 @@ function startK3Timer() {
 function loadK3History() {
   const el = document.getElementById('k3History');
   if (!el) return;
-  db.ref('k3/rounds').limitToLast(30).once('value').then(snap => {
+  db.ref('k3/rounds').limitToLast(40).once('value').then(snap => {
     const rows = [];
     snap.forEach(ch => {
       const d = ch.val() || {};
       if (d.resultSum == null && d.sum == null) return;
+      if (!k3RoundRevealed(d.roundId || ch.key)) return;   // hide results of unfinished periods
       rows.push({ id: ch.key, d });
     });
     rows.reverse();
