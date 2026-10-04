@@ -1724,149 +1724,170 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 <script>
 </script>
 <style id="gv-rocket-live-v1">
-/* ===== ROCKET JUMP LIVE (continuous shared rounds, Aviator-style) ===== */
-.rjx{display:grid;gap:9px;text-align:left;-webkit-user-select:none;user-select:none}
-.rjx input{-webkit-user-select:text;user-select:text}
-.rjx-hist{display:flex;gap:6px;overflow-x:auto;padding:7px 9px;border-radius:12px;background:#0b0d12;border:1px solid rgba(255,255,255,.08);scrollbar-width:none;min-height:34px;align-items:center}
-.rjx-hist::-webkit-scrollbar{display:none}
-.rjx-chip{flex:0 0 auto;font-size:11px;font-weight:900;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.06);letter-spacing:.2px}
-.rjx-chip.lo{color:#38bdf8}.rjx-chip.mid{color:#a78bfa}.rjx-chip.hi{color:#f472b6}
-.rjx-chip-empty{font-size:10px;color:#6b7280;font-weight:700}
-.rjx-stage{position:relative;width:100%;max-width:100%;height:clamp(210px,56vw,300px);min-width:0;border-radius:16px;overflow:hidden;background:#0a0b0f;border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 0 60px rgba(0,0,0,.55)}
-.rjx-stage canvas{position:absolute;inset:0;width:100%;height:100%;max-width:100%;display:block}
-.rjx-row,.rjx-left,.rjx-amt,.rjx-panels,.rjx-bets{min-width:0}
-.rjx-row{grid-template-columns:minmax(0,1fr) minmax(96px,128px)}
-.rjx-btn{min-width:0;max-width:100%}
-@media(max-width:360px){
-  .rjx-row{grid-template-columns:minmax(0,1fr) 100px;gap:6px}
-  .rjx-btn .t{font-size:16px}
-  .rjx-btn .s{font-size:11px}
-  .rjx-panel{padding:8px}
-}
-.rjx-center{position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);text-align:center;pointer-events:none;z-index:3;padding:0 14px}
-.rjx-mult{font-size:clamp(44px,15vw,74px);font-weight:900;letter-spacing:-2px;line-height:1;color:#fff;text-shadow:0 0 28px rgba(80,160,255,.45);font-variant-numeric:tabular-nums}
-.rjx-mult.crash{color:#ef4444;text-shadow:0 0 28px rgba(239,68,68,.45)}
-.rjx-mult.big{color:#f472b6;text-shadow:0 0 28px rgba(244,114,182,.5)}
-.rjx-mult.small{font-size:clamp(22px,7vw,32px);letter-spacing:.5px;text-shadow:none}
-.rjx-sub{margin-top:8px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#cbd5e1}
-.rjx-sub.crash{color:#ef4444;font-size:15px}
-.rjx-bar{width:min(190px,60%);height:5px;border-radius:99px;background:rgba(255,255,255,.14);margin:12px auto 0;overflow:hidden}
-.rjx-bar i{display:block;height:100%;width:100%;background:#e5173f;border-radius:99px;transition:width .2s linear}
-.rjx-live{position:absolute;left:10px;top:9px;z-index:4;font-size:9px;font-weight:900;letter-spacing:1.2px;color:#34d399;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:99px;border:1px solid rgba(52,211,153,.35)}
-.rjx-live.off{color:#f87171;border-color:rgba(248,113,113,.35)}
-.rjx-round{position:absolute;right:10px;top:9px;z-index:4;font-size:9px;font-weight:900;letter-spacing:1px;color:#94a3b8;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:99px}
-.rjx-panels{display:grid;grid-template-columns:1fr;gap:9px}
-@media(min-width:640px){.rjx-panels{grid-template-columns:1fr 1fr}}
-.rjx-panel{padding:10px;border-radius:14px;background:#13151b;border:1px solid rgba(255,255,255,.09);display:grid;gap:8px}
-.rjx-row{display:grid;grid-template-columns:minmax(0,1fr) 108px;gap:8px;align-items:stretch}
-.rjx-left{display:grid;gap:7px;align-content:start}
-.rjx-amt{display:grid;grid-template-columns:34px 1fr 34px;gap:5px;align-items:center;background:#0a0b0f;border-radius:99px;padding:3px;border:1px solid rgba(255,255,255,.08)}
-.rjx-amt button{width:34px;height:34px;border-radius:50%;border:0;background:#2a2d36;color:#fff;font-size:18px;font-weight:900;line-height:1;padding:0;cursor:pointer}
-.rjx-amt input{width:100%!important;margin:0!important;border:0!important;background:transparent!important;text-align:center;font-size:16px!important;font-weight:900;color:#fff!important;padding:0!important;height:34px;box-shadow:none!important;outline:none}
-.rjx-chips{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.rjx-chips button{border:0;border-radius:99px;background:#22252e;color:#d1d5db;font-size:12px;font-weight:800;padding:7px 0;cursor:pointer}
-.rjx-fixed .rjx-chips,.rjx-fixed .rjx-amt button{display:none}
-.rjx-fixed .rjx-amt{grid-template-columns:1fr}
-.rjx-btn{border:0;border-radius:14px;color:#fff;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;width:100%;max-width:108px;min-width:0;min-height:72px;height:72px;padding:5px 4px;box-sizing:border-box;box-shadow:0 0 0 2px rgba(255,255,255,.18) inset;overflow:hidden}
-.rjx-btn .t{font-size:18px;line-height:1.05;white-space:nowrap}.rjx-btn .s{font-size:12px;font-weight:800;opacity:.95;text-align:center;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.rjx-btn.bet{background:linear-gradient(#35c61f,#1f9d10)}
-/* After a bet is placed, keep that same bet control visibly selected in yellow. */
-.rjx-btn.active,.rjx-btn.active.cancel,.rjx-btn.active.cash{background:linear-gradient(#facc15,#eab308)!important;color:#171717!important;box-shadow:0 0 0 2px rgba(250,204,21,.48) inset,0 0 18px rgba(250,204,21,.22)!important}
-.rjx-btn.cash{background:linear-gradient(#facc15,#eab308);color:#171717;animation:rjxPulse 1s ease-in-out infinite alternate}
-.rjx-btn.cancel{background:linear-gradient(#facc15,#eab308);color:#171717}
-.rjx-btn.won{background:linear-gradient(#16a34a,#166534)}
-.rjx-btn.lost{background:linear-gradient(#4b5563,#374151)}
-.rjx-btn.wait{background:#2a2d36;color:#9ca3af;box-shadow:none}
-.rjx-btn:disabled{cursor:not-allowed;opacity:.9}
-@keyframes rjxPulse{from{filter:brightness(1)}to{filter:brightness(1.18)}}
-.rjx-auto{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:#9ca3af}
-.rjx-auto input{width:78px!important;margin:0!important;padding:6px 8px!important;border-radius:99px!important;background:#0a0b0f!important;border:1px solid rgba(255,255,255,.1)!important;color:#fff!important;text-align:center;font-size:13px!important;font-weight:800;height:30px}
-.rjx-msg{font-size:11px;font-weight:800;min-height:14px;text-align:center}
-.rjx-msg.bad{color:#f87171}.rjx-msg.good{color:#34d399}
-.rjx-bets{border-radius:14px;background:#0f1116;border:1px solid rgba(255,255,255,.08);overflow:hidden}
-.rjx-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px;background:#0a0b0f}
-.rjx-tabs button{border:0;border-radius:99px;background:transparent;color:#9ca3af;font-size:12px;font-weight:800;padding:8px 0;cursor:pointer}
-.rjx-tabs button.on{background:#2a2d36;color:#fff}
-.rjx-sum{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:11px;font-weight:800;color:#9ca3af;border-bottom:1px solid rgba(255,255,255,.06)}
-.rjx-sum b{color:#fff}
-.rjx-head,.rjx-r{display:grid;grid-template-columns:1.1fr 1fr .8fr 1fr;gap:6px;padding:7px 12px;font-size:11.5px;align-items:center}
-.rjx-head{color:#6b7280;font-weight:800;font-size:10px;letter-spacing:.6px;text-transform:uppercase}
-.rjx-r{font-weight:800;color:#e5e7eb;border-top:1px solid rgba(255,255,255,.04);font-variant-numeric:tabular-nums}
-.rjx-r.mine{background:rgba(52,211,153,.08)}
-.rjx-r.win{background:rgba(52,211,153,.07)}
-.rjx-r.lose{color:#9ca3af}
-.rjx-r .x{color:#a78bfa}.rjx-r .w{color:#34d399;text-align:right}.rjx-head span:last-child{text-align:right}
-.rjx-list{max-height:330px;overflow-y:auto}
-.rjx-empty{padding:18px;text-align:center;font-size:12px;color:#6b7280;font-weight:700}
+/* ===== ROCKET JUMP LIVE — scoped under #gameContentBox so the app's global
+   button/input rules (width:100%, padding, margin, dark !important background) cannot touch it ===== */
+#gameContentBox .rjx{display:grid;gap:10px;text-align:left;-webkit-user-select:none;user-select:none}
+#gameContentBox .rjx *{box-sizing:border-box}
+#gameContentBox .rjx button,#gameContentBox .rjx input{width:auto;min-width:0;margin:0;padding:0;border:0;border-radius:0;background:transparent!important;box-shadow:none!important;text-shadow:none;transform:none!important;font-family:inherit;line-height:1.2;-webkit-appearance:none;appearance:none;outline:none}
+#gameContentBox .rjx button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+#gameContentBox .rjx button:disabled{opacity:1}
+#gameContentBox .rjx input{-webkit-user-select:text;user-select:text}
+#gameContentBox .rjx input::-webkit-outer-spin-button,#gameContentBox .rjx input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#gameContentBox .rjx input[type=number]{-moz-appearance:textfield}
 
-/* Final Rocket Jump bet-button sizing and selected-bet highlight. */
-.rjx-panels .rjx-row .rjx-btn{width:100%;max-width:108px;min-width:0;height:72px;min-height:72px;padding:5px 4px;box-sizing:border-box;}
-.rjx-panels .rjx-row .rjx-btn.active,.rjx-panels .rjx-row .rjx-btn.active.cancel,.rjx-panels .rjx-row .rjx-btn.active.cash{background:linear-gradient(#facc15,#eab308)!important;color:#171717!important;}
-@media(max-width:360px){
-  .rjx-row{grid-template-columns:minmax(0,1fr) 100px!important;gap:6px!important}
-  .rjx-panels .rjx-row .rjx-btn{max-width:100px;height:68px;min-height:68px;}
-  .rjx-panels .rjx-row .rjx-btn .t{font-size:16px}
-  .rjx-panels .rjx-row .rjx-btn .s{font-size:11px}
-}
+/* recent results */
+#gameContentBox .rjx-hist{display:flex;gap:6px;overflow-x:auto;padding:8px 10px;border-radius:12px;background:#0b0d12;border:1px solid rgba(255,255,255,.08);scrollbar-width:none;min-height:38px;align-items:center}
+#gameContentBox .rjx-hist::-webkit-scrollbar{display:none}
+#gameContentBox .rjx-chip{flex:0 0 auto;font-size:12px;font-weight:900;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.06)}
+#gameContentBox .rjx-chip.lo{color:#38bdf8}#gameContentBox .rjx-chip.mid{color:#a78bfa}#gameContentBox .rjx-chip.hi{color:#f472b6}
+#gameContentBox .rjx-chip-empty{font-size:11px;color:#6b7280;font-weight:700}
+
+/* stage */
+#gameContentBox .rjx-stage{position:relative;width:100%;height:clamp(200px,52vw,270px);max-height:270px;border-radius:16px;overflow:hidden;background:#0a0b0f;border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 0 60px rgba(0,0,0,.55)}
+#gameContentBox .rjx-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#gameContentBox .rjx-center{position:absolute;left:0;right:0;top:50%;transform:translateY(-60%);text-align:center;pointer-events:none;z-index:3;padding:0 14px}
+#gameContentBox .rjx-mult{font-size:clamp(42px,14vw,68px);font-weight:900;letter-spacing:-2px;line-height:1;color:#fff;text-shadow:0 0 28px rgba(80,160,255,.45);font-variant-numeric:tabular-nums}
+#gameContentBox .rjx-mult.crash{color:#ef4444;text-shadow:0 0 28px rgba(239,68,68,.45)}
+#gameContentBox .rjx-mult.big{color:#f472b6;text-shadow:0 0 28px rgba(244,114,182,.5)}
+#gameContentBox .rjx-mult.small{font-size:clamp(20px,6.4vw,28px);letter-spacing:.6px;text-shadow:none}
+#gameContentBox .rjx-sub{margin-top:8px;font-size:12px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#cbd5e1}
+#gameContentBox .rjx-sub.crash{color:#ef4444;font-size:14px}
+#gameContentBox .rjx-bar{width:min(180px,58%);height:5px;border-radius:99px;background:rgba(255,255,255,.14);margin:12px auto 0;overflow:hidden}
+#gameContentBox .rjx-bar i{display:block;height:100%;width:100%;background:#e5173f;border-radius:99px;transition:width .2s linear}
+#gameContentBox .rjx-live{position:absolute;left:10px;top:9px;z-index:4;font-size:10px;font-weight:900;letter-spacing:1.1px;color:#34d399;background:rgba(0,0,0,.5);padding:4px 9px;border-radius:99px;border:1px solid rgba(52,211,153,.35)}
+#gameContentBox .rjx-live.off{color:#f87171;border-color:rgba(248,113,113,.35)}
+#gameContentBox .rjx-round{position:absolute;right:10px;top:9px;z-index:4;font-size:10px;font-weight:900;letter-spacing:1px;color:#94a3b8;background:rgba(0,0,0,.5);padding:4px 9px;border-radius:99px}
+
+/* bet panels */
+#gameContentBox .rjx-panels{display:grid;grid-template-columns:1fr;gap:10px}
+#gameContentBox .rjx-panel{padding:10px;border-radius:16px;background:#13151b;border:1px solid rgba(255,255,255,.09);display:grid;gap:8px}
+#gameContentBox .rjx-grid{display:grid;grid-template-columns:minmax(0,1fr) clamp(96px,34%,120px);grid-template-areas:"amt btn" "chips btn";gap:8px;align-items:stretch}
+#gameContentBox .rjx-amt{grid-area:amt;display:grid;grid-template-columns:34px minmax(0,1fr) 34px;align-items:center;gap:4px;height:44px;padding:4px;background:#0a0b0f;border-radius:99px;border:1px solid rgba(255,255,255,.1)}
+#gameContentBox .rjx-amt button{width:34px;height:34px;border-radius:50%;background:#2a2d36!important;color:#fff;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 0 2px}
+#gameContentBox .rjx-amt button:active{background:#3b3f4b!important}
+#gameContentBox .rjx-amt input{width:100%;height:34px;text-align:center;font-size:17px;font-weight:900;color:#fff!important}
+#gameContentBox .rjx-amt input:disabled{opacity:.55}
+#gameContentBox .rjx-chips{grid-area:chips;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#gameContentBox .rjx-chips button{height:32px;border-radius:99px;background:#22252e!important;color:#d1d5db;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+#gameContentBox .rjx-chips button:active{background:#343845!important}
+#gameContentBox .rjx-fixed .rjx-chips{display:none}
+#gameContentBox .rjx-fixed .rjx-grid{grid-template-areas:"amt btn" "amt btn"}
+#gameContentBox .rjx-fixed .rjx-amt{grid-template-columns:minmax(0,1fr);height:100%;min-height:44px;border-radius:14px}
+#gameContentBox .rjx-fixed .rjx-amt button{display:none}
+#gameContentBox .rjx-fixed .rjx-amt input{height:100%;font-size:20px}
+
+/* main bet / cash-out button */
+#gameContentBox .rjx button.rjx-btn{grid-area:btn;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:88px;padding:6px 4px;border-radius:14px;color:#fff;font-weight:900;text-align:center;border:2px solid rgba(255,255,255,.28)!important;transition:filter .15s}
+#gameContentBox .rjx-btn .t{font-size:19px;line-height:1.1;letter-spacing:.2px}
+#gameContentBox .rjx-btn .s{font-size:12px;font-weight:800;opacity:.95;line-height:1.15;word-break:break-word}
+#gameContentBox .rjx button.rjx-btn:active{filter:brightness(.9)}
+#gameContentBox .rjx button.rjx-btn.bet{background:linear-gradient(180deg,#3ddc2c 0%,#22a816 55%,#17870d 100%)!important;box-shadow:0 4px 16px rgba(34,197,94,.38),inset 0 1px 0 rgba(255,255,255,.35)!important;border-color:rgba(190,255,170,.55)!important}
+#gameContentBox .rjx button.rjx-btn.bet .t{font-size:22px}
+#gameContentBox .rjx button.rjx-btn.bet:disabled{filter:saturate(.55) brightness(.78)}
+#gameContentBox .rjx button.rjx-btn.cash{background:linear-gradient(180deg,#fbbf24,#f59e0b 55%,#d97706)!important;color:#1a1200;box-shadow:0 4px 16px rgba(245,158,11,.4),inset 0 1px 0 rgba(255,255,255,.4)!important;border-color:rgba(255,230,160,.6)!important;animation:rjxPulse .9s ease-in-out infinite alternate}
+#gameContentBox .rjx button.rjx-btn.cancel{background:linear-gradient(180deg,#f05252,#c81e1e)!important;box-shadow:0 4px 14px rgba(239,68,68,.32)!important}
+#gameContentBox .rjx button.rjx-btn.won{background:linear-gradient(180deg,#16a34a,#14532d)!important;border-color:rgba(134,239,172,.5)!important}
+#gameContentBox .rjx button.rjx-btn.lost{background:linear-gradient(180deg,#4b5563,#2f3541)!important}
+#gameContentBox .rjx button.rjx-btn.wait{background:#242730!important;color:#9ca3af;border-color:rgba(255,255,255,.1)!important}
+@keyframes rjxPulse{from{filter:brightness(1)}to{filter:brightness(1.15)}}
+
+/* auto cash-out + message */
+#gameContentBox .rjx-auto{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#9ca3af;min-height:34px}
+#gameContentBox .rjx-auto span:first-child{flex:1 1 auto}
+#gameContentBox .rjx-auto input{width:84px;height:32px;border-radius:99px;background:#0a0b0f!important;border:1px solid rgba(255,255,255,.12);color:#fff!important;text-align:center;font-size:14px;font-weight:800}
+#gameContentBox .rjx-auto input:disabled{opacity:.5}
+#gameContentBox .rjx-msg{font-size:12px;font-weight:800;min-height:0;text-align:center;line-height:1.3}
+#gameContentBox .rjx-msg:empty{display:none}
+#gameContentBox .rjx-msg.bad{color:#f87171}#gameContentBox .rjx-msg.good{color:#34d399}
+
+/* bets table */
+#gameContentBox .rjx-bets{border-radius:16px;background:#0f1116;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+#gameContentBox .rjx-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px;background:#0a0b0f}
+#gameContentBox .rjx-tabs button{height:36px;border-radius:99px;color:#9ca3af;font-size:13px;font-weight:800}
+#gameContentBox .rjx-tabs button.on{background:#2a2d36!important;color:#fff}
+#gameContentBox .rjx-sum{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;font-size:11.5px;font-weight:800;color:#9ca3af;border-bottom:1px solid rgba(255,255,255,.06)}
+#gameContentBox .rjx-head,#gameContentBox .rjx-r{display:grid;grid-template-columns:1.1fr 1fr .8fr 1fr;gap:6px;padding:8px 12px;font-size:12px;align-items:center}
+#gameContentBox .rjx-head{color:#6b7280;font-weight:800;font-size:10px;letter-spacing:.6px;text-transform:uppercase}
+#gameContentBox .rjx-r{font-weight:800;color:#e5e7eb;border-top:1px solid rgba(255,255,255,.04);font-variant-numeric:tabular-nums}
+#gameContentBox .rjx-r.mine{background:rgba(52,211,153,.09)}
+#gameContentBox .rjx-r.win{background:rgba(52,211,153,.07)}
+#gameContentBox .rjx-r.lose{color:#9ca3af}
+#gameContentBox .rjx-r .x{color:#a78bfa}#gameContentBox .rjx-r .w{color:#34d399;text-align:right}#gameContentBox .rjx-head span:last-child{text-align:right}
+#gameContentBox .rjx-list{max-height:330px;overflow-y:auto}
+#gameContentBox .rjx-empty{padding:20px;text-align:center;font-size:12px;color:#6b7280;font-weight:700}
 </style>
-<style id="gv-rocket-jump-final-layout-fix">
-/* Compact +/- controls: stack them vertically so both controls stay visible on narrow phones. */
-.rjx-panel .rjx-amt{
-  grid-template-columns:30px minmax(0,1fr) !important;
-  grid-template-rows:1fr 1fr !important;
-  gap:4px !important;
-  padding:3px !important;
-  min-width:0 !important;
-  min-height:64px !important;
-  border-radius:14px !important;
-}
-.rjx-panel .rjx-amt button{
-  width:30px !important;
-  height:28px !important;
-  min-width:30px !important;
-  min-height:28px !important;
-  border-radius:9px !important;
-  font-size:17px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  line-height:1 !important;
-}
-.rjx-panel .rjx-amt button:first-child{grid-column:1;grid-row:1;}
-.rjx-panel .rjx-amt button:last-child{grid-column:1;grid-row:2;}
-.rjx-panel .rjx-amt input{
-  grid-column:2 !important;
-  grid-row:1 / span 2 !important;
-  width:100% !important;
-  min-width:0 !important;
-  height:56px !important;
-  font-size:15px !important;
-}
-.rjx-panel .rjx-fixed .rjx-amt{
-  grid-template-columns:1fr !important;
-  grid-template-rows:1fr !important;
-  min-height:56px !important;
-}
-.rjx-panel .rjx-fixed .rjx-amt input{grid-column:1 !important;grid-row:1 !important;height:50px !important;}
-.rjx-panel .rjx-fixed .rjx-amt button{display:none !important;}
+<style id="gv-mines-redesign-v1">
+/* ===== MINES — redesigned screen (scoped; beats the app's global button/input rules) ===== */
+#gameContentBox .mx{display:grid;gap:10px;text-align:left}
+#gameContentBox .mx *{box-sizing:border-box}
+#gameContentBox .mx button,#gameContentBox .mx input,#gameContentBox .mx select{width:auto;min-width:0;margin:0;padding:0;border:0;border-radius:0;background:transparent!important;box-shadow:none!important;text-shadow:none;transform:none;font-family:inherit;line-height:1.2;-webkit-appearance:none;appearance:none;outline:none}
+#gameContentBox .mx button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+#gameContentBox .mx button:disabled{opacity:1;cursor:default}
+#gameContentBox .mx input{-webkit-user-select:text;user-select:text}
+#gameContentBox .mx input::-webkit-outer-spin-button,#gameContentBox .mx input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#gameContentBox .mx input[type=number]{-moz-appearance:textfield}
+#gameContentBox .mx .hidden{display:none!important}
 
-/* Keep the selected/placed bet visibly yellow. */
-.rjx-panel .rjx-btn.cancel,
-.rjx-panel .rjx-btn.cash,
-.rjx-panel .rjx-btn.active{
-  background:linear-gradient(180deg,#fde047,#eab308) !important;
-  color:#171717 !important;
-  box-shadow:0 0 0 2px rgba(250,204,21,.48) inset,0 0 16px rgba(250,204,21,.22) !important;
-}
+/* hero */
+#gameContentBox .mx-hero{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:radial-gradient(circle at 90% 0%,rgba(239,68,68,.20),transparent 45%),linear-gradient(145deg,#161821,#0b0c11);border:1px solid rgba(255,255,255,.09)}
+#gameContentBox .mx-hero-ic{flex:0 0 46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#7f1d1d,#ef4444);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 18px rgba(239,68,68,.35)}
+#gameContentBox .mx-hero-t{font-size:17px;font-weight:900;letter-spacing:.3px;color:#fff}
+#gameContentBox .mx-hero-s{font-size:11px;color:#94a3b8;margin-top:3px;line-height:1.35}
 
-/* Never crop an admin banner image. */
-.gv-bn,.gv-bn-track,.gv-bn-slide{background:#0a0a0c;}
-.gv-bn-slide img{object-fit:contain !important;object-position:center center !important;}
-@media(max-width:360px){
-  .rjx-panel .rjx-amt{grid-template-columns:28px minmax(0,1fr) !important;min-height:60px !important;}
-  .rjx-panel .rjx-amt button{width:28px !important;height:26px !important;min-width:28px !important;min-height:26px !important;font-size:16px !important;}
-  .rjx-panel .rjx-amt input{height:52px !important;font-size:14px !important;}
-}
+/* live stats */
+#gameContentBox .mx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#gameContentBox .mx-stat{padding:9px 6px;border-radius:13px;text-align:center;background:#12141b;border:1px solid rgba(255,255,255,.08);min-width:0}
+#gameContentBox .mx-stat span{display:block;font-size:9px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#7c8497}
+#gameContentBox .mx-stat b{display:block;margin-top:4px;font-size:16px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#gameContentBox .mx-stat.m b{color:#facc15}#gameContentBox .mx-stat.n b{color:#a78bfa}#gameContentBox .mx-stat.w b{color:#34d399}
+
+/* settings card */
+#gameContentBox .mx-card{padding:12px;border-radius:16px;background:#12141b;border:1px solid rgba(255,255,255,.08);display:grid;gap:10px}
+#gameContentBox .mx-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;color:#cbd5e1}
+#gameContentBox .mx-row small{font-size:11px;font-weight:700;color:#7c8497}
+#gameContentBox .mx-amt{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;align-items:center;gap:6px;height:50px;padding:4px;background:#0a0b0f;border-radius:99px;border:1px solid rgba(255,255,255,.1)}
+#gameContentBox .mx-amt button{width:42px;height:42px;border-radius:50%;background:#2a2d36!important;color:#fff;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 0 2px}
+#gameContentBox .mx-amt button:active{background:#3b3f4b!important}
+#gameContentBox .mx-amt input{width:100%;height:42px;text-align:center;font-size:19px;font-weight:900;color:#fff!important}
+#gameContentBox .mx-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#gameContentBox .mx-quick button{height:34px;border-radius:99px;background:#22252e!important;color:#d1d5db;font-size:13px;font-weight:800}
+#gameContentBox .mx-quick button:active{background:#343845!important}
+#gameContentBox .mx-mines{display:flex;gap:6px;overflow-x:auto;padding:2px 1px 4px;scrollbar-width:none}
+#gameContentBox .mx-mines::-webkit-scrollbar{display:none}
+#gameContentBox .mx-mines button{flex:0 0 auto;min-width:42px;height:38px;padding:0 12px;border-radius:12px;background:#1b1e27!important;border:1px solid rgba(255,255,255,.08)!important;color:#cbd5e1;font-size:14px;font-weight:900}
+#gameContentBox .mx-mines button.on{background:linear-gradient(145deg,#dc2626,#7f1d1d)!important;border-color:rgba(252,165,165,.7)!important;color:#fff;box-shadow:0 4px 14px rgba(239,68,68,.32)!important}
+#gameContentBox .mx-lock{opacity:.45;pointer-events:none}
+#gameContentBox .mx-summary{display:none;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;color:#cbd5e1}
+#gameContentBox .mx-summary b{color:#fff}
+#gameContentBox .mx-setup-body{display:grid;gap:10px}
+#gameContentBox .mx-playing .mx-setup-body{display:none}
+#gameContentBox .mx-playing .mx-summary{display:flex}
+
+/* board */
+#gameContentBox .mx-board{padding:10px;border-radius:18px;background:radial-gradient(circle at 50% 0%,rgba(59,130,246,.10),transparent 55%),#0d0f15;border:1px solid rgba(255,255,255,.09)}
+#gameContentBox .mx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0}
+#gameContentBox .mx button.mx-tile{aspect-ratio:1/1;width:100%;border-radius:14px!important;display:flex;align-items:center;justify-content:center;font-size:clamp(20px,7vw,30px);color:#fff;background:linear-gradient(160deg,#2b3347,#1a2030 60%,#141926)!important;border:1px solid rgba(148,163,184,.22)!important;box-shadow:0 3px 0 #0a0d14,inset 0 1px 0 rgba(255,255,255,.1)!important;transition:transform .12s,filter .12s}
+#gameContentBox .mx button.mx-tile::after{content:'';width:26%;height:26%;border-radius:50%;background:rgba(148,163,184,.16)}
+#gameContentBox .mx button.mx-tile.open::after{display:none}
+#gameContentBox .mx button.mx-tile:not(:disabled):active{transform:translateY(2px) scale(.97);box-shadow:0 1px 0 #0a0d14!important}
+#gameContentBox .mx button.mx-tile:disabled:not(.open):not(.idle){filter:brightness(.85)}
+#gameContentBox .mx button.mx-tile.idle{filter:none}
+#gameContentBox .mx button.mx-tile.revealed-safe{background:linear-gradient(160deg,#10b981,#047857)!important;border-color:rgba(167,243,208,.75)!important;box-shadow:0 3px 0 #064e3b,0 0 18px rgba(16,185,129,.4)!important;animation:mxPop .28s ease}
+#gameContentBox .mx button.mx-tile.revealed-mine{background:radial-gradient(circle at 35% 30%,#f87171,#b91c1c 70%)!important;border-color:rgba(254,202,202,.85)!important;box-shadow:0 3px 0 #7f1d1d,0 0 22px rgba(239,68,68,.55)!important;animation:mxShake .4s ease}
+#gameContentBox .mx button.mx-tile.ghost-safe{background:linear-gradient(160deg,#16352c,#0f241e)!important;border-color:rgba(52,211,153,.25)!important;box-shadow:none!important;opacity:.6}
+#gameContentBox .mx button.mx-tile.ghost-mine{background:linear-gradient(160deg,#3a1d22,#241216)!important;border-color:rgba(248,113,113,.3)!important;box-shadow:none!important;opacity:.75}
+@keyframes mxPop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes mxShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* action buttons */
+#gameContentBox .mx button.mx-act{width:100%;height:54px;border-radius:15px;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid rgba(255,255,255,.28)!important;transition:filter .15s}
+#gameContentBox .mx-act .t{font-size:18px;letter-spacing:.3px}
+#gameContentBox .mx-act .s{font-size:14px;font-weight:800;opacity:.95}
+#gameContentBox .mx button.mx-act:active{filter:brightness(.9)}
+#gameContentBox .mx button.mx-act.start{background:linear-gradient(180deg,#3ddc2c,#22a816 55%,#17870d)!important;box-shadow:0 4px 16px rgba(34,197,94,.38),inset 0 1px 0 rgba(255,255,255,.35)!important;border-color:rgba(190,255,170,.55)!important}
+#gameContentBox .mx button.mx-act.cash{background:linear-gradient(180deg,#fbbf24,#f59e0b 55%,#d97706)!important;color:#1a1200;box-shadow:0 4px 16px rgba(245,158,11,.4),inset 0 1px 0 rgba(255,255,255,.4)!important;border-color:rgba(255,230,160,.6)!important}
+#gameContentBox .mx-hint{text-align:center;font-size:11px;color:#7c8497;font-weight:700;line-height:1.4}
+#gameContentBox .mx-off{padding:26px 16px;text-align:center;border-radius:16px;background:#12141b;border:1px solid rgba(248,113,113,.3);color:#f87171;font-weight:800;font-size:14px}
 </style>
 </head>
 <body class="auth-mode">
@@ -2484,8 +2505,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     <div><b>💰</b><span>Real Rewards</span></div>
                 </div>
             </div>
-            <div class="gv-games-section-head"><span>🎮 All Games</span><small>Live now</small></div>
-            <div class="gv-sq-grid" id="gvGamesGrid">
+            <div class="gv-games-section-head"><span>🎟 Lottery</span><small>Period games</small></div>
+            <div class="gv-sq-grid" id="gvLotteryGrid">
                 <div id="colourClashTopCard" class="game-hub-card gv-sq-card">
                     <div class="gh-row">
                         <div class="game-thumb colour">🎨</div>
@@ -2499,6 +2520,22 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     </div>
                     <button onclick="tryPlayColourClash()" class="btn-green">▶ Play Now</button>
                 </div>
+                <div id="k3TopCard" class="game-hub-card gv-sq-card">
+                    <div class="gh-row">
+                        <div class="game-thumb colour">🎲</div>
+                        <div class="gh-body">
+                            <div class="gh-top">
+                                <span class="gh-title">K3</span>
+                                <span class="status-pill active" id="k3TopPill">LIVE</span>
+                            </div>
+                            <div id="k3TopStatus" class="gh-meta">Loading round...</div>
+                        </div>
+                    </div>
+                    <button onclick="tryPlayK3()" class="btn-green">▶ Play Now</button>
+                </div>
+            </div>
+            <div class="gv-games-section-head" style="margin-top:14px;"><span>🎮 Arcade Games</span><small>Live now</small></div>
+            <div class="gv-sq-grid" id="gvGamesGrid">
                 <div id="gameList" class="gv-sq-list"></div>
             </div>
             <button onclick="backToDashboard()" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
@@ -4568,6 +4605,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
         function closeActiveGame() {
             if (typeof leaveRocketLive === 'function') leaveRocketLive();
+            if (typeof leaveK3 === 'function') leaveK3();
             if (colourClashTimer) clearInterval(colourClashTimer);
             minesState = null;
             if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
@@ -7233,56 +7271,122 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         }
 
         /* --- MINES GAME --- */
+        /* ===== MINES (redesigned screen — game rules, wallet flow and round logging unchanged) ===== */
+        function minesRange(currency) {
+            const c = gameCurrencyLabel(currency || activeGameCurrency);
+            return c === 'USDT'
+                ? { min: Number(minesConfig.minBetUsdt || minesConfig.minBet), max: Number(minesConfig.maxBetUsdt || minesConfig.maxBet) }
+                : { min: Number(minesConfig.minBet), max: Number(minesConfig.maxBet) };
+        }
+        function minesDec(currency) { return gameCurrencyLabel(currency) === 'USDT' ? 4 : 2; }
+        // INR payouts stay whole rupees (as before); USDT keeps 4 decimals so small wins are not floored to zero.
+        function minesPayout(bet, mult, currency) {
+            const v = Number(bet) * Number(mult);
+            return gameCurrencyLabel(currency) === 'USDT' ? Math.floor(v * 10000) / 10000 : Math.floor(v);
+        }
+        function minesSetPlaying(on) {
+            const root = document.getElementById('minesRoot');
+            if (root) root.classList.toggle('mx-playing', !!on);
+        }
+        function minesPick(n) {
+            const sel = document.getElementById('minesCountSelect');
+            if (!sel || sel.disabled) return;
+            sel.value = String(n);
+            document.querySelectorAll('#minesMineChips button').forEach(b => b.classList.toggle('on', Number(b.dataset.n) === Number(n)));
+            minesIdleStats();
+        }
+        function minesAdj(dir) {
+            const inp = document.getElementById('minesBetInput'); if (!inp || inp.disabled) return;
+            const r = minesRange(), step = gameCurrencyLabel() === 'USDT' ? 0.1 : 10;
+            let v = (Number(inp.value) || r.min) + dir * step;
+            v = Math.min(r.max, Math.max(r.min, v));
+            inp.value = v.toFixed(minesDec());
+        }
+        function minesQuick(kind) {
+            const inp = document.getElementById('minesBetInput'); if (!inp || inp.disabled) return;
+            const r = minesRange(), cur = Number(inp.value) || r.min;
+            let v = kind === 'min' ? r.min : kind === 'max' ? Math.min(r.max, gameCurrencyAmount() > 0 ? Math.max(r.min, gameCurrencyAmount()) : r.max) : kind === 'half' ? cur / 2 : cur * 2;
+            v = Math.min(r.max, Math.max(r.min, v));
+            inp.value = v.toFixed(minesDec());
+        }
+        function minesIdleStats() {
+            if (minesState && minesState.active) return;
+            const sel = document.getElementById('minesCountSelect');
+            const next = document.getElementById('minesNextMult');
+            if (sel && next) next.innerText = (fairMinesMultiplier(Number(sel.value) || 1, 1) * (minesConfig.rtpPercent / 100)).toFixed(2) + 'x';
+        }
+
         function renderMinesSetup() {
             const contentBox = document.getElementById('gameContentBox');
             const setupCurrency = gameCurrencyLabel(activeGameCurrency);
-            const setupMin = setupCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || 0.1) : Number(minesConfig.minBet);
-            const setupMax = setupCurrency === 'USDT' ? Number(minesConfig.maxBetUsdt || minesConfig.maxBet) : Number(minesConfig.maxBet);
-            document.getElementById('activeGameInfo').innerText = `Bet Range: ${gameMoney(setupMin, setupCurrency)} - ${gameMoney(setupMax, setupCurrency)}`;
-            document.getElementById('activeGameInfo').dataset.baseInfo = `Bet Range: ${gameMoney(setupMin, setupCurrency)} - ${gameMoney(setupMax, setupCurrency)}`;
+            const rg = minesRange(setupCurrency);
+            const info = document.getElementById('activeGameInfo');
+            info.innerText = `Bet Range: ${gameMoney(rg.min, setupCurrency)} - ${gameMoney(rg.max, setupCurrency)}`;
+            info.dataset.baseInfo = info.innerText;
 
             if (!minesConfig.enabled) {
-                contentBox.innerHTML = `<p style="color:#f87171;">💣 Mines is currently unavailable. Please check back later.</p>`;
+                contentBox.innerHTML = `<div class="mx"><div class="mx-off">💣 Mines is currently unavailable.<br><span style="font-size:12px;font-weight:700;opacity:.8;">Please check back later.</span></div></div>`;
                 return;
             }
 
-            let mineOptions = '';
+            const defMines = Math.min(3, minesConfig.maxMines);
+            let mineOptions = '', mineChips = '';
             for (let i = minesConfig.minMines; i <= minesConfig.maxMines; i++) {
-                mineOptions += `<option value="${i}" ${i === Math.min(3, minesConfig.maxMines) ? 'selected' : ''}>${i} Mine${i > 1 ? 's' : ''}</option>`;
+                mineOptions += `<option value="${i}" ${i === defMines ? 'selected' : ''}>${i} Mine${i > 1 ? 's' : ''}</option>`;
+                mineChips += `<button type="button" data-n="${i}" class="${i === defMines ? 'on' : ''}" onclick="minesPick(${i})">${i}</button>`;
             }
 
-            contentBox.innerHTML = `
-                <div class="mines-hero">
-                    <div class="mines-hero-title">💣 MINES — REVEAL & WIN</div>
-                    <div class="mines-hero-sub">Pick safe tiles, grow your multiplier and cash out before a mine ends the round.</div>
-                </div>
-                <div class="mines-stat-strip">
-                    <div class="mines-stat"><span>Mine Range</span><b>${minesConfig.minMines}-${minesConfig.maxMines}</b></div>
-                    <div class="mines-stat"><span>Board</span><b>25 Tiles</b></div>
-                </div>
-                <div id="minesBetLimits" style="font-size:11px;color:var(--text-muted);margin:7px 0 10px;text-align:center;">Bet limits: <b>${gameMoney(setupMin, setupCurrency)}</b> – <b>${gameMoney(setupMax, setupCurrency)}</b></div>
-                <input id="minesBetInput" type="number" placeholder="Bet Amount (${activeGameCurrency === 'USDT' ? 'USDT' : '₹'})" value="${activeGameCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || minesConfig.minBet) : Number(minesConfig.minBet)}" min="${activeGameCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || minesConfig.minBet) : Number(minesConfig.minBet)}" max="${activeGameCurrency === 'USDT' ? Number(minesConfig.maxBetUsdt || minesConfig.maxBet) : Number(minesConfig.maxBet)}">
-                <select id="minesCountSelect">${mineOptions}</select>
-                <button id="minesStartBtn" onclick="startMinesGame()" class="btn-green">🚀 START MINES</button>
-                <div id="minesPlayWrap" class="hidden">
-                    <div class="mines-info-row">
-                        <span>Multiplier: <b id="minesMultiplierDisplay" style="color:#facc15;">1.00x</b></span>
-                        <span>Potential Win: <b id="minesPotentialWin" style="color:#34d399;">${gameMoney(0, setupCurrency)}</b></span>
+            contentBox.innerHTML = gameCurrencySwitcherHtml() + `
+                <div class="mx" id="minesRoot">
+                    <div class="mx-hero">
+                        <div class="mx-hero-ic">💣</div>
+                        <div><div class="mx-hero-t">Mines</div><div class="mx-hero-s">Open safe tiles to grow your multiplier. Cash out before you hit a mine.</div></div>
                     </div>
-                    <div id="minesGrid" class="mines-grid"></div>
-                    <button id="minesCashoutBtn" onclick="cashoutMines()" class="btn-yellow hidden">💰 CASH OUT</button>
+                    <div class="mx-stats">
+                        <div class="mx-stat m"><span>Multiplier</span><b id="minesMultiplierDisplay">1.00x</b></div>
+                        <div class="mx-stat n"><span>Next tile</span><b id="minesNextMult">—</b></div>
+                        <div class="mx-stat w"><span>Potential win</span><b id="minesPotentialWin">—</b></div>
+                    </div>
+                    <div class="mx-card">
+                        <div class="mx-summary" id="minesSummary"></div>
+                        <div class="mx-setup-body">
+                            <div class="mx-row"><span>Bet amount</span><small id="minesBetLimits">Bet limits: <b>${gameMoney(rg.min, setupCurrency)}</b> – <b>${gameMoney(rg.max, setupCurrency)}</b></small></div>
+                            <div class="mx-amt">
+                                <button type="button" onclick="minesAdj(-1)" aria-label="Decrease bet">−</button>
+                                <input id="minesBetInput" type="number" inputmode="decimal" placeholder="Bet Amount (${setupCurrency === 'USDT' ? 'USDT' : '₹'})" value="${rg.min}" min="${rg.min}" max="${rg.max}" step="${setupCurrency === 'USDT' ? '0.0001' : '0.01'}">
+                                <button type="button" onclick="minesAdj(1)" aria-label="Increase bet">+</button>
+                            </div>
+                            <div class="mx-quick">
+                                <button type="button" onclick="minesQuick('min')">Min</button>
+                                <button type="button" onclick="minesQuick('half')">½</button>
+                                <button type="button" onclick="minesQuick('double')">2×</button>
+                                <button type="button" onclick="minesQuick('max')">Max</button>
+                            </div>
+                            <div class="mx-row"><span>Number of mines</span><small>${minesConfig.minMines}–${minesConfig.maxMines} • 25 tiles</small></div>
+                            <div class="mx-mines" id="minesMineChips">${mineChips}</div>
+                            <select id="minesCountSelect" class="hidden">${mineOptions}</select>
+                        </div>
+                    </div>
+                    <div class="mx-board" id="minesPlayWrap">
+                        <div id="minesGrid" class="mx-grid"></div>
+                    </div>
+                    <button id="minesStartBtn" onclick="startMinesGame()" class="mx-act start"><span class="t">START GAME</span></button>
+                    <button id="minesCashoutBtn" onclick="cashoutMines()" class="mx-act cash hidden"><span class="t">CASH OUT</span></button>
+                    <div class="mx-hint">Every safe tile raises the multiplier. Hitting a mine ends the round.</div>
                 </div>
-                <div style="margin-top:8px;font-size:9px;color:var(--text-muted);text-align:center;">⚠️ Safe tiles increase the multiplier. Hitting a mine ends the round.</div>
             `;
+            renderMinesGrid(true);
+            minesIdleStats();
         }
 
         function startMinesGame() {
+            if (minesState && minesState.active) return;
             const betInput = document.getElementById('minesBetInput');
             const minesCountSelect = document.getElementById('minesCountSelect');
             const bet = Number(betInput.value);
             const betCurrency = activeGameCurrency;
-            const minBet = betCurrency === 'USDT' ? Number(minesConfig.minBetUsdt || minesConfig.minBet) : Number(minesConfig.minBet);
-            const maxBet = betCurrency === 'USDT' ? Number(minesConfig.maxBetUsdt || minesConfig.maxBet) : Number(minesConfig.maxBet);
+            const rg = minesRange(betCurrency);
+            const minBet = rg.min, maxBet = rg.max;
             const minesCount = Number(minesCountSelect.value);
 
             if (!bet || bet < minBet || bet > maxBet) {
@@ -7326,29 +7430,30 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             betInput.disabled = true;
             minesCountSelect.disabled = true;
             document.getElementById('minesStartBtn').classList.add('hidden');
-            document.getElementById('minesPlayWrap').classList.remove('hidden');
             document.getElementById('minesCashoutBtn').classList.remove('hidden');
+            minesSetPlaying(true);
+            try { refreshGameWalletPanel(); } catch (e) {}
 
-            renderMinesGrid();
+            renderMinesGrid(false);
             updateMinesMultiplierDisplay();
         }
 
-        function renderMinesGrid() {
+        function renderMinesGrid(idle) {
             const grid = document.getElementById('minesGrid');
+            if (!grid) return;
             grid.innerHTML = '';
             for (let i = 0; i < 25; i++) {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'mine-tile';
-                btn.innerText = '❔';
+                btn.className = 'mx-tile' + (idle ? ' idle' : '');
                 btn.dataset.tileIndex = i;
+                if (idle) btn.disabled = true;
                 grid.appendChild(btn);
             }
-            // Single delegated click handler on the grid itself: the tapped tile's
-            // own index is always read fresh from its data-tile-index attribute,
-            // so the correct tile opens no matter which one is tapped.
+            // Single delegated click handler: the tapped tile's own index is read fresh
+            // from data-tile-index, so the correct tile opens no matter which one is tapped.
             grid.onclick = function (e) {
-                const btnEl = e.target.closest('.mine-tile');
+                const btnEl = e.target.closest('.mx-tile');
                 if (!btnEl || btnEl.disabled || !grid.contains(btnEl)) return;
                 const index = Number(btnEl.dataset.tileIndex);
                 if (Number.isNaN(index)) return;
@@ -7368,23 +7473,31 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         }
 
         function updateMinesMultiplierDisplay() {
+            if (!minesState) return;
+            const rtp = minesConfig.rtpPercent / 100;
             const fair = fairMinesMultiplier(minesState.minesCount, minesState.revealedCount);
-            const actual = fair * (minesConfig.rtpPercent / 100);
+            const actual = fair * rtp;
             minesState.currentMultiplier = actual;
-            const potentialWin = Math.floor(minesState.bet * actual);
+            const potentialWin = minesPayout(minesState.bet, actual, minesState.currency);
+            const totalSafe = 25 - minesState.minesCount;
 
             const multEl = document.getElementById('minesMultiplierDisplay');
             const winEl = document.getElementById('minesPotentialWin');
+            const nextEl = document.getElementById('minesNextMult');
             const cashoutBtn = document.getElementById('minesCashoutBtn');
+            const sum = document.getElementById('minesSummary');
             if (multEl) multEl.innerText = `${actual.toFixed(2)}x`;
             if (winEl) winEl.innerText = gameMoney(potentialWin, minesState.currency);
-            if (cashoutBtn) cashoutBtn.innerText = `💰 Cash Out (${gameMoney(potentialWin, minesState.currency)})`;
+            if (nextEl) nextEl.innerText = minesState.revealedCount < totalSafe ? (fairMinesMultiplier(minesState.minesCount, minesState.revealedCount + 1) * rtp).toFixed(2) + 'x' : '—';
+            if (cashoutBtn) cashoutBtn.innerHTML = `<span class="t">CASH OUT</span><span class="s">${gameMoney(potentialWin, minesState.currency)}</span>`;
+            if (sum) sum.innerHTML = `<span>Bet <b>${gameMoney(minesState.bet, minesState.currency)}</b></span><span><b>${minesState.minesCount}</b> mine${minesState.minesCount > 1 ? 's' : ''}</span><span>💎 <b>${minesState.revealedCount}/${totalSafe}</b></span>`;
         }
 
         function revealMineTile(index, btnEl) {
             if (!minesState || !minesState.active) return;
             if (btnEl.disabled) return;
             btnEl.disabled = true;
+            btnEl.classList.add('open');
 
             if (minesState.minePositions.has(index)) {
                 minesState.active = false;
@@ -7392,6 +7505,8 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 btnEl.innerText = '💣';
                 revealAllMinesOnLoss();
                 document.getElementById('minesCashoutBtn').classList.add('hidden');
+                minesSetPlaying(false);
+                { const pw = document.getElementById('minesPotentialWin'), nx = document.getElementById('minesNextMult'); if (pw) pw.innerText = gameMoney(0, minesState.currency); if (nx) nx.innerText = '—'; }
 
                 if (minesState.roundKey) {
                     db.ref('mines_rounds/' + minesState.roundKey).set({
@@ -7407,8 +7522,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 }
                 logGameRound('mines', 'Mines', minesState.bet, 0, 'loss');
 
-                alert(`💥 Boom! You hit a mine and lost ${gameMoney(minesState.bet, minesState.currency)}.`);
+                const lostBet = minesState.bet, lostCur = minesState.currency;
                 resetMinesAfterRound();
+                // let the board paint before the popup blocks the screen
+                setTimeout(() => alert(`💥 Boom! You hit a mine and lost ${gameMoney(lostBet, lostCur)}.`), 450);
             } else {
                 minesState.revealedCount++;
                 btnEl.classList.add('revealed-safe');
@@ -7422,16 +7539,17 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
         }
 
+        // Shows every tile that was still closed (mines in red, remaining gems faded).
         function revealAllMinesOnLoss() {
             const grid = document.getElementById('minesGrid');
-            const tiles = grid.querySelectorAll('.mine-tile');
-            minesState.minePositions.forEach(pos => {
-                const t = tiles[pos];
-                if (t && !t.classList.contains('revealed-mine')) {
-                    t.classList.add('revealed-mine');
-                    t.innerText = '💣';
-                    t.disabled = true;
-                }
+            if (!grid || !minesState) return;
+            const tiles = grid.querySelectorAll('.mx-tile');
+            tiles.forEach((t, i) => {
+                if (t.classList.contains('open')) return;
+                t.disabled = true;
+                t.classList.add('open');
+                if (minesState.minePositions.has(i)) { t.classList.add('ghost-mine'); t.innerText = '💣'; }
+                else { t.classList.add('ghost-safe'); t.innerText = '💎'; }
             });
         }
 
@@ -7439,7 +7557,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (!minesState || !minesState.active) return;
             minesState.active = false;
 
-            const winAmount = Math.floor(minesState.bet * minesState.currentMultiplier);
+            const winAmount = minesPayout(minesState.bet, minesState.currentMultiplier, minesState.currency);
             if (minesState.currency === 'USDT') currentUsdtBalance += winAmount; else currentBalance += winAmount;
             db.ref('users/' + currentUid).update({ usdtBalance: currentUsdtBalance, balance: currentBalance }).then(() => {
                 if (minesState.roundKey) {
@@ -7459,12 +7577,14 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
 
                 const cashoutBtn = document.getElementById('minesCashoutBtn');
                 if (cashoutBtn) cashoutBtn.classList.add('hidden');
-                const grid = document.getElementById('minesGrid');
-                if (grid) grid.querySelectorAll('.mine-tile').forEach(t => t.disabled = true);
+                revealAllMinesOnLoss();
+                minesSetPlaying(false);
+                try { refreshGameWalletPanel(); } catch (e) {}
 
                 logGameRound('mines', 'Mines', minesState.bet, winAmount, 'win');
-                alert(`🎉 Cashed out at ${minesState.currentMultiplier.toFixed(2)}x! Won ${gameMoney(winAmount, activeGameCurrency)}.`);
+                const mult = minesState.currentMultiplier;
                 resetMinesAfterRound();
+                setTimeout(() => alert(`🎉 Cashed out at ${mult.toFixed(2)}x! Won ${gameMoney(winAmount, activeGameCurrency)}.`), 450);
             });
         }
 
@@ -7475,7 +7595,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             const startBtn = document.getElementById('minesStartBtn');
             if (betInput) betInput.disabled = false;
             if (minesCountSelect) minesCountSelect.disabled = false;
-            if (startBtn) startBtn.classList.remove('hidden');
+            if (startBtn) { startBtn.classList.remove('hidden'); startBtn.innerHTML = '<span class="t">PLAY AGAIN</span>'; }
         }
 
         // Shared celebratory particle burst, used by all mini-games on a win.
@@ -8941,6 +9061,225 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 }
 </style>
 
+
+<style id="gv-k3-styles">
+/* K3 popup: only Total amount button is black (header keeps selection color) */
+.k3-wgp-card .wgp-total{background:#111827!important;background-image:none!important;color:#fff!important;text-shadow:none!important;}
+.k3-wgp-card .wgp-total:disabled{opacity:.55!important;}
+
+/* ===== K3 — BDG-style layout ===== */
+.k3-root{
+  text-align:left;color:#e5e7eb;
+  background:#1a1d24;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:12px 10px 14px;
+  box-shadow:0 12px 32px rgba(0,0,0,.4);
+  position:relative;overflow:hidden;
+}
+.k3-topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.k3-brand{font-weight:1000;font-size:18px;color:#fbbf24;letter-spacing:.5px;}
+.k3-period{font-size:11px;color:#9ca3af;margin-top:2px;word-break:break-all;}
+.k3-timer-wrap{text-align:right;}
+.k3-timer-label{font-size:9px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;}
+.k3-timer{
+  font-weight:1000;font-size:22px;font-variant-numeric:tabular-nums;color:#fff;
+  letter-spacing:1px;
+}
+.k3-timer.bet{color:#fbbf24;}
+.k3-timer.res{color:#34d399;}
+.k3-phase-pill{display:inline-block;margin-top:4px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.35);color:#9ca3af;}
+.k3-phase-pill.open{color:#86efac;background:rgba(16,185,129,.15);}
+.k3-phase-pill.cool{color:#fde68a;background:rgba(245,158,11,.12);}
+
+/* Dice stage — green frame like BDG */
+.k3-stage{
+  margin:10px 0 12px;padding:12px 10px 10px;
+  border-radius:12px;
+  background:#252830;
+  border:3px solid #22c55e;
+  box-shadow:0 0 0 1px rgba(34,197,94,.25), inset 0 0 20px rgba(0,0,0,.25);
+}
+.k3-stage-label{text-align:center;font-size:10px;font-weight:800;letter-spacing:.6px;color:#9ca3af;text-transform:uppercase;margin-bottom:10px;}
+.k3-dice-row{display:flex;gap:10px;justify-content:center;align-items:center;min-height:70px;}
+
+/* Clean red dice with CSS pips */
+.k3-die{
+  width:62px;height:62px;border-radius:12px;
+  background:linear-gradient(145deg,#ff5a5a 0%,#e11d2a 55%,#b91c1c 100%);
+  border:2px solid #fecaca;
+  box-shadow:0 6px 14px rgba(185,28,28,.45), inset 0 2px 0 rgba(255,255,255,.25);
+  position:relative;
+  display:grid;place-items:center;
+}
+.k3-die.waiting{
+  background:linear-gradient(145deg,#374151,#1f2937);
+  border-color:#4b5563;
+  box-shadow:none;
+}
+.k3-die.waiting::after{content:'?';color:#9ca3af;font-weight:900;font-size:22px;}
+.k3-die.rolling{animation:k3Shake .45s ease-in-out infinite;background:linear-gradient(145deg,#fbbf24,#d97706);}
+.k3-die.rolling::after{content:'🎲';font-size:26px;}
+@keyframes k3Shake{
+  0%,100%{transform:rotate(-8deg) scale(1)}
+  50%{transform:rotate(8deg) scale(1.05)}
+}
+/* Pip grid */
+.k3-pips{width:70%;height:70%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;}
+.k3-pip{width:9px;height:9px;border-radius:50%;background:transparent;margin:auto;}
+.k3-pip.on{background:#fff;box-shadow:0 0 4px rgba(255,255,255,.5);}
+
+.k3-sum-badge{
+  margin:10px auto 0;width:fit-content;padding:5px 14px;border-radius:999px;
+  font-weight:900;font-size:13px;color:#fff;
+  background:#1e3a5f;border:1px solid rgba(125,211,252,.35);
+}
+
+/* Total number grid — BDG balls */
+.k3-section-label{
+  font-size:11px;font-weight:900;color:#fbbf24;margin:12px 0 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.k3-total-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.k3-ball{
+  margin:0!important;padding:8px 4px 6px!important;border-radius:12px!important;
+  border:none!important;background:transparent!important;box-shadow:none!important;
+  display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+  color:#fff!important;
+}
+.k3-ball .k3-ball-n{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:1000;font-size:15px;color:#fff;
+  box-shadow:0 3px 8px rgba(0,0,0,.3);
+}
+.k3-ball.k3-red .k3-ball-n{background:radial-gradient(circle at 30% 30%,#fb7185,#dc2626);}
+.k3-ball.k3-green .k3-ball-n{background:radial-gradient(circle at 30% 30%,#86efac,#16a34a);}
+.k3-ball small{font-size:10px;font-weight:800;color:#9ca3af;}
+.k3-ball.sel .k3-ball-n{
+  outline:2px solid #fff;outline-offset:2px;
+  box-shadow:0 0 0 3px rgba(251,191,36,.45),0 4px 12px rgba(0,0,0,.35);
+}
+.k3-ball.sel small{color:#fde68a;}
+
+/* Small Big Even Odd row */
+.k3-sb-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;}
+#k3GameRoot button.k3-sb,
+#k3GameRoot .k3-sb,
+button.k3-sb{
+  margin:0!important;padding:12px 4px!important;border-radius:10px!important;
+  font-weight:1000!important;font-size:13px!important;border:0!important;
+  color:#fff!important;box-shadow:0 4px 10px rgba(0,0,0,.25)!important;
+  line-height:1.25!important;min-height:52px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  -webkit-text-fill-color:#fff!important;opacity:1!important;visibility:visible!important;
+  background-image:none!important;filter:none!important;
+}
+#k3GameRoot button.k3-sb span,
+#k3GameRoot .k3-sb span{color:inherit!important;-webkit-text-fill-color:inherit!important;font-weight:1000!important;}
+#k3GameRoot button.k3-sb small,
+#k3GameRoot .k3-sb small{display:block!important;font-size:10px!important;font-weight:800!important;opacity:.95!important;margin-top:2px!important;color:inherit!important;-webkit-text-fill-color:inherit!important;}
+#k3GameRoot button.k3-sb.k3-btn-small,
+button.k3-sb.k3-btn-small{background:#5ba3f5!important;background-color:#5ba3f5!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#k3GameRoot button.k3-sb.k3-btn-big,
+button.k3-sb.k3-btn-big{background:#f5a623!important;background-color:#f5a623!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#k3GameRoot button.k3-sb.k3-btn-even,
+button.k3-sb.k3-btn-even{background:#2dbd6e!important;background-color:#2dbd6e!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#k3GameRoot button.k3-sb.k3-btn-odd,
+button.k3-sb.k3-btn-odd{background:#f04444!important;background-color:#f04444!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#k3GameRoot button.k3-sb.sel,
+button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;filter:brightness(1.08)!important;}
+
+/* Bet bar */
+.k3-bet-bar{
+  margin-top:12px;padding:12px;border-radius:12px;
+  background:#12151c;border:1px solid rgba(255,255,255,.08);
+}
+.k3-limits{font-size:11px;color:#9ca3af;margin:6px 0 8px;}
+.k3-selected{
+  font-size:12px;margin:0 0 10px;padding:8px 10px;border-radius:8px;
+  background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);color:#fde68a;
+  min-height:36px;display:flex;align-items:center;
+}
+.k3-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px;}
+.k3-chip{
+  margin:0!important;padding:7px 11px!important;min-height:0!important;width:auto!important;
+  border-radius:8px!important;font-size:12px!important;font-weight:800!important;
+  background:#252830!important;border:1px solid rgba(255,255,255,.1)!important;
+  color:#e5e7eb!important;box-shadow:none!important;
+}
+#k3Amount{
+  height:48px;border-radius:10px!important;border:1px solid rgba(255,255,255,.12)!important;
+  background:#0b0e14!important;font-size:15px!important;font-weight:700;color:#fff!important;
+}
+#k3Amount:focus{border-color:#fbbf24!important;box-shadow:0 0 0 2px rgba(251,191,36,.2)!important;}
+#k3PlaceBtn{
+  margin-top:8px!important;min-height:48px!important;border-radius:10px!important;
+  background:linear-gradient(135deg,#22c55e,#16a34a)!important;
+  border:none!important;font-size:15px!important;font-weight:1000!important;
+  color:#fff!important;box-shadow:0 8px 18px rgba(22,163,74,.3)!important;
+}
+#k3PlaceBtn:disabled{opacity:.5!important;box-shadow:none!important;}
+
+/* History */
+.k3-hist-tabs{display:flex;gap:0;margin:14px 0 0;border-bottom:2px solid #252830;}
+.k3-hist-tab{
+  flex:1;margin:0!important;padding:10px 6px!important;border-radius:0!important;
+  font-size:12px!important;font-weight:900!important;
+  background:transparent!important;border:none!important;border-bottom:2px solid transparent!important;
+  color:#9ca3af!important;box-shadow:none!important;margin-bottom:-2px!important;
+}
+.k3-hist-tab.on{color:#fbbf24!important;border-bottom-color:#fbbf24!important;background:transparent!important;}
+.k3-hist-head-row{
+  display:grid;grid-template-columns:1.4fr .4fr .55fr .55fr .9fr;gap:4px;
+  padding:8px 6px;font-size:10px;font-weight:900;color:#9ca3af;text-transform:uppercase;
+  background:#12151c;border-bottom:1px solid #252830;
+}
+.k3-history{max-height:200px;overflow:auto;background:#12151c;}
+.k3-hist-row{
+  display:grid;grid-template-columns:1.4fr .4fr .55fr .55fr .9fr;gap:4px;
+  padding:8px 6px;font-size:11px;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.04);color:#d1d5db;
+}
+.k3-hist-row .p{color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;}
+.k3-hist-row .s{font-weight:1000;color:#fff;}
+.k3-hist-row .sz{color:#93c5fd;font-weight:800;}
+.k3-hist-row .pr{color:#86efac;font-weight:800;}
+.k3-mini-die-wrap{display:inline-flex;gap:3px;align-items:center;}
+.k3-mini-die{
+  width:18px;height:18px;border-radius:4px;
+  background:linear-gradient(145deg,#ff5a5a,#b91c1c);
+  display:inline-grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  gap:1px;padding:2px;border:1px solid #fecaca;box-sizing:border-box;
+}
+.k3-mini-die .mp{width:3px;height:3px;border-radius:50%;background:transparent;margin:auto;}
+.k3-mini-die .mp.on{background:#fff;}
+.k3-hist-empty{color:#6b7280;font-size:12px;padding:16px;text-align:center;}
+.k3-locked-banner{
+  margin:0 0 10px;padding:10px;border-radius:10px;font-size:12px;font-weight:700;
+  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fecaca;
+}
+@media(max-width:430px){
+  .k3-die{width:54px;height:54px;}
+  .k3-ball .k3-ball-n{width:36px;height:36px;font-size:14px;}
+  .k3-sb{font-size:12px!important;padding:10px 2px!important;}
+}
+
+/* FORCE K3 Total amount button black (override theme green/orange) */
+#k3EntryAmountModal .wgp-total,
+#k3EntryAmountModal button.wgp-total,
+.k3-wgp-card .wgp-total,
+.k3-wgp-card button.wgp-total{
+  background:#111827!important;
+  background-color:#111827!important;
+  background-image:none!important;
+  color:#ffffff!important;
+  text-shadow:none!important;
+  filter:none!important;
+}
+#k3EntryAmountModal .wgp-total:disabled,
+.k3-wgp-card .wgp-total:disabled{opacity:.55!important;}
+</style>
+
 <style id="gv-square-games-and-banner">
 /* ===== Play Games Hub: square tiles, 2 columns x 4 rows ===== */
 .gv-sq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:6px;}
@@ -8959,15 +9298,14 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 @media (max-width:340px){.gv-sq-grid{gap:8px;}.gv-sq-grid .game-thumb{width:36px;height:36px;font-size:19px;}.gv-sq-grid .gh-meta{font-size:8.5px;}}
 
 /* ===== Home banner slider (controlled from Admin > Notifications) ===== */
-/* Banner is always rendered at the image's natural aspect ratio: full image, no crop, no contain-shrink. */
-.gv-bn{position:relative;width:100%;margin:0 0 12px;border-radius:18px;overflow:hidden;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;line-height:0;}
-.gv-bn-track{display:flex;width:100%;height:auto;margin:0;padding:0;transition:transform .45s ease;will-change:transform;}
-.gv-bn-slide{flex:0 0 100%;width:100%;height:auto;min-width:100%;position:relative;margin:0;padding:0;line-height:0;overflow:hidden;}
-.gv-bn-slide img{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;min-width:100%;object-fit:fill!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;background:#0a0a0c;-webkit-user-drag:none;user-select:none;pointer-events:none;}
-.gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;line-height:0;}
+.gv-bn{position:relative;margin:0 0 12px;border-radius:18px;overflow:hidden;aspect-ratio:16/7;background:#0a0a0c;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.4);touch-action:pan-y;}
+.gv-bn-track{display:flex;height:100%;transition:transform .45s ease;will-change:transform;}
+.gv-bn-slide{flex:0 0 100%;height:100%;position:relative;}
+.gv-bn-slide.link{cursor:pointer;}
+.gv-bn-slide img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;user-select:none;pointer-events:none;}
+.gv-bn-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;}
 .gv-bn-dot{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .25s,background .25s;}
 .gv-bn-dot.on{width:16px;background:#fff;}
-@media(max-width:480px){.gv-bn{border-radius:16px;}.gv-bn-dots{bottom:6px;}}
 </style>
 <style id="gv-compact-wallet-and-wingo-popup">
 /* ===== Compact wallet card (all inner sizes reduced; balance + currency switch share one row) ===== */
@@ -9027,30 +9365,11 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
     function safeImg(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)||/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u)?u:'';}
     function safeLink(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
     function stop(){if(timer){clearInterval(timer);timer=null;}}
-    function setNaturalHeight(){
-        var host=document.getElementById('gvBannerSlider');
-        if(!host||!items.length) return;
-        var slides=host.querySelectorAll('.gv-bn-slide');
-        var slide=slides[idx], img=slide&&slide.querySelector('img');
-        if(!img) return;
-        function apply(){
-            var w=host.clientWidth||img.clientWidth||0;
-            if(!w) return;
-            if(img.naturalWidth>0 && img.naturalHeight>0){
-                host.style.height=Math.round(w*img.naturalHeight/img.naturalWidth)+'px';
-            }else if(img.offsetHeight>0){
-                host.style.height=img.offsetHeight+'px';
-            }
-        }
-        if(img.complete) apply(); else img.addEventListener('load',apply,{once:true});
-    }
     function go(n){
         var host=document.getElementById('gvBannerSlider'); if(!host||!items.length) return;
         idx=(n+items.length)%items.length;
-        var track=host.querySelector('.gv-bn-track');
-        if(track) track.style.transform='translate3d(-'+(idx*100)+'%,0,0)';
+        var track=host.querySelector('.gv-bn-track'); if(track) track.style.transform='translateX(-'+(idx*100)+'%)';
         host.querySelectorAll('.gv-bn-dot').forEach(function(d,i){d.classList.toggle('on',i===idx);});
-        setNaturalHeight();
     }
     function play(){
         stop();
@@ -9060,14 +9379,14 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
     function render(){
         var host=document.getElementById('gvBannerSlider'); if(!host) return;
         stop();
-        if(!cfg.enabled||!items.length){host.classList.add('hidden');host.innerHTML='';host.style.height='';return;}
+        if(!cfg.enabled||!items.length){host.classList.add('hidden');host.innerHTML='';return;}
         if(idx>=items.length) idx=0;
         host.innerHTML='';
         var track=document.createElement('div'); track.className='gv-bn-track';
         items.forEach(function(b){
             var s=document.createElement('div'); s.className='gv-bn-slide'+(safeLink(b.linkUrl)?' link':'');
             var img=document.createElement('img'); img.alt=b.title||'Banner'; img.draggable=false; img.src=safeImg(b.imageUrl);
-            img.onload=function(){if(items[idx]===b){setNaturalHeight();}};
+            // A broken image is dropped so users never see an empty banner.
             img.onerror=function(){items=items.filter(function(x){return x.id!==b.id;});render();};
             s.appendChild(img);
             var l=safeLink(b.linkUrl);
@@ -9081,7 +9400,7 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
             host.appendChild(dots);
         }
         host.classList.remove('hidden');
-        go(idx); setNaturalHeight(); play();
+        go(idx); play();
         if(!host.__bound){
             host.__bound=true; var x0=0,dx=0,down=false;
             host.addEventListener('touchstart',function(e){down=true;dx=0;host.__moved=false;x0=e.touches[0].clientX;stop();},{passive:true});
@@ -9090,8 +9409,6 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
                 if(down&&Math.abs(dx)>40){host.__moved=true;go(dx<0?idx+1:idx-1);}
                 down=false; play(); setTimeout(function(){host.__moved=false;},50);
             });
-            window.addEventListener('resize',function(){setNaturalHeight();});
-            window.addEventListener('orientationchange',function(){setTimeout(setNaturalHeight,150);});
         }
     }
     function apply(v){
@@ -9372,10 +9689,11 @@ function rjxMsg(slot,text,type){ rjxSlot[slot].msg=text||''; rjxSlot[slot].type=
 
 /* ---- render ---- */
 function rjxPanelHtml(n){
-    return '<div class="rjx-panel" id="rjxP'+n+'"><div class="rjx-row"><div class="rjx-left">'
-      +'<div class="rjx-amt"><button type="button" onclick="rjxAdj('+n+',-1)">−</button><input id="rjxAmt'+n+'" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Amount"><button type="button" onclick="rjxAdj('+n+',1)">+</button></div>'
+    return '<div class="rjx-panel" id="rjxP'+n+'"><div class="rjx-grid">'
+      +'<div class="rjx-amt"><button type="button" onclick="rjxAdj('+n+',-1)" aria-label="Decrease">−</button><input id="rjxAmt'+n+'" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Amount"><button type="button" onclick="rjxAdj('+n+',1)" aria-label="Increase">+</button></div>'
       +'<div class="rjx-chips" id="rjxChips'+n+'"></div>'
-      +'</div><button type="button" class="rjx-btn wait" id="rjxBtn'+n+'" onclick="rjxMainBtn('+n+')" disabled><span class="t">Bet</span><span class="s">—</span></button></div>'
+      +'<button type="button" class="rjx-btn bet" id="rjxBtn'+n+'" onclick="rjxMainBtn('+n+')" disabled><span class="t">Bet</span><span class="s">—</span></button>'
+      +'</div>'
       +'<div class="rjx-auto"><span>Auto cash out at</span><input id="rjxAuto'+n+'" type="number" inputmode="decimal" min="1.01" step="0.01" placeholder="off"><span>x</span></div>'
       +'<div class="rjx-msg" id="rjxMsg'+n+'"></div></div>';
 }
@@ -9482,10 +9800,10 @@ function rjxAmountFor(slot,cur){
     if(rjxCfg.allowUserAmount){ const el=document.getElementById('rjxAmt'+slot); return Number(el&&el.value)||0; }
     return rjxFixedAmount(cur);
 }
-function rjxSetAmt(slot,val){ if(!rjxCfg||!rjxCfg.allowUserAmount) return; const el=document.getElementById('rjxAmt'+slot); if(el){ el.value=String(val); rjxUiSig=''; } }
+function rjxSetAmt(slot,val){ if(!rjxCfg||!rjxCfg.allowUserAmount) return; const el=document.getElementById('rjxAmt'+slot); if(el&&!el.disabled){ el.value=String(val); rjxUiSig=''; } }
 function rjxAdj(slot,dir){
     if(!rjxCfg||!rjxCfg.allowUserAmount) return;
-    const el=document.getElementById('rjxAmt'+slot); if(!el) return;
+    const el=document.getElementById('rjxAmt'+slot); if(!el||el.disabled) return;
     const cur=rjxCur(), lim=rjxLimits(cur), step=cur==='USDT'?0.1:10, v=Number(el.value)||lim.min||0;
     let n=v+dir*step; if(lim.min>0) n=Math.max(lim.min,n); n=Math.max(0,n); if(lim.max>0) n=Math.min(lim.max,n);
     el.value=n.toFixed(rjxDec(cur));
@@ -9627,16 +9945,16 @@ function rjxPanel(n,r,now,ph){
     if(mine){
         const b=mine.bet, amt=Number(b.amount)||0;
         if(b.status==='active'){
-            if(ph==='betting'){ cls='active cancel'; t='Cancel'; s='Bet '+rjxMoney(amt,cur); dis=st.busy; }
-            else if(ph==='flying'){ cls='active cash'; t='Cash Out'; s=rjxMoney(Number((amt*rjxFloor2(rjxMult(r,now-r.launchAt))).toFixed(rjxDec(cur))),cur); dis=st.busy; }
+            if(ph==='betting'){ cls='cancel'; t='Cancel'; s='Bet '+rjxMoney(amt,cur); dis=st.busy; }
+            else if(ph==='flying'){ cls='cash'; t='Cash Out'; s=rjxMoney(Number((amt*rjxFloor2(rjxMult(r,now-r.launchAt))).toFixed(rjxDec(cur))),cur); dis=st.busy; }
             else { cls='wait'; t='Settling…'; s=''; }
         }else if(b.status==='cashed'||b.status==='win'){ cls='won'; t='Won '+Number(b.cashoutMultiplier||0).toFixed(2)+'x'; s=rjxMoney(Number(b.winAmount)||0,cur); }
         else if(b.status==='loss'){ cls='lost'; t='Lost'; s='-'+rjxMoney(amt,cur); }
         else if(b.status==='refunded'){ cls='wait'; t='Refunded'; s=rjxMoney(amt,cur); }
     }else{
         if(ph==='betting'){ cls='bet'; t=st.busy?'Placing…':'Bet'; s=rjxMoney(rjxAmountFor(n,cur),cur); dis=st.busy||!rjxEnabled(); }
-        else if(ph==='flying'){ cls='wait'; t='Next round'; s='Flight in progress'; }
-        else { cls='wait'; t=rjxEnabled()?'Next round':'Paused'; s=rjxEnabled()?'Starting soon':''; }
+        else if(ph==='flying'){ cls='bet'; t='Bet'; s='Next round'; dis=true; }
+        else { cls='bet'; t='Bet'; s=rjxEnabled()?'Starting soon':'Paused'; dis=true; }
     }
     const key=cls+'|'+t+'|'+s+'|'+dis;
     if(btn.dataset.k!==key){ btn.dataset.k=key; btn.className='rjx-btn '+cls; btn.disabled=dis; btn.innerHTML='<span class="t">'+rjxEsc(t)+'</span><span class="s">'+rjxEsc(s)+'</span>'; }
@@ -9762,5 +10080,902 @@ function rjxDraw(ts,r,now,ph){
         rjxRocket(ctx,padL+30*sc,h-padB-13*sc,-.22,sc,ts,false);
     }
 }
+
+
+
+/* ===== K3 LOTTERY — WINGO-parity engine =====
+   Mirrors colour_clash architecture:
+     control/k3Config
+     k3/rounds/{roundId}   {status, resultSum, dice, size, parity, ...}
+     k3/entries/{id}       {roundId, betType, target, amount, status, ...}
+   Round id = floor(now / cycleMs) + 1  (same scheme as WINGO)
+*/
+let k3Timer = null;
+let k3ConfigReady = false;
+let k3Selected = null;
+let k3LastRoundId = '';
+let k3RoundListener = null;
+let k3RoundListenerId = null;
+let k3SettlementSweepAt = 0;
+let k3ShowLastAt = 0;
+const k3ReconciledRounds = new Set();
+// FIX: use Firebase SERVER time so every device (and the admin app) agrees on the
+// period id / phase. Raw Date.now() let a fast phone clock resolve a round early
+// (random dice) before the admin's forced dice arrived.
+let k3ServerOffset = 0;
+try { db.ref('.info/serverTimeOffset').on('value', s => { k3ServerOffset = Number(s.val()) || 0; }, () => {}); } catch(e) {}
+function k3Now() { return Date.now() + k3ServerOffset; }
+let k3Config = {
+  enabled: true, entrySeconds: 60, cooldownSeconds: 5,
+  minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000,
+  sizeMultiplier: 2, parityMultiplier: 2, autoResult: true, fairRandomOnly: false,
+  totalMultipliers: {3:207.36,4:69.12,5:34.56,6:20.74,7:13.83,8:9.88,9:8.3,10:7.68,11:7.68,12:8.3,13:9.88,14:13.83,15:20.74,16:34.56,17:69.12,18:207.36}
+};
+
+db.ref('control/k3Config').on('value', snap => {
+  const d = snap.val() || {};
+  const tm = (d.totalMultipliers && typeof d.totalMultipliers === 'object') ? d.totalMultipliers : k3Config.totalMultipliers;
+  k3Config = {
+    enabled: d.enabled !== false,
+    entrySeconds: Math.max(5, Number(d.entrySeconds) || 60),
+    cooldownSeconds: Math.max(2, Number(d.cooldownSeconds) || 5),
+    minBet: Math.max(1, Number(d.minBet) || 10),
+    maxBet: Math.max(1, Number(d.maxBet) || 5000),
+    minBetUsdt: Math.max(0.0001, Number(d.minBetUsdt) || 0.1),
+    maxBetUsdt: Math.max(0.0001, Number(d.maxBetUsdt) || 5000),
+    sizeMultiplier: Math.max(1, Number(d.sizeMultiplier) || 2),
+    parityMultiplier: Math.max(1, Number(d.parityMultiplier) || 2),
+    autoResult: d.autoResult !== false,
+    fairRandomOnly: d.fairRandomOnly === true,
+    totalMultipliers: tm
+  };
+  k3ConfigReady = true;
+  try { updateK3HubStatus(); } catch(e) {}
+  if (document.getElementById('k3GameRoot')) {
+    const r = getK3RoundState();
+    const lab = document.getElementById('k3PeriodLabel');
+    if (lab) lab.innerText = 'Period #' + r.roundId;
+  }
+}, () => { k3ConfigReady = true; });
+
+// seed default config once
+db.ref('control/k3Config').once('value').then(snap => {
+  if (!snap.exists()) {
+    db.ref('control/k3Config').set({
+      enabled: true, entrySeconds: 60, cooldownSeconds: 5,
+      minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000,
+      sizeMultiplier: 2, parityMultiplier: 2, autoResult: true, fairRandomOnly: false,
+      totalMultipliers: k3Config.totalMultipliers
+    });
+  }
+}).catch(()=>{});
+
+function k3CycleMs() {
+  const entry = Math.max(5, Number(k3Config.entrySeconds) || 60);
+  const cooldown = Math.max(2, Number(k3Config.cooldownSeconds) || 5);
+  return (entry + cooldown) * 1000;
+}
+function getK3RoundState(now = k3Now()) {
+  const cycle = k3CycleMs();
+  const roundIndex = Math.floor(now / cycle);
+  const roundId = String(roundIndex + 1);
+  const cycleStart = roundIndex * cycle;
+  const elapsed = now - cycleStart;
+  const phase = elapsed < k3Config.entrySeconds * 1000 ? 'open' : 'cooldown';
+  const phaseEnd = phase === 'open'
+    ? cycleStart + k3Config.entrySeconds * 1000
+    : cycleStart + cycle;
+  return { roundId, phase, phaseEnd, cycleStart, roundIndex };
+}
+function k3Money(n, cur) { return gameMoney(n, cur || selectedWalletCurrency); }
+function k3DiceFace(n) { return ({1:'⚀',2:'⚁',3:'⚂',4:'⚃',5:'⚄',6:'⚅'})[n] || '🎲'; }
+function k3DiceHtml(n, state) {
+  // state: waiting | rolling | on
+  if (state === 'waiting' || n == null || n < 1) {
+    return '<div class="k3-die waiting"></div>';
+  }
+  if (state === 'rolling') {
+    return '<div class="k3-die rolling"></div>';
+  }
+  // pip positions for classic die face (3x3)
+  const map = {
+    1: [4],
+    2: [0, 8],
+    3: [0, 4, 8],
+    4: [0, 2, 6, 8],
+    5: [0, 2, 4, 6, 8],
+    6: [0, 2, 3, 5, 6, 8]
+  };
+  const on = new Set(map[n] || []);
+  let pips = '';
+  for (let i = 0; i < 9; i++) {
+    pips += '<span class="k3-pip' + (on.has(i) ? ' on' : '') + '"></span>';
+  }
+  return '<div class="k3-die on"><div class="k3-pips">' + pips + '</div></div>';
+}
+
+function k3MiniDiceHtml(n) {
+  n = Number(n);
+  const map = {1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  const on = new Set(map[n] || []);
+  let cells = '';
+  for (let i = 0; i < 9; i++) cells += '<span class="mp' + (on.has(i) ? ' on' : '') + '"></span>';
+  return '<span class="k3-mini-die">' + cells + '</span>';
+}
+function k3ShowLastResult() {
+  // Show previous period dice on stage while current period is open / waiting
+  if (k3Now() - k3ShowLastAt < 3000) return;
+  k3ShowLastAt = k3Now();
+  const r = getK3RoundState();
+  const prevId = String(Math.max(1, Number(r.roundId) - 1));
+  db.ref('k3/rounds/' + prevId).once('value').then(snap => {
+    const d = snap.val();
+    const row = document.getElementById('k3DiceRow');
+    const badge = document.getElementById('k3SumBadge');
+    if (!row) return;
+    if (d && d.dice && Array.isArray(d.dice) && d.dice.length === 3 && d.resultSum != null) {
+      // only overwrite if we are not mid-roll for current resolved round
+      if (row.dataset.rolling === 'done' && row.dataset.roundId === String(r.roundId)) return;
+      if (r.phase === 'cooldown' && row.dataset.rolling === '1') return;
+      row.dataset.rolling = 'prev';
+      row.dataset.roundId = prevId;
+      row.innerHTML = d.dice.map(x => k3DiceHtml(x, 'on')).join('');
+      if (badge) badge.textContent = 'Last · #' + prevId + ' · Sum ' + d.resultSum + ' · ' + (d.size || '') + ' · ' + (d.parity || '');
+    } else if (row.dataset.rolling !== 'done' && row.dataset.rolling !== '1') {
+      row.innerHTML = k3DiceHtml(null,'waiting')+k3DiceHtml(null,'waiting')+k3DiceHtml(null,'waiting');
+      if (badge) badge.textContent = 'Waiting for first result…';
+    }
+  }).catch(()=>{});
+}
+
+function k3RollDice() {
+  try {
+    if (typeof ccSecureRandomInt === 'function') {
+      return [1 + ccSecureRandomInt(6), 1 + ccSecureRandomInt(6), 1 + ccSecureRandomInt(6)];
+    }
+  } catch(e) {}
+  return [1 + Math.floor(Math.random()*6), 1 + Math.floor(Math.random()*6), 1 + Math.floor(Math.random()*6)];
+}
+function k3Sum(dice) { return (dice[0]|0) + (dice[1]|0) + (dice[2]|0); }
+function k3SizeOf(sum) { return sum >= 11 ? 'Big' : 'Small'; }
+function k3ParityOf(sum) { return (sum % 2 === 0) ? 'Even' : 'Odd'; }
+
+function updateK3HubStatus() {
+  const st = document.getElementById('k3TopStatus');
+  const pill = document.getElementById('k3TopPill');
+  if (!st) return;
+  if (!k3ConfigReady) { st.innerText = 'Loading…'; return; }
+  if (globalGamesPaused || !k3Config.enabled) {
+    st.innerText = '🔒 Game currently unavailable';
+    if (pill) { pill.innerText = 'LOCKED'; pill.className = 'status-pill locked'; }
+    return;
+  }
+  const r = getK3RoundState();
+  const left = Math.max(0, Math.ceil((r.phaseEnd - k3Now()) / 1000));
+  st.innerText = `Round #${r.roundId} • ${r.phase === 'open' ? 'Entries OPEN' : 'COOLDOWN'} • ${left}s`;
+  if (pill) { pill.innerText = 'LIVE'; pill.className = 'status-pill active'; }
+}
+
+function tryPlayK3() {
+  document.getElementById('gamesHub').classList.add('hidden');
+  document.getElementById('activeGameArea').classList.remove('hidden');
+  document.getElementById('activeGameTitle').innerText = 'K3';
+  const locked = globalGamesPaused || !k3Config.enabled;
+  document.getElementById('activeGameInfo').innerText = locked
+    ? '🔒 This game is currently locked by the administrator.'
+    : `3 dice sum lottery • ₹${k3Config.minBet} – ₹${k3Config.maxBet}`;
+  renderK3();
+}
+
+function leaveK3() {
+  if (k3Timer) { clearInterval(k3Timer); k3Timer = null; }
+  try {
+    if (k3RoundListenerId && k3RoundListener) {
+      db.ref('k3/rounds/' + k3RoundListenerId).off('value', k3RoundListener);
+    }
+  } catch(e) {}
+  k3RoundListener = null;
+  k3RoundListenerId = null;
+  try { closeK3EntryModal(); } catch(e) {}
+}
+
+function renderK3() {
+  const box = document.getElementById('gameContentBox');
+  if (!box) return;
+  const cur = selectedWalletCurrency || 'INR';
+  const lo = cur === 'USDT' ? k3Config.minBetUsdt : k3Config.minBet;
+  const hi = cur === 'USDT' ? k3Config.maxBetUsdt : k3Config.maxBet;
+  const tm = k3Config.totalMultipliers || {};
+  let totalBtns = '';
+  for (let s = 3; s <= 18; s++) {
+    const m = tm[s] || tm[String(s)] || '—';
+    // BDG: odd numbers red-ish balls, even green-ish
+    const color = (s % 2 === 1) ? 'red' : 'green';
+    totalBtns += `<button type="button" class="k3-ball k3-${color}" data-sum="${s}" onclick="k3PickTotal(${s})"><span class="k3-ball-n">${s}</span><small>${m}X</small></button>`;
+  }
+  const chips = cur === 'USDT' ? [0.1, 1, 5, 10, 50] : [10, 50, 100, 500, 1000];
+  const chipHtml = chips.map(c => `<button type="button" class="k3-chip" onclick="k3SetAmount(${c})">${cur === 'USDT' ? c : ('₹' + c)}</button>`).join('');
+  const locked = globalGamesPaused || !k3Config.enabled;
+  const r = getK3RoundState();
+  const sm = k3Config.sizeMultiplier;
+  const pm = k3Config.parityMultiplier;
+
+  box.innerHTML = `
+  <div id="k3GameRoot" class="k3-root">
+    ${locked ? '<div class="k3-locked-banner">🔒 K3 is locked. You can still browse recent results.</div>' : ''}
+    <div class="k3-topbar">
+      <div>
+        <div class="k3-brand">K3</div>
+        <div class="k3-period" id="k3PeriodLabel">Period #${r.roundId}</div>
+      </div>
+      <div class="k3-timer-wrap">
+        <div class="k3-timer-label">Time remaining</div>
+        <div class="k3-timer bet" id="k3TimerDisplay">00:00</div>
+        <div id="k3Phase" class="k3-phase-pill ${r.phase==='open'?'open':'cool'}">${r.phase==='open'?'● ENTRIES OPEN':'● ENTRIES CLOSED'}</div>
+      </div>
+    </div>
+
+    <div class="k3-stage">
+      <div class="k3-stage-label">Dice result</div>
+      <div class="k3-dice-row" id="k3DiceRow">
+        ${k3DiceHtml(null,'waiting')}${k3DiceHtml(null,'waiting')}${k3DiceHtml(null,'waiting')}
+      </div>
+      <div class="k3-sum-badge" id="k3SumBadge">Loading last result…</div>
+    </div>
+
+    <div class="k3-section-label">Total</div>
+    <div class="k3-total-grid" id="k3TotalGrid">${totalBtns}</div>
+
+    <div class="k3-sb-row">
+      <button type="button" class="k3-sb k3-btn-small" data-k3="Small" onclick="k3PickSize('Small')" style="background:#5ba3f5!important;background-color:#5ba3f5!important;background-image:none!important;color:#fff!important;"><span>Small</span><small>${sm}X · 3–10</small></button>
+      <button type="button" class="k3-sb k3-btn-big" data-k3="Big" onclick="k3PickSize('Big')" style="background:#f5a623!important;background-color:#f5a623!important;background-image:none!important;color:#fff!important;"><span>Big</span><small>${sm}X · 11–18</small></button>
+      <button type="button" class="k3-sb k3-btn-even" data-k3="Even" onclick="k3PickParity('Even')" style="background:#2dbd6e!important;background-color:#2dbd6e!important;background-image:none!important;color:#fff!important;"><span>Even</span><small>${pm}X</small></button>
+      <button type="button" class="k3-sb k3-btn-odd" data-k3="Odd" onclick="k3PickParity('Odd')" style="background:#f04444!important;background-color:#f04444!important;background-image:none!important;color:#fff!important;"><span>Odd</span><small>${pm}X</small></button>
+    </div>
+
+    <div class="k3-bet-bar" style="padding:10px 12px;">
+      ${typeof colourClashCurrencySwitchHtml === 'function' ? colourClashCurrencySwitchHtml().replace(/setColourClashCurrency/g,'setK3Currency').replace(/WINGO currency/g,'K3 currency') : ''}
+      <div class="k3-limits" style="margin:6px 0 0;">Wallet <b id="k3WalletBalance">${k3Money(cur==='USDT'?currentUsdtBalance:currentBalance,cur)}</b> · Limits <b>${k3Money(lo,cur)}</b> – <b>${k3Money(hi,cur)}</b></div>
+      <div class="k3-selected" id="k3SelectedLabel" style="margin-top:8px;">Tap a Total number or Small / Big / Even / Odd to place a bet</div>
+    </div>
+
+    <div class="k3-hist-tabs">
+      <button type="button" class="k3-hist-tab on" onclick="k3SetHistoryTab('game',this)">Game history</button>
+      <button type="button" class="k3-hist-tab" onclick="k3SetHistoryTab('mine',this)">My history</button>
+    </div>
+    <div id="k3HistoryGamePanel">
+      <div class="k3-hist-head-row"><span>Period</span><span>Sum</span><span>Size</span><span>Parity</span><span>Results</span></div>
+      <div id="k3History" class="k3-history">Loading…</div>
+    </div>
+    <div id="k3HistoryMinePanel" class="hidden">
+      <div id="k3MyHistory" class="k3-history">Loading…</div>
+    </div>
+  </div>`;
+
+  startK3Timer();
+  listenK3Result(r.roundId);
+  loadK3History();
+  loadK3MyHistory();
+  setK3Currency(selectedWalletCurrency || 'INR');
+  k3ShowLastAt = 0;
+  k3ShowLastResult();
+}
+
+function k3SetHistoryTab(tab, btn) {
+  document.querySelectorAll('.k3-hist-tab').forEach(b => b.classList.toggle('on', b === btn));
+  const g = document.getElementById('k3HistoryGamePanel');
+  const m = document.getElementById('k3HistoryMinePanel');
+  if (g) g.classList.toggle('hidden', tab !== 'game');
+  if (m) m.classList.toggle('hidden', tab !== 'mine');
+  if (tab === 'mine') loadK3MyHistory();
+  else loadK3History();
+}
+
+function setK3Currency(c) {
+  selectedWalletCurrency = c;
+  activeGameCurrency = c;
+  try { updateWalletCurrencyUI(); } catch(e) {}
+  document.querySelectorAll('.cc-currency-btn').forEach(b => b.classList.toggle('active', b.dataset.currency === c));
+  const lo = c === 'USDT' ? k3Config.minBetUsdt : k3Config.minBet;
+  const hi = c === 'USDT' ? k3Config.maxBetUsdt : k3Config.maxBet;
+  const el = document.getElementById('k3Amount');
+  if (el) { el.min = lo; el.max = hi; el.step = c === 'USDT' ? 0.0001 : 1; el.placeholder = `Enter amount (${c === 'USDT' ? 'USDT' : '₹'})`; if (!Number(el.value)) el.value = lo; }
+  const wb = document.getElementById('k3WalletBalance');
+  if (wb) wb.innerText = k3Money(c === 'USDT' ? currentUsdtBalance : currentBalance, c);
+  const limits = document.querySelector('.k3-limits');
+  if (limits) limits.innerHTML = `Limits <b>${k3Money(lo,c)}</b> – <b>${k3Money(hi,c)}</b> · Wallet <b id="k3WalletBalance">${k3Money(c==='USDT'?currentUsdtBalance:currentBalance,c)}</b>`;
+}
+
+function k3SetTab(t) {
+  document.querySelectorAll('.k3-tab').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  ['total','size','parity'].forEach(k => {
+    const el = document.getElementById('k3Tab' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (el) el.classList.toggle('hidden', k !== t);
+  });
+}
+function k3SetAmount(v) {
+  const el = document.getElementById('k3Amount'); if (!el) return;
+  const cur = selectedWalletCurrency || 'INR';
+  const lo = cur === 'USDT' ? k3Config.minBetUsdt : k3Config.minBet;
+  const hi = cur === 'USDT' ? k3Config.maxBetUsdt : k3Config.maxBet;
+  let n = Number(v) || 0;
+  if (lo > 0) n = Math.max(lo, n);
+  if (hi > 0) n = Math.min(hi, n);
+  el.value = cur === 'USDT' ? n.toFixed(4) : String(Math.round(n * 100) / 100);
+}
+function k3AdjAmount(dir) {
+  const el = document.getElementById('k3Amount'); if (!el) return;
+  const cur = selectedWalletCurrency || 'INR';
+  const step = cur === 'USDT' ? 0.1 : 10;
+  k3SetAmount((Number(el.value) || 0) + dir * step);
+}
+function k3PickTotal(s) {
+  k3Selected = { betType: 'total', target: s };
+  document.querySelectorAll('.k3-ball').forEach(b => b.classList.toggle('sel', Number(b.dataset.sum) === s));
+  document.querySelectorAll('.k3-sb').forEach(b => b.classList.remove('sel'));
+  const m = (k3Config.totalMultipliers || {})[s] || '—';
+  const lab = document.getElementById('k3SelectedLabel');
+  if (lab) lab.innerHTML = 'Selected: <b>Total ' + s + '</b> · ' + m + 'X payout';
+  openK3EntryModal();
+}
+function k3PickSize(sz) {
+  k3Selected = { betType: 'size', target: sz };
+  document.querySelectorAll('.k3-sb').forEach(b => {
+    const k = b.getAttribute('data-k3');
+    b.classList.toggle('sel', k === sz);
+  });
+  document.querySelectorAll('.k3-ball').forEach(b => b.classList.remove('sel'));
+  const lab = document.getElementById('k3SelectedLabel');
+  if (lab) lab.innerHTML = 'Selected: <b>' + sz + '</b> · ' + k3Config.sizeMultiplier + 'X payout';
+  openK3EntryModal();
+}
+function k3PickParity(p) {
+  k3Selected = { betType: 'parity', target: p };
+  document.querySelectorAll('.k3-sb').forEach(b => {
+    const k = b.getAttribute('data-k3');
+    b.classList.toggle('sel', k === p);
+  });
+  document.querySelectorAll('.k3-ball').forEach(b => b.classList.remove('sel'));
+  const lab = document.getElementById('k3SelectedLabel');
+  if (lab) lab.innerHTML = 'Selected: <b>' + p + '</b> · ' + k3Config.parityMultiplier + 'X payout';
+  openK3EntryModal();
+}
+
+function closeK3EntryModal() {
+  const m = document.getElementById('k3EntryAmountModal');
+  if (m) {
+    if (m._wgpKey) document.removeEventListener('keydown', m._wgpKey);
+    m.remove();
+  }
+  document.body.classList.remove('gv-wingo-entry-open');
+}
+
+function openK3EntryModal() {
+  if (!currentUid) { alert('Please login first.'); return; }
+  if (!k3Config.enabled || globalGamesPaused) { alert('K3 is locked.'); return; }
+  if (!k3ConfigReady) { alert('K3 is still loading settings.'); return; }
+  const r = getK3RoundState();
+  if (r.phase !== 'open') { alert('Entries are closed for this period.'); return; }
+  if (!k3Selected) { alert('Select Total, Small/Big or Even/Odd first.'); return; }
+
+  closeK3EntryModal();
+  const c = selectedWalletCurrency === 'USDT' ? 'USDT' : 'INR';
+  const min = c === 'USDT' ? k3Config.minBetUsdt : k3Config.minBet;
+  const max = c === 'USDT' ? k3Config.maxBetUsdt : k3Config.maxBet;
+
+  let pickText = '', theme = '#f9b93e', multLabel = '2';
+  if (k3Selected.betType === 'total') {
+    pickText = 'Total ' + k3Selected.target;
+    const odd = Number(k3Selected.target) % 2 === 1;
+    theme = odd ? '#e5484d' : '#2fb36b';
+    multLabel = String((k3Config.totalMultipliers || {})[k3Selected.target] || '—');
+  } else if (k3Selected.betType === 'size') {
+    pickText = k3Selected.target;
+    theme = k3Selected.target === 'Big' ? '#f5a623' : '#5ba3f5';
+    multLabel = String(k3Config.sizeMultiplier);
+  } else {
+    pickText = k3Selected.target;
+    theme = k3Selected.target === 'Even' ? '#2dbd6e' : '#f04444';
+    multLabel = String(k3Config.parityMultiplier);
+  }
+
+  const cycleSec = Math.round(k3CycleMs() / 1000);
+  const gameTitle = 'K3 ' + (cycleSec % 60 === 0 ? (cycleSec / 60) + ' Min' : cycleSec + ' Sec');
+  const units = c === 'USDT' ? [0.1, 1, 10, 100] : [1, 10, 100, 1000];
+  const mults = [1, 5, 10, 20, 50, 100];
+  const st = { unit: (units.find(x => x >= min) || units[units.length - 1]), qty: 1, mult: 1, agree: true };
+
+  const modal = document.createElement('div');
+  modal.id = 'k3EntryAmountModal';
+  modal.className = 'wgp-backdrop';
+  modal.innerHTML = `
+    <div class="wgp-card k3-wgp-card" role="dialog" aria-modal="true" aria-label="Place K3 entry" style="--wgp:${theme}">
+      <div class="wgp-head">
+        <div class="wgp-title">${gameTitle}</div>
+        <div class="wgp-pick">${pickText} <span style="opacity:.85;font-size:12px;">×${multLabel}</span></div>
+      </div>
+      <div class="wgp-body">
+        <div class="wgp-row"><span class="wgp-lbl">Balance</span><div class="wgp-chips wgp-units">${units.map(x => `<button type="button" class="wgp-chip" data-unit="${x}">${x}</button>`).join('')}</div></div>
+        <div class="wgp-row"><span class="wgp-lbl">Quantity</span>
+          <div class="wgp-qty"><button type="button" class="wgp-qbtn" data-q="-1" aria-label="Decrease">-</button><input class="wgp-qinput" type="number" inputmode="numeric" min="1" max="9999" step="1" value="1" aria-label="Quantity"><button type="button" class="wgp-qbtn" data-q="1" aria-label="Increase">+</button></div>
+        </div>
+        <div class="wgp-chips wgp-mults">${mults.map(x => `<button type="button" class="wgp-chip" data-mult="${x}">X${x}</button>`).join('')}</div>
+        <div class="wgp-agree"><button type="button" class="wgp-check on" role="checkbox" aria-checked="true" aria-label="I agree"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="wgp-agree-txt">I agree</span><button type="button" class="wgp-rules">《Pre-sale rules》</button></div>
+      </div>
+      <div class="wgp-foot">
+        <button type="button" class="wgp-cancel">Cancel</button>
+        <button type="button" id="k3PlaceBtn" class="wgp-total" style="background:#111827!important;background-image:none!important;color:#fff!important;text-shadow:none!important;">Total amount <span class="wgp-total-val"></span></button>
+      </div>
+      <input type="hidden" id="k3Amount" value="">
+    </div>`;
+  document.body.appendChild(modal);
+  document.body.classList.add('gv-wingo-entry-open');
+  // Only force black Total amount button (keep colored header / chips)
+  try {
+    const totalBtn = modal.querySelector('.wgp-total');
+    if (totalBtn) {
+      totalBtn.style.background = '#111827';
+      totalBtn.style.backgroundImage = 'none';
+      totalBtn.style.color = '#fff';
+      totalBtn.style.textShadow = 'none';
+    }
+  } catch(e) {}
+
+  const q = s => modal.querySelector(s);
+  const qinput = q('.wgp-qinput'), amt = document.getElementById('k3Amount');
+  const fmt = n => c === 'USDT' ? n.toFixed(4) : n.toFixed(2);
+  const refresh = () => {
+    const total = Number((st.unit * st.qty * st.mult).toFixed(c === 'USDT' ? 4 : 2));
+    amt.value = String(total);
+    const tv = q('.wgp-total-val');
+    if (tv) tv.textContent = (c === 'USDT' ? 'USDT ' : '₹') + fmt(total);
+    modal.querySelectorAll('[data-unit]').forEach(b => b.classList.toggle('on', Number(b.dataset.unit) === st.unit));
+    modal.querySelectorAll('[data-mult]').forEach(b => b.classList.toggle('on', Number(b.dataset.mult) === st.mult));
+    const ck = q('.wgp-check');
+    if (ck) {
+      ck.classList.toggle('on', st.agree);
+      ck.setAttribute('aria-checked', st.agree ? 'true' : 'false');
+    }
+    const btn = q('.wgp-total');
+    if (btn) {
+      btn.disabled = !st.agree || total < min || total > max;
+      // Always BLACK confirm button (never theme green/orange)
+      btn.style.setProperty('background', '#111827', 'important');
+      btn.style.setProperty('background-color', '#111827', 'important');
+      btn.style.setProperty('background-image', 'none', 'important');
+      btn.style.setProperty('color', '#ffffff', 'important');
+      btn.style.setProperty('text-shadow', 'none', 'important');
+    }
+  };
+  const setQty = v => {
+    v = Math.floor(Number(v));
+    if (!isFinite(v) || v < 1) v = 1;
+    if (v > 9999) v = 9999;
+    st.qty = v;
+    qinput.value = String(v);
+    refresh();
+  };
+  modal.querySelectorAll('[data-unit]').forEach(b => b.addEventListener('click', () => { st.unit = Number(b.dataset.unit); refresh(); }));
+  modal.querySelectorAll('[data-mult]').forEach(b => b.addEventListener('click', () => { st.mult = Number(b.dataset.mult); refresh(); }));
+  modal.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => setQty(st.qty + Number(b.dataset.q))));
+  qinput.addEventListener('input', () => { const v = Math.floor(Number(qinput.value)); if (isFinite(v) && v >= 1) { st.qty = Math.min(9999, v); refresh(); } });
+  qinput.addEventListener('blur', () => setQty(qinput.value));
+  q('.wgp-check').addEventListener('click', () => { st.agree = !st.agree; refresh(); });
+  q('.wgp-agree-txt').addEventListener('click', () => { st.agree = !st.agree; refresh(); });
+  q('.wgp-rules').addEventListener('click', () => {
+    alert('K3 pre-sale rules\n\n• Total (3–18) pays the listed multiplier\n• Small / Big pays x' + k3Config.sizeMultiplier + '\n• Even / Odd pays x' + k3Config.parityMultiplier + '\n• Entry limit: ' + k3Money(min, c) + ' – ' + k3Money(max, c) + '\n• Total amount = Balance unit × Quantity × Multiplier\n• Wallet is debited when you confirm. Entries close when the period timer ends.');
+  });
+  q('.wgp-cancel').addEventListener('click', closeK3EntryModal);
+  q('.wgp-total').addEventListener('click', () => {
+    if (!st.agree) return alert('Please agree to the Pre-sale rules to continue.');
+    setQty(qinput.value);
+    k3PlaceBet().then(() => closeK3EntryModal()).catch(() => {});
+  });
+  modal.addEventListener('click', e => { if (e.target === modal) closeK3EntryModal(); });
+  modal._wgpKey = e => { if (e.key === 'Escape') closeK3EntryModal(); };
+  document.addEventListener('keydown', modal._wgpKey);
+  refresh();
+}
+
+
+async function k3PlaceBet() {
+  if (!currentUid) { alert('Please login first.'); return; }
+  if (!k3Config.enabled || globalGamesPaused) { alert('K3 is locked.'); return; }
+  if (!k3ConfigReady) { alert('K3 is still loading settings. Try again.'); return; }
+  const r = getK3RoundState();
+  if (r.phase !== 'open') { alert('Betting is closed for this period. Wait for the next one.'); return; }
+  if (!k3Selected) { alert('Select Total, Big/Small or Even/Odd first.'); return; }
+  const cur = selectedWalletCurrency || 'INR';
+  const el = document.getElementById('k3Amount');
+  let amount = Number(el && el.value);
+  const lo = cur === 'USDT' ? k3Config.minBetUsdt : k3Config.minBet;
+  const hi = cur === 'USDT' ? k3Config.maxBetUsdt : k3Config.maxBet;
+  if (!(amount > 0)) { alert('Enter a valid amount.'); return; }
+  if (amount < lo || amount > hi) { alert('Amount must be between ' + k3Money(lo, cur) + ' and ' + k3Money(hi, cur)); return; }
+  if ((cur === 'USDT' ? currentUsdtBalance : currentBalance) < amount) { alert('Insufficient balance.'); return; }
+  if (typeof gvSafetyCheckCC === 'function' && !gvSafetyCheckCC(amount)) return;
+
+  const field = cur === 'USDT' ? 'usdtBalance' : 'balance';
+  const btn = document.getElementById('k3PlaceBtn');
+  if (btn) btn.disabled = true;
+  try {
+    // re-check phase after UI delay
+    if (getK3RoundState().phase !== 'open' || getK3RoundState().roundId !== r.roundId) {
+      alert('Betting closed just before your bet was placed.');
+      return;
+    }
+    // FIX: if the admin already resolved this period early, the result is known -> no bets.
+    try {
+      const stSnap = await db.ref('k3/rounds/' + r.roundId + '/status').once('value');
+      const stv = stSnap.val();
+      if (stv === 'resolved' || stv === 'settled') { alert('This period has already been drawn. Wait for the next one.'); return; }
+    } catch (e) {}
+    const tx = await db.ref('users/' + currentUid + '/' + field).transaction(v => {
+      const n = Number(v) || 0;
+      if (n < amount) return;
+      return Number((n - amount).toFixed(cur === 'USDT' ? 4 : 2));
+    });
+    if (!tx.committed) { alert('Insufficient balance or debit failed.'); return; }
+    try {
+      await db.ref('k3/entries').push().set({
+        roundId: r.roundId,
+        userId: currentUid,
+        customUid: userCustomUid || '',
+        amount,
+        currency: cur,
+        betType: k3Selected.betType,
+        target: k3Selected.target,
+        status: 'pending',
+        timestamp: Date.now()
+      });
+    } catch (err) {
+      await db.ref('users/' + currentUid + '/' + field).transaction(v => (Number(v) || 0) + amount);
+      throw err;
+    }
+    if (cur === 'USDT') currentUsdtBalance = Math.max(0, (Number(currentUsdtBalance) || 0) - amount);
+    else currentBalance = Math.max(0, (Number(currentBalance) || 0) - amount);
+    try { updateWalletCurrencyUI(); } catch(e) {}
+    const wb = document.getElementById('k3WalletBalance');
+    if (wb) wb.innerText = k3Money(cur === 'USDT' ? currentUsdtBalance : currentBalance, cur);
+    alert('Bet placed on period #' + r.roundId);
+    try { loadK3MyHistory(); } catch(e) {}
+    // Attach one-shot listener so status flips to win/loss when settled
+    try {
+      db.ref('k3/entries').orderByChild('userId').equalTo(String(currentUid)).limitToLast(5).on('value', function k3LiveHist() {
+        loadK3MyHistory();
+      });
+    } catch(e) {}
+  } catch (e) {
+    alert('Could not place bet: ' + (e.message || e));
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function k3CreditOnce(entryKey, userId, currency, amount) {
+  if (!(amount > 0) || !userId) return Promise.resolve();
+  const creditKey = 'k3_credit_' + entryKey;
+  return db.ref('k3/credits/' + creditKey).transaction(cur => {
+    if (cur) return;
+    return { userId, currency, amount, at: Date.now() };
+  }).then(res => {
+    if (!res.committed) return false;
+    const field = String(currency).toUpperCase() === 'USDT' ? 'usdtBalance' : 'balance';
+    return db.ref('users/' + userId + '/' + field).transaction(v =>
+      Number(((Number(v) || 0) + Number(amount)).toFixed(String(currency).toUpperCase() === 'USDT' ? 4 : 2))
+    );
+  }).catch(() => false);
+}
+
+function k3ValidDice(d) {
+  return Array.isArray(d) && d.length === 3 && d.every(x => Number.isInteger(Number(x)) && Number(x) >= 1 && Number(x) <= 6);
+}
+async function resolveK3Round(roundId) {
+  if (!k3ConfigReady || !k3Config.autoResult) return;
+  // FIX: never draw a round before its entry window has ended (SERVER time).
+  // Prevents an early/fast-clock client from locking in random dice before the
+  // admin's forced dice is applied.
+  const idx = Number(roundId) - 1;
+  const entryEnd = idx * k3CycleMs() + k3Config.entrySeconds * 1000;
+  if (!(idx >= 0) || k3Now() < entryEnd) return null;
+
+  const ref = db.ref('k3/rounds/' + roundId);
+  const res = await ref.transaction(c => {
+    if (c && (c.status === 'resolved' || c.status === 'settled') && c.resultSum != null) return; // already drawn: never overwrite
+    let dice;
+    if (!k3Config.fairRandomOnly && c && k3ValidDice(c.forcedDice)) dice = c.forcedDice.map(Number);   // admin forced
+    else if (c && k3ValidDice(c.dice)) dice = c.dice.map(Number);
+    else dice = k3RollDice();
+    const sum = k3Sum(dice);
+    return Object.assign({}, c || {}, {
+      roundId: String(roundId),
+      status: 'resolved',
+      dice,
+      resultSum: sum,
+      size: k3SizeOf(sum),
+      parity: k3ParityOf(sum),
+      source: (!k3Config.fairRandomOnly && c && k3ValidDice(c.forcedDice)) ? 'forced' : 'random',
+      resolvedAt: k3Now()
+    });
+  });
+  const round = res.snapshot.val();
+  if (round && (round.status === 'resolved' || round.status === 'settled') && round.resultSum != null) {
+    settleK3Entries(roundId, round);
+  }
+  return round;
+}
+
+function settleK3Entries(roundId, round) {
+  const rid = String(roundId);
+  const sum = Number(round.resultSum);
+  const size = String(round.size || (sum >= 11 ? 'Big' : 'Small'));
+  const parity = String(round.parity || (sum % 2 === 0 ? 'Even' : 'Odd'));
+  const tm = k3Config.totalMultipliers || {};
+
+  const processSnap = (snap) => {
+    if (!snap || !snap.exists()) return Promise.resolve();
+    const jobs = [];
+    snap.forEach(ch => {
+      const e = ch.val();
+      if (!e) return;
+      if (String(e.roundId) !== rid) return;
+      if (e.status === 'win' || e.status === 'loss' || e.status === 'settled') return;
+      const cur = String(e.currency || 'INR').toUpperCase();
+      const amt = Number(e.amount) || 0;
+      let win = false, mult = 0;
+      const bt = String(e.betType || '');
+      const target = e.target;
+      if (bt === 'total') {
+        mult = Number(tm[target] ?? tm[String(target)] ?? tm[Number(target)]) || 0;
+        win = Number(target) === sum;
+      } else if (bt === 'size') {
+        mult = Number(k3Config.sizeMultiplier) || 2;
+        win = String(target).toLowerCase() === size.toLowerCase();
+      } else if (bt === 'parity') {
+        mult = Number(k3Config.parityMultiplier) || 2;
+        win = String(target).toLowerCase() === parity.toLowerCase();
+      }
+      const winAmt = win ? Number((amt * mult).toFixed(cur === 'USDT' ? 4 : 2)) : 0;
+      const entryKey = ch.key;
+      const userId = e.userId;
+      jobs.push(
+        ch.ref.transaction(curE => {
+          if (!curE || curE.status === 'win' || curE.status === 'loss' || curE.status === 'settled') return;
+          return Object.assign({}, curE, {
+            status: win ? 'win' : 'loss',
+            winAmount: winAmt,
+            resultSum: sum,
+            resultDice: round.dice || null,
+            resultSize: size,
+            resultParity: parity,
+            timestampResolved: Date.now()
+          });
+        }).then(res => {
+          if (res.committed && win && winAmt > 0) return k3CreditOnce(entryKey, userId, cur, winAmt);
+          return false;
+        }).catch(() => false)
+      );
+    });
+    return Promise.all(jobs);
+  };
+
+  // Primary: indexed query by roundId (string). Fallback: scan recent entries.
+  return db.ref('k3/entries').orderByChild('roundId').equalTo(rid).once('value')
+    .then(processSnap)
+    .catch(() => db.ref('k3/entries').limitToLast(200).once('value').then(processSnap))
+    .then(() => { try { loadK3MyHistory(); } catch(e) {} })
+    .catch(() => {});
+}
+
+function reconcileK3Settlements() {
+  if (!k3ConfigReady) return;
+  const now = k3Now();
+  if (now - k3SettlementSweepAt < 3000) return;
+  k3SettlementSweepAt = now;
+  const cycle = k3CycleMs();
+  const idx = Math.floor(now / cycle);
+  for (let i = 1; i <= 3; i++) {
+    const roundIndex = idx - i;
+    if (roundIndex < 0) break;
+    const rid = String(roundIndex + 1);
+    if (k3ReconciledRounds.has(rid)) continue;          // each past round is checked once per session
+    k3ReconciledRounds.add(rid);
+    // FIX: only finish rounds that really exist (e.g. admin forced them / still unresolved)
+    // or that still have pending bets. Never invent NEW random results for rounds the admin
+    // deleted from history (that produced "another result" for the same period).
+    db.ref('k3/rounds/' + rid).once('value').then(snap => {
+      if (snap.exists()) { resolveK3Round(rid); return; }
+      return db.ref('k3/entries').orderByChild('roundId').equalTo(rid).limitToFirst(1).once('value').then(es => {
+        if (es.exists()) resolveK3Round(rid);
+      });
+    }).catch(() => { k3ReconciledRounds.delete(rid); });
+  }
+}
+
+function listenK3Result(roundId) {
+  try {
+    if (k3RoundListenerId && k3RoundListener) {
+      db.ref('k3/rounds/' + k3RoundListenerId).off('value', k3RoundListener);
+    }
+  } catch(e) {}
+  k3RoundListenerId = String(roundId);
+  k3RoundListener = function(snap) {
+    const d = snap.val();
+    if (!d || (d.status !== 'resolved' && d.status !== 'settled') || d.resultSum == null) return;
+    displayK3Result(d);
+    loadK3History();
+    loadK3MyHistory();
+  };
+  db.ref('k3/rounds/' + roundId).on('value', k3RoundListener);
+}
+
+function displayK3Result(d) {
+  const row = document.getElementById('k3DiceRow');
+  const badge = document.getElementById('k3SumBadge');
+  if (row && d.dice && Array.isArray(d.dice)) {
+    row.dataset.rolling = 'done';
+    row.dataset.roundId = String(d.roundId || '');
+    row.innerHTML = d.dice.map(x => k3DiceHtml(x, 'on')).join('');
+  }
+  if (badge) badge.textContent = 'Sum ' + d.resultSum + ' · ' + (d.size || '') + ' · ' + (d.parity || '');
+}
+
+function startK3Timer() {
+  if (k3Timer) clearInterval(k3Timer);
+  k3Timer = setInterval(() => {
+    if (!document.getElementById('k3GameRoot')) { clearInterval(k3Timer); k3Timer = null; return; }
+    if (!k3ConfigReady) return;
+    const r = getK3RoundState();
+    const box = document.getElementById('k3TimerDisplay');
+    if (box) {
+      const sec = Math.max(0, Math.ceil((r.phaseEnd - k3Now()) / 1000));
+      box.innerText = String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+      box.className = 'k3-timer ' + (r.phase === 'open' ? 'bet' : 'res');
+    }
+    const phase = document.getElementById('k3Phase');
+    if (phase) {
+      phase.innerText = r.phase === 'open' ? '● ENTRIES OPEN' : '● ENTRIES CLOSED';
+      phase.className = 'k3-phase-pill ' + (r.phase === 'open' ? 'open' : 'cool');
+    }
+    const lab = document.getElementById('k3PeriodLabel');
+    if (lab) lab.innerText = 'Period #' + r.roundId;
+    const wb = document.getElementById('k3WalletBalance');
+    if (wb) wb.innerText = k3Money(selectedWalletCurrency === 'USDT' ? currentUsdtBalance : currentBalance, selectedWalletCurrency);
+
+    if (r.roundId !== k3LastRoundId) {
+      k3LastRoundId = r.roundId;
+      listenK3Result(r.roundId);
+      loadK3History();
+      const row = document.getElementById('k3DiceRow');
+      if (row) { row.dataset.rolling = ''; row.dataset.roundId = ''; }
+      // Show previous period result on stage (not blank ?) while waiting for this period's draw
+      k3ShowLastAt = 0;
+      k3ShowLastResult();
+      const badge = document.getElementById('k3SumBadge');
+      if (badge && r.phase === 'cooldown') badge.textContent = 'Drawing…';
+    }
+
+    // while betting is open, keep showing last period result (not blank ?)
+    if (r.phase === 'open') {
+      const row = document.getElementById('k3DiceRow');
+      if (row && (!row.dataset.rolling || row.dataset.rolling === '' || row.dataset.rolling === 'prev')) {
+        if (!row.dataset.roundId || row.dataset.roundId === String(r.roundId)) {
+          k3ShowLastResult();
+        }
+      }
+    }
+    // during cooldown of current round, show rolling then resolve
+    if (r.phase === 'cooldown') {
+      const row = document.getElementById('k3DiceRow');
+      if (row && row.dataset.rolling !== 'done' && row.dataset.rolling !== '1') {
+        row.dataset.rolling = '1';
+        row.innerHTML = k3DiceHtml(null,'rolling')+k3DiceHtml(null,'rolling')+k3DiceHtml(null,'rolling');
+        const badge = document.getElementById('k3SumBadge');
+        if (badge) badge.textContent = 'Rolling…';
+      }
+      // resolve the round whose entry window just closed (current roundId during cooldown)
+      resolveK3Round(r.roundId).then(round => {
+        if (round && round.resultSum != null) displayK3Result(round);
+      }).catch(()=>{});
+    }
+
+    reconcileK3Settlements();
+    updateK3HubStatus();
+  }, 500);
+}
+
+function loadK3History() {
+  const el = document.getElementById('k3History');
+  if (!el) return;
+  db.ref('k3/rounds').limitToLast(30).once('value').then(snap => {
+    const rows = [];
+    snap.forEach(ch => {
+      const d = ch.val() || {};
+      if (d.resultSum == null && d.sum == null) return;
+      rows.push({ id: ch.key, d });
+    });
+    rows.reverse();
+    if (!rows.length) {
+      el.innerHTML = '<div class="k3-hist-empty">No results yet</div>';
+      return;
+    }
+    el.innerHTML = rows.map(x => {
+      const d = x.d;
+      const sum = d.resultSum != null ? d.resultSum : d.sum;
+      const dice = '<span class="k3-mini-die-wrap">'+(d.dice||[]).map(function(n){return k3MiniDiceHtml(n);}).join('')+'</span>';
+      return `<div class="k3-hist-row"><span class="p">#${d.roundId || x.id}</span><span class="s">${sum}</span><span class="sz">${d.size || k3SizeOf(sum)}</span><span class="pr">${d.parity || k3ParityOf(sum)}</span><span class="d">${dice}</span></div>`;
+    }).join('');
+  }).catch(() => {
+    el.innerHTML = '<div class="k3-hist-empty">Could not load history</div>';
+  });
+}
+
+function loadK3MyHistory() {
+  const el = document.getElementById('k3MyHistory');
+  if (!el) return;
+  if (!currentUid) {
+    el.innerHTML = '<div class="k3-hist-empty">Login to see your history</div>';
+    return;
+  }
+  const map = {};
+  const ingest = (snap) => {
+    if (!snap || !snap.exists()) return;
+    snap.forEach(ch => {
+      const v = ch.val() || {};
+      map[ch.key] = Object.assign({ id: ch.key }, v);
+    });
+  };
+  const render = () => {
+    const rows = Object.values(map).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    if (!rows.length) {
+      el.innerHTML = '<div class="k3-hist-empty">No K3 bets yet</div>';
+      return;
+    }
+    el.innerHTML = rows.slice(0, 50).map(e => {
+      const cur = String(e.currency || 'INR').toUpperCase();
+      const st = String(e.status || 'pending').toLowerCase();
+      const stColor = st === 'win' ? '#34d399' : (st === 'loss' ? '#f87171' : '#fbbf24');
+      const stLabel = st === 'win' ? ('WON ' + k3Money(e.winAmount || 0, cur)) : (st === 'loss' ? 'LOST' : 'PENDING');
+      const target = e.betType === 'total' ? ('Total ' + e.target) : (e.target || e.betType || '—');
+      const res = (e.resultSum != null) ? (' · sum ' + e.resultSum) : '';
+      return `<div class="k3-hist-row" style="grid-template-columns:1.1fr 1fr .9fr 1.1fr;">
+        <span class="p">#${e.roundId || '—'}${res}</span>
+        <span>${target}</span>
+        <span>${k3Money(e.amount, cur)}</span>
+        <span style="color:${stColor};font-weight:900;">${stLabel}</span>
+      </div>`;
+    }).join('');
+  };
+
+  const q1 = db.ref('k3/entries').orderByChild('userId').equalTo(String(currentUid)).limitToLast(50).once('value').then(ingest).catch(() => {});
+  const jobs = [q1];
+  if (userCustomUid) {
+    jobs.push(db.ref('k3/entries').orderByChild('customUid').equalTo(String(userCustomUid)).limitToLast(50).once('value').then(ingest).catch(() => {}));
+  }
+  // Fallback scan if indexed queries return nothing
+  Promise.all(jobs).then(() => {
+    if (Object.keys(map).length) { render(); return; }
+    return db.ref('k3/entries').limitToLast(150).once('value').then(snap => {
+      if (!snap.exists()) return;
+      snap.forEach(ch => {
+        const v = ch.val() || {};
+        if (String(v.userId) === String(currentUid) || (userCustomUid && String(v.customUid) === String(userCustomUid))) {
+          map[ch.key] = Object.assign({ id: ch.key }, v);
+        }
+      });
+    }).catch(() => {});
+  }).then(render).catch(() => {
+    el.innerHTML = '<div class="k3-hist-empty">Could not load your history</div>';
+  });
+}
+
+// Background settlement even when K3 screen is closed (like WINGO)
+setInterval(() => {
+  try {
+    if (typeof k3ConfigReady !== 'undefined' && k3ConfigReady && k3Config && k3Config.enabled !== false && k3Config.autoResult !== false) {
+      reconcileK3Settlements();
+    }
+  } catch(e) {}
+}, 3000);
 
 </script>
