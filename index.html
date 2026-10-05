@@ -10147,6 +10147,7 @@ db.ref('control/k3Config').on('value', snap => {
     parityMultiplier: Math.max(1, Number(d.parityMultiplier) || 2),
     autoResult: d.autoResult !== false,
     fairRandomOnly: d.fairRandomOnly === true,
+    historyFloor: Math.max(0, Number(d.historyFloor) || 0),
     totalMultipliers: tm
   };
   k3ConfigReady = true;
@@ -10379,6 +10380,8 @@ function renderK3() {
   setK3Currency(selectedWalletCurrency || 'INR');
   k3ShowLastAt = 0;
   k3ShowLastResult();
+  k3CatchUpHistAt = 0;
+  k3CatchUp(true);   // fill any periods that passed while nobody was online + settle old bets
 }
 
 function k3SetHistoryTab(tab, btn) {
@@ -10834,6 +10837,64 @@ function reconcileK3Settlements() {
     }).catch(() => { k3ReconciledRounds.delete(rid); });
   }
 }
+
+// ===================== K3 CATCH-UP (works even if nobody was online) =====================
+// Rounds are time-based, but a browser can only draw/settle while it is open. So whenever ANY app
+// opens (or comes back to the foreground, or every 30s) it now finishes everything that should
+// already have happened: it settles ALL of the player's unsettled bets (not just the last 3
+// periods) and fills in missing recent periods so the history never has holes.
+let k3CatchUpBusy = false, k3CatchUpHistAt = 0;
+function k3EndedUpTo() { return Math.floor(k3Now() / k3CycleMs()); }   // id of the last fully ended period
+
+function k3CatchUpMine() {
+  if (!k3ConfigReady || !currentUid) return Promise.resolve();
+  return db.ref('k3/entries').orderByChild('userId').equalTo(String(currentUid)).limitToLast(80).once('value').then(snap => {
+    const ids = {};
+    snap.forEach(ch => {
+      const e = ch.val() || {};
+      const st = String(e.status || 'pending').toLowerCase();
+      if (st === 'win' || st === 'loss' || st === 'settled') return;
+      const rid = String(e.roundId);
+      if (Number(rid) >= 1 && k3RoundRevealed(rid)) ids[rid] = 1;
+    });
+    // resolveK3Round draws the round if still missing (forced dice honoured) and settles its bets
+    return Promise.all(Object.keys(ids).slice(0, 40).map(rid => resolveK3Round(rid).catch(() => null)));
+  }).catch(() => {});
+}
+
+function k3CatchUpHistory() {
+  if (!k3ConfigReady || !k3Config.enabled || !k3Config.autoResult) return Promise.resolve();
+  const last = k3EndedUpTo();
+  if (last < 1) return Promise.resolve();
+  const first = Math.max(1, last - 39, Number(k3Config.historyFloor) || 0);   // never rebuild what admin cleared
+  return db.ref('k3/rounds').limitToLast(80).once('value').then(snap => {
+    const have = {};
+    snap.forEach(ch => {
+      const v = ch.val() || {};
+      if (v.resultSum != null && (v.status === 'resolved' || v.status === 'settled')) have[String(v.roundId || ch.key)] = 1;
+    });
+    const todo = [];
+    for (let id = first; id <= last; id++) { if (!have[String(id)]) todo.push(String(id)); }
+    return Promise.all(todo.slice(-40).map(rid => resolveK3Round(rid).catch(() => null)));
+  }).then(() => { try { loadK3History(); } catch (e) {} }).catch(() => {});
+}
+
+function k3CatchUp(withHistory) {
+  if (k3CatchUpBusy) return;
+  k3CatchUpBusy = true;
+  const wantHist = withHistory && (k3Now() - k3CatchUpHistAt > 45000);
+  if (wantHist) k3CatchUpHistAt = k3Now();
+  k3CatchUpMine()
+    .then(() => wantHist ? k3CatchUpHistory() : null)
+    .catch(() => {})
+    .then(() => { k3CatchUpBusy = false; });
+}
+// background: runs on ANY screen (not only inside K3), so bets never wait for the player to reopen K3
+setTimeout(() => { try { k3CatchUp(false); } catch (e) {} }, 5000);
+setInterval(() => { try { k3CatchUp(!!document.getElementById('k3GameRoot')); } catch (e) {} }, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) { try { k3CatchUp(!!document.getElementById('k3GameRoot')); } catch (e) {} }
+});
 
 function listenK3Result(roundId) {
   try {
