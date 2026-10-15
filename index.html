@@ -215,7 +215,7 @@
             box-shadow: inset 0 0 12px rgba(var(--accent-rgb),0.06);
         }
 
-        .game-card, .tournament-card, .withdraw-history-item, .support-history-item,
+        .game-card, .withdraw-history-item, .support-history-item,
         .deposit-history-item, .reward-card, .prediction-card, .membership-card,
         .gv-event-featured{position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(34,211,238,.42);background:linear-gradient(135deg,rgba(8,35,55,.96),rgba(10,16,30,.98));box-shadow:0 10px 26px rgba(0,0,0,.28),0 0 22px rgba(34,211,238,.08);padding:10px;}
         .gv-event-featured img{width:100%;max-height:150px;object-fit:cover;border-radius:11px;display:block;margin-bottom:8px;}
@@ -240,7 +240,7 @@
             text-align: left; font-size: 13px;
             transition: transform .18s, border-color .18s, box-shadow .18s;
         }
-        .game-card:hover, .tournament-card:hover {
+        .game-card:hover {
             border-color: var(--blue);
             transform: translateY(-2px);
             box-shadow: 0 0 18px rgba(var(--accent-rgb),0.3);
@@ -1180,6 +1180,88 @@
             flex: 1; font-family: ui-monospace, monospace; font-weight: 800;
             font-size: 15px; color: var(--blue); word-break: break-all;
         }
+        /* ===== Refer & Earn v2 ===== */
+        .rf-hero { position: relative; overflow: hidden; border-radius: 18px; padding: 18px 16px; margin-bottom: 12px;
+            background: linear-gradient(135deg, #1b1b1b 0%, #0a0a0a 55%, #10231b 100%);
+            border: 1.5px solid rgba(var(--accent-rgb),0.45); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+        .rf-hero::after { content: ''; position: absolute; right: -44px; top: -44px; width: 150px; height: 150px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(52,211,153,0.28), transparent 70%); pointer-events: none; }
+        .rf-hero-eyebrow { font-size: 10px; font-weight: 800; letter-spacing: 0.9px; text-transform: uppercase; color: var(--text-muted); }
+        .rf-hero-amount { font-size: 32px; font-weight: 900; color: #34d399; line-height: 1.15; margin: 5px 0 6px; }
+        .rf-hero-amount span { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-left: 4px; }
+        .rf-hero-amount.off { color: #facc15; }
+        .rf-hero-sub { font-size: 12.5px; color: #d1d5db; line-height: 1.5; position: relative; z-index: 1; }
+        .rf-card { background: var(--card, #050505); border: 1.5px solid rgba(var(--accent-rgb),0.28); border-radius: 16px;
+            padding: 14px; margin-bottom: 12px; }
+        .rf-label { font-size: 10px; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; color: var(--text-muted); }
+        .rf-title { font-size: 13px; font-weight: 800; color: var(--blue-bright, #fff); margin-bottom: 10px; }
+        .rf-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+        .rf-title-row .rf-title { margin: 0; }
+        .rf-code-row { display: flex; align-items: center; gap: 10px; margin: 8px 0 12px; padding: 12px 14px; border-radius: 12px;
+            background: rgba(var(--accent-rgb),0.08); border: 1.5px dashed rgba(var(--accent-rgb),0.5); }
+        .rf-code { flex: 1; font-family: ui-monospace, monospace; font-weight: 900; font-size: 22px; letter-spacing: 3px; color: #fff; word-break: break-all; }
+        .rf-icon-btn { width: auto; margin: 0; padding: 8px 12px; font-size: 12px; font-weight: 800; border-radius: 10px; cursor: pointer;
+            background: rgba(var(--accent-rgb),0.15); color: #fff; border: 1px solid rgba(var(--accent-rgb),0.45); }
+        .rf-share-btn { width: 100%; margin: 0 0 8px; padding: 13px; font-size: 14px; font-weight: 900; border-radius: 12px; cursor: pointer;
+            border: none; color: #04130c; background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 6px 18px rgba(16,185,129,0.3); }
+        .rf-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .rf-link-row { display: flex; align-items: center; gap: 10px; margin: 8px 0 6px; padding: 10px 12px; border-radius: 12px;
+            background: rgba(52,211,153,0.07); border: 1.5px solid rgba(52,211,153,0.35); }
+        .rf-link { flex: 1; min-width: 0; font-family: ui-monospace, monospace; font-size: 12px; color: #d1d5db; word-break: break-all; line-height: 1.4; }
+        .rf-link b { color: #34d399; }
+        .rf-link-hint { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
+        .rf-invite-note { margin: 6px 0; padding: 9px 12px; border-radius: 10px; font-size: 12.5px; color: #34d399;
+            background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.35); }
+        .rf-btn { margin: 0; padding: 10px 6px; font-size: 12px; font-weight: 800; border-radius: 10px; cursor: pointer; color: #fff;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); }
+        .rf-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .rf-step { text-align: center; padding: 10px 6px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+        .rf-step i { display: block; font-style: normal; font-size: 22px; margin-bottom: 4px; }
+        .rf-step b { display: block; font-size: 12px; color: #fff; }
+        .rf-step small { display: block; margin-top: 3px; font-size: 10.5px; line-height: 1.35; color: var(--text-muted); }
+        .rf-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .rf-stat { padding: 12px 10px; border-radius: 14px; text-align: center; background: rgba(var(--accent-rgb),0.07);
+            border: 1.5px solid rgba(var(--accent-rgb),0.25); }
+        .rf-stat span { display: block; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+        .rf-stat b { display: block; margin-top: 5px; font-size: 20px; color: #fff; }
+        .rf-stat b.g { color: #34d399; } .rf-stat b.y { color: #facc15; }
+        .rf-stat small { display: block; margin-top: 2px; font-size: 10px; color: var(--text-muted); }
+        .rf-progress-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #d1d5db; margin-bottom: 6px; }
+        .rf-progress-head b { color: #34d399; }
+        .rf-progress { height: 9px; border-radius: 99px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 12px; }
+        .rf-progress i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #34d399, #facc15); transition: width .4s; }
+        .rf-ms { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .rf-ms-dot { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 900; color: var(--text-muted); background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); }
+        .rf-ms > div { flex: 1; } .rf-ms b { display: block; font-size: 13px; color: #fff; } .rf-ms small { font-size: 11px; color: var(--text-muted); }
+        .rf-ms strong { font-size: 13px; color: #facc15; }
+        .rf-ms.done .rf-ms-dot { background: #34d399; color: #04130c; border-color: #34d399; } .rf-ms.done strong { color: #34d399; }
+        .rf-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+        .rf-tabs button { flex: 1; margin: 0; padding: 7px 4px; font-size: 12px; font-weight: 800; border-radius: 99px; cursor: pointer; color: var(--text-muted);
+            background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+        .rf-tabs button.active { color: #04130c; background: #fff; border-color: #fff; }
+        .rf-refresh { width: auto; margin: 0; padding: 5px 10px; font-size: 11px; font-weight: 800; border-radius: 99px; cursor: pointer; color: #fff;
+            background: transparent; border: 1px solid rgba(255,255,255,0.2); }
+        .rf-friend { display: flex; gap: 10px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+        .rf-friend:first-child, .rf-earn:first-child { border-top: none; }
+        .rf-avatar { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 900; color: #fff; background: linear-gradient(145deg, #2a2a2a, #111); border: 1px solid rgba(var(--accent-rgb),0.4); }
+        .rf-friend-main { flex: 1; min-width: 0; }
+        .rf-friend-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .rf-friend-top b { font-family: ui-monospace, monospace; font-size: 13px; color: #fff; }
+        .rf-friend-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .rf-friend-nums { display: flex; gap: 14px; margin-top: 5px; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; }
+        .rf-friend-nums b { color: #facc15; } .rf-friend-nums b.g { color: #34d399; }
+        .rf-chip { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+        .rf-chip.ok { color: #34d399; background: rgba(52,211,153,0.14); } .rf-chip.wait { color: #facc15; background: rgba(250,204,21,0.14); }
+        .rf-chip.mute { color: #9ca3af; background: rgba(156,163,175,0.14); } .rf-chip.bad { color: #f87171; background: rgba(248,113,113,0.14); }
+        .rf-earn { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+        .rf-earn-ico { width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 17px; background: rgba(52,211,153,0.12); }
+        .rf-earn-main { flex: 1; min-width: 0; } .rf-earn-main b { display: block; font-size: 12.5px; color: #fff; } .rf-earn-main small { font-size: 11px; color: var(--text-muted); }
+        .rf-earn strong { color: #34d399; font-size: 13px; }
+        .rf-empty { text-align: center; padding: 18px 8px; font-size: 12.5px; color: var(--text-muted); }
+        .rf-empty i { display: block; font-style: normal; font-size: 26px; margin-bottom: 6px; }
         .game-thumb {
             width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
@@ -2193,14 +2275,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     </div>
                     <div class="explore-chevron">›</div>
                 </div>
-                <div class="explore-item" onclick="openFeature('Tournaments')">
-                    <div class="explore-icon" style="background:rgba(217,119,6,0.25);">🏆</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Tournaments</div>
-                        <div class="explore-sub">Join tournaments & compete</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
                 <div class="explore-item" onclick="openFeature('Predictions')">
                     <div class="explore-icon" style="background:rgba(var(--accent-rgb),0.2);">📊</div>
                     <div class="explore-text">
@@ -2292,38 +2366,54 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             <div class="tab-panel-header">
                 <h3 style="margin-top:0;">👥 Refer & Earn</h3>
             </div>
-            <div class="section-card">
-                <p class="section-hint" style="margin-bottom:10px;">Share your UID. New users must enter it at signup. You earn a signup bonus plus a % of every approved deposit from your downline.</p>
-                <div class="refer-uid-box">
-                    <div>
-                        <div style="font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Your Referral UID</div>
-                        <div class="uid-val" id="referMyUid">Loading...</div>
-                    </div>
-                    <button type="button" onclick="copyTextToClipboard('referMyUid', this)" class="btn-gray" style="width:auto;margin:0;padding:8px 12px;font-size:12px;">📋 Copy</button>
-                </div>
-                <div class="refer-stat-grid">
-                    <div class="refer-stat">
-                        <span>Signup Bonus</span>
-                        <b id="referBonusAmount" style="color:#34d399;">₹0</b>
-                    </div>
-                    <div class="refer-stat">
-                        <span>Deposit Commission</span>
-                        <b id="referDepositCommissionDisplay" style="color:#34d399;">0%</b>
-                    </div>
-                    <div class="refer-stat">
-                        <span>Downline Users</span>
-                        <b id="referCount" style="color:#facc15;">0</b>
-                    </div>
-                    <div class="refer-stat">
-                        <span>Total Earned</span>
-                        <b id="referTotalEarned" style="color:#34d399;">₹0</b>
-                    </div>
-                </div>
-            </div>
-            <h4 style="margin:14px 0 8px 0; font-size:13px; font-weight:800; color:var(--blue);">📋 Your Downline</h4>
-            <div id="userReferralDepositsList" class="history-list" style="max-height:280px;">Loading downline...</div>
-        </div>
 
+            <div class="rf-hero" id="rfHero"></div>
+
+            <div class="rf-card">
+                <div class="rf-label">Your referral code</div>
+                <div class="rf-code-row">
+                    <div class="rf-code" id="referMyUid">Loading...</div>
+                    <button type="button" class="rf-icon-btn" onclick="rfCopyCode(this)">📋 Copy</button>
+                </div>
+                <div class="rf-label">Your invite link</div>
+                <div class="rf-link-row">
+                    <div class="rf-link" id="rfLinkText">Loading...</div>
+                    <button type="button" class="rf-icon-btn" onclick="rfCopyLink(this)">🔗 Copy</button>
+                </div>
+                <div class="rf-link-hint">Friends who open this link land on Create Account with your code already filled in.</div>
+
+            </div>
+
+            <div class="rf-card">
+                <div class="rf-title">How it works</div>
+                <div class="rf-steps" id="rfSteps"></div>
+            </div>
+
+            <div class="rf-stats" id="rfStats"></div>
+
+            <div class="rf-card" id="rfMilestoneCard" style="display:none;">
+                <div class="rf-title">🏆 Milestone bonuses</div>
+                <div id="rfMilestones"></div>
+            </div>
+
+            <div class="rf-card">
+                <div class="rf-title-row">
+                    <div class="rf-title">👥 Your friends</div>
+                    <button type="button" class="rf-refresh" onclick="rfRefresh(this)">↻ Refresh</button>
+                </div>
+                <div class="rf-tabs" id="rfTabs">
+                    <button type="button" data-f="all" class="active" onclick="rfSetFilter('all')">All</button>
+                    <button type="button" data-f="qualified" onclick="rfSetFilter('qualified')">Qualified</button>
+                    <button type="button" data-f="pending" onclick="rfSetFilter('pending')">Pending</button>
+                </div>
+                <div id="userReferralDepositsList">Loading friends...</div>
+            </div>
+
+            <div class="rf-card">
+                <div class="rf-title">💰 Earnings history</div>
+                <div id="rfEarnings">Loading earnings...</div>
+            </div>
+        </div>
 
         <!-- ========== MISSIONS TAB ========== -->
         <div id="tabMissions" class="tab-panel">
@@ -2561,17 +2651,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             <h4 style="margin:16px 0 8px;font-size:13px;font-weight:800;color:var(--blue);">📜 Your Withdrawal History</h4>
             <div id="userWithdrawList" class="history-list">Loading status...</div>
             <button onclick="closeFeature('withdrawArea')" class="btn-gray" style="margin-top:12px;">⬅ Back to Menu</button>
-        </div>
-
-        <!-- Tournaments Section -->
-        <div id="tournamentsArea" class="hidden">
-            <h3 style="color:var(--accent-cyan); margin-top:0;">🏆 Active Tournaments</h3>
-            <div id="tournamentListContainer" style="max-height: 250px; overflow-y: auto;">Loading tournaments...</div>
-
-            <h4 style="color:var(--accent-cyan); margin:14px 0 8px 0; font-size:14px;">🏁 Recently Ended</h4>
-            <div id="tournamentResultsContainer" style="max-height: 200px; overflow-y: auto;">Loading results...</div>
-
-            <button onclick="closeFeature('tournamentsArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
         </div>
 
         <!-- Predictions Hub Section -->
@@ -3013,18 +3092,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }
         });
 
-        db.ref('control/referBonus').on('value', snap => {
-            globalReferBonus = Number(snap.val()) || 0;
-            const referBonusEl = document.getElementById('referBonusAmount');
-            if(referBonusEl) referBonusEl.innerText = `₹${globalReferBonus}`;
-        });
-
-        db.ref('control/referDepositCommissionPercent').on('value', snap => {
-            const pct = Number(snap.val()) || 0;
-            const el = document.getElementById('referDepositCommissionDisplay');
-            if(el) el.innerText = `${pct}%`;
-        });
-
         db.ref('control/investmentConfig').on('value', snap => {
             const data = snap.val() || {};
             adminMinInvest = Number(data.minInvestment) || 0;
@@ -3231,15 +3298,70 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             return res;
         }
 
+        function gvReferralCodeFromLocation() {
+            const keys = ['ref','refer','invite','code','referral','referraluid','referral_uid','referralcode','referral_code','referrer','refuid','referuid','refer_uid','invitecode','invite_code','r'];
+            const wanted = new Set(keys.map(k => k.toLowerCase()));
+            const clean = value => String(value || '').trim().replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+            const readParams = raw => {
+                if (!raw) return '';
+                try {
+                    const params = new URLSearchParams(String(raw).replace(/^.*?\?/, '').replace(/^#/, '').replace(/^\?/, '').split('#')[0]);
+                    for (const [key, value] of params.entries()) {
+                        if (wanted.has(String(key).toLowerCase()) && clean(value)) return clean(value);
+                    }
+                } catch (e) {}
+                return '';
+            };
+            try {
+                const fromSearch = readParams(location.search || '');
+                if (fromSearch) return fromSearch;
+                const hash = String(location.hash || '').replace(/^#/, '');
+                const fromHash = readParams(hash);
+                if (fromHash) return fromHash;
+                // Support links that encode the invite UID as a route segment, e.g. /ref/ABC123.
+                const pathMatch = String(location.pathname || '').match(/\/(?:ref|refer|invite)\/([A-Za-z0-9_-]{3,64})(?:\/|$)/i);
+                if (pathMatch) return clean(pathMatch[1]);
+                // Last-resort compatibility for copied URLs with unusual query/hash ordering.
+                const full = String(location.href || '');
+                const match = full.match(/[?&#](ref|refer|invite|code|referral|referraluid|referral_uid|referralcode|referral_code|referrer|refuid|referuid|refer_uid|invitecode|invite_code|r)=([^&#]+)/i);
+                if (match) return clean(decodeURIComponent(match[2].replace(/\+/g, ' ')));
+            } catch (e) {}
+            return '';
+        }
+
+        function gvPrefillReferralCode() {
+            const code = gvReferralCodeFromLocation();
+            const input = document.getElementById('regReferUid');
+            if (code && input && !(typeof currentUid !== 'undefined' && currentUid)) {
+                input.value = code;
+                input.setAttribute('value', code);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            return code;
+        }
+
         function showRegisterScreen() {
-            document.getElementById('authLogin').classList.add('hidden');
-            document.getElementById('authRegister').classList.remove('hidden');
+            const login = document.getElementById('authLogin');
+            const register = document.getElementById('authRegister');
+            if (login) login.classList.add('hidden');
+            if (register) register.classList.remove('hidden');
+            const dash = document.getElementById('dash');
+            if (dash && !(typeof currentUid !== 'undefined' && currentUid)) dash.classList.add('hidden');
             document.body.classList.add('auth-mode');
+            if (typeof gvPrefillReferralCode === 'function') gvPrefillReferralCode();
         }
 
         function showLoginScreen() {
-            document.getElementById('authRegister').classList.add('hidden');
-            document.getElementById('authLogin').classList.remove('hidden');
+            // Keep invite traffic on registration, including if another startup handler requests Login.
+            const inviteCode = typeof gvReferralCodeFromLocation === 'function' ? gvReferralCodeFromLocation() : '';
+            if (inviteCode && !(typeof currentUid !== 'undefined' && currentUid)) {
+                showRegisterScreen();
+                return;
+            }
+            const register = document.getElementById('authRegister');
+            const login = document.getElementById('authLogin');
+            if (register) register.classList.add('hidden');
+            if (login) login.classList.remove('hidden');
             document.body.classList.add('auth-mode');
         }
 
@@ -3375,32 +3497,18 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     }).then(() => data);
                 })
                 .then(data => {
+                    let refWork = null;
                     if (!isAdminBootstrap) {
                         const referrerKey = data.referrerKey;
-                        const referrerData = data.referrerData;
                         const shortId = data.shortId;
 
-                        const newCount = (Number(referrerData.referredCount) || 0) + 1;
-                        const currentReferrerBal = Number(referrerData.balance) || 0;
-                        const dynamicBonus = Number(globalReferBonus) || 0;
-                        const newBal = currentReferrerBal + dynamicBonus;
-
-                        db.ref('users/' + referrerKey).update({
-                            referredCount: newCount,
-                            balance: newBal
-                        });
-
-                        if (dynamicBonus > 0) {
-                            recordBonusCreditForUser(referrerKey,'referral_bonus',dynamicBonus,'INR',{fromCustomUid:shortId});
-                            db.ref('referral_earnings').push({
-                                referrerUid: referrerKey,
-                                referrerCustomUid: referUidInput,
-                                fromCustomUid: shortId,
-                                type: 'signup',
-                                amount: dynamicBonus,
-                                timestamp: Date.now()
-                            });
-                        }
+                        // Count the referral, then pay the reward under the admin's rules (instantly, or later on deposit).
+                        db.ref('users/' + referrerKey + '/referredCount').transaction(c => (Number(c) || 0) + 1);
+                        refWork = db.ref('users/' + data.newAuthUid).update({ referralStatus: 'pending' }).then(() => {
+                            if (referralConfig.enabled && referralConfig.mode === 'signup') {
+                                return gvQualifyReferral(data.newAuthUid, referralConfig, { trigger: 'signup' });
+                            }
+                        }).catch(e => console.warn('Referral reward skipped:', e));
 
                         // Missions: credit referrer's "referral_joined" progress
                         db.ref('control/missions').once('value').then(msnap => {
@@ -3434,8 +3542,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                         });
                     }
 
-                    alert('Account created successfully! Please log in.');
-                    showLoginScreen();
+                    return Promise.race([refWork || Promise.resolve(), new Promise(r => setTimeout(r, 8000))]).then(() => {
+                        alert('Account created successfully! Please log in.');
+                        showLoginScreen();
+                    });
                 })
                 .catch(err => {
                     // If registration/auth/database creation fails before the account
@@ -3552,6 +3662,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 updateWalletCurrencyUI();
                 refreshWithdrawalRestrictionStatus();
                 document.getElementById('referMyUid').innerText = userCustomUid;
+                if (typeof rfRenderLink === 'function') rfRenderLink();
                 // referCount will be updated dynamically in loadUserReferralDeposits
                 document.getElementById('profileUid').innerText = userCustomUid;
                 const pe = document.getElementById('profileEmail');
@@ -3598,7 +3709,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             loadUserWithdrawals(uid);
             loadUserDeposits(uid);
             loadUserSupportRequests(uid);
-            loadUserTournaments();
             loadDailyRewardsForUser(uid);
             loadUserGiftCodeHistory(uid);
             loadUserPredictions(uid);
@@ -4052,93 +4162,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             }).join('');
         }
 
-        function loadUserReferralDeposits(myCustomUid) {
-            const container = document.getElementById('userReferralDepositsList');
-            const totalEarnedEl = document.getElementById('referTotalEarned');
-            const referCountEl = document.getElementById('referCount');
-            if(!container || !myCustomUid) return;
-
-            db.ref('users').once('value', usersSnap => {
-                const downline = []; // { customUid, joinedAt, status }
-                if(usersSnap.exists()) {
-                    usersSnap.forEach(uChild => {
-                        const uVal = uChild.val();
-                        if(uVal.referredBy === myCustomUid && uVal.status !== 'deleted' && uVal.status !== 'blocked') {
-                            downline.push({
-                                customUid: uVal.customUid,
-                                joinedAt: uVal.joinedAt || 0,
-                                status: uVal.status || 'active'
-                            });
-                        }
-                    });
-                }
-
-                // Update referCount display with actual downline count
-                if(referCountEl) {
-                    referCountEl.innerText = downline.length;
-                }
-
-                if(downline.length === 0) {
-                    container.innerHTML = '<p>No users have registered with your referral UID yet.</p>';
-                    if(totalEarnedEl) totalEarnedEl.innerText = '₹0';
-                    return;
-                }
-
-                const downlineUids = downline.map(d => d.customUid);
-
-                Promise.all([
-                    db.ref('deposits').orderByChild('status').equalTo('approved').once('value'),
-                    db.ref('referral_earnings').once('value')
-                ]).then(([depSnap, earnSnap]) => {
-                    // Total deposited per downline user
-                    const depositTotals = {};
-                    if(depSnap.exists()) {
-                        depSnap.forEach(dChild => {
-                            const dVal = dChild.val();
-                            if(downlineUids.includes(dVal.customUid)) {
-                                depositTotals[dVal.customUid] = (depositTotals[dVal.customUid] || 0) + (Number(dVal.amount) || 0);
-                            }
-                        });
-                    }
-
-                    // Commission/bonus earnings per downline user, and grand total
-                    const earningsTotals = {};
-                    let grandTotalEarned = 0;
-                    if(earnSnap.exists()) {
-                        earnSnap.forEach(eChild => {
-                            const eVal = eChild.val();
-                            if(eVal.referrerCustomUid === myCustomUid) {
-                                earningsTotals[eVal.fromCustomUid] = (earningsTotals[eVal.fromCustomUid] || 0) + (Number(eVal.amount) || 0);
-                                grandTotalEarned += Number(eVal.amount) || 0;
-                            }
-                        });
-                    }
-
-                    if(totalEarnedEl) totalEarnedEl.innerText = `₹${grandTotalEarned}`;
-
-                    downline.sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
-
-                    container.innerHTML = downline.map(d => {
-                        const deposited = depositTotals[d.customUid] || 0;
-                        const earned = earningsTotals[d.customUid] || 0;
-                        const joined = d.joinedAt ? new Date(d.joinedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-                        const activityBadge = deposited > 0
-                            ? `<span style="color:#34d399; font-weight:bold;">Active Depositor</span>`
-                            : `<span style="color:var(--text-muted);">No Deposits Yet</span>`;
-
-                        return `
-                            <div class="deposit-history-item">
-                                <b>UID:</b> <span class="uid-badge">${d.customUid}</span> &nbsp; ${activityBadge}<br>
-                                <b>Joined:</b> ${joined}<br>
-                                <b>Total Deposited:</b> <span style="color:#facc15; font-weight:bold;">₹${deposited}</span> |
-                                <b>You Earned:</b> <span style="color:#34d399; font-weight:bold;">₹${earned}</span>
-                            </div>
-                        `;
-                    }).join('');
-                });
-            });
-        }
-
         let allMembershipsData = {}; // Cache for membership comparison
         let membershipTimers = {}; // Track bonus timers
 
@@ -4495,7 +4518,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             // Hide all overlay feature areas first
             const overlays = [
                 'notificationsArea','historyArea','investArea','incomeArea','membershipArea',
-                'depositArea','withdrawArea','tournamentsArea','predictionsArea','supportArea',
+                'depositArea','withdrawArea','predictionsArea','supportArea',
                 'gamesHub','activeGameArea'
             ];
             overlays.forEach(id => {
@@ -4512,8 +4535,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (featureName === 'Play Games') {
                 document.getElementById('gamesHub').classList.remove('hidden');
                 loadMiniGames();
-            } else if (featureName === 'Tournaments') {
-                document.getElementById('tournamentsArea').classList.remove('hidden');
             } else if (featureName === 'Predictions') {
                 document.getElementById('predictionsArea').classList.remove('hidden');
             } else if (featureName === 'Membership') {
@@ -4563,10 +4584,11 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         }
 
         function switchTab(tabName) {
+            if (tabName === 'refer' && typeof rfState !== 'undefined' && userCustomUid && Date.now() - rfState.loadedAt > 15000) loadUserReferralDeposits(userCustomUid);
             // Hide overlay feature screens when switching main tabs
             const overlays = [
                 'notificationsArea','historyArea','investArea','incomeArea','membershipArea',
-                'depositArea','withdrawArea','tournamentsArea','predictionsArea','supportArea',
+                'depositArea','withdrawArea','predictionsArea','supportArea',
                 'gamesHub','activeGameArea'
             ];
             overlays.forEach(id => {
@@ -4608,7 +4630,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
         function openNotifications() {
             const overlays = [
                 'historyArea','investArea','incomeArea','membershipArea',
-                'depositArea','withdrawArea','tournamentsArea','predictionsArea','supportArea',
+                'depositArea','withdrawArea','predictionsArea','supportArea',
                 'gamesHub','activeGameArea'
             ];
             overlays.forEach(id => {
@@ -5070,69 +5092,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             });
         }
 
-        function loadUserTournaments() {
-            db.ref('tournaments').on('value', snap => {
-                const container = document.getElementById('tournamentListContainer');
-                const resultsContainer = document.getElementById('tournamentResultsContainer');
-                if(!container) return;
-                container.innerHTML = '';
-                if(resultsContainer) resultsContainer.innerHTML = '';
-
-                if(!snap.exists()) {
-                    container.innerHTML = '<p>No active tournaments available right now.</p>';
-                    if(resultsContainer) resultsContainer.innerHTML = '<p>No tournaments have ended yet.</p>';
-                    return;
-                }
-
-                const openTournaments = [];
-                const endedTournaments = [];
-
-                snap.forEach(child => {
-                    const t = child.val();
-                    const tKey = child.key;
-                    const status = t.status || 'open';
-                    if (status === 'open') {
-                        openTournaments.push({ tKey, t });
-                    } else if (status === 'closed') {
-                        endedTournaments.push({ tKey, t });
-                    }
-                    // Cancelled tournaments are simply not shown to users.
-                });
-
-                if (openTournaments.length === 0) {
-                    container.innerHTML = '<p>No active tournaments available right now.</p>';
-                } else {
-                    openTournaments.forEach(({ tKey, t }) => {
-                        const entryFee = Number(t.entryFee) || 0;
-                        const feeText = entryFee === 0 ? '<span style="color:#34d399; font-weight:bold;">Free</span>' : `<span style="color:#facc15; font-weight:bold;">₹${entryFee}</span>`;
-
-                        container.innerHTML += `
-                            <div class="tournament-card">
-                                <b style="color:var(--accent-cyan); font-size:14px;">🏆 ${t.title}</b><br>
-                                <p style="margin:5px 0;">Prize Pool: <span style="color:#facc15; font-weight:bold;">₹${t.prize}</span> | Entry Fee: ${feeText}</p>
-                                <p style="margin:5px 0; font-size:12px; color:var(--text-muted);">${t.description || ''}</p>
-                                <button onclick="joinTournament('${tKey}', '${t.title}', ${entryFee})" class="btn-green" style="margin-top:6px; padding:6px; font-size:12px;">Join Tournament</button>
-                            </div>
-                        `;
-                    });
-                }
-
-                if (resultsContainer) {
-                    if (endedTournaments.length === 0) {
-                        resultsContainer.innerHTML = '<p>No tournaments have ended yet.</p>';
-                    } else {
-                        endedTournaments.sort((a, b) => (b.t.declaredAt || 0) - (a.t.declaredAt || 0));
-                        resultsContainer.innerHTML = endedTournaments.map(({ t }) => `
-                            <div class="tournament-card">
-                                <b style="color:var(--accent-cyan); font-size:14px;">🏆 ${t.title}</b><br>
-                                <p style="margin:5px 0; font-size:13px;">Winner: <span class="uid-badge">${t.winnerCustomUid || '—'}</span> won <span style="color:#34d399; font-weight:bold;">₹${t.prizeAwarded || 0}</span></p>
-                            </div>
-                        `).join('');
-                    }
-                }
-            });
-        }
-
         let cachedUserEvents = [];
         let userEventTicker = null;
         function eventTimeValue(v){
@@ -5199,34 +5158,6 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                 const cls=state==='live'?'is-live':state==='upcoming'?'is-upcoming':'is-ended';
                 return `<div class="gv-event-grid-card ${cls}"><div class="gv-event-badges">${e.pinned?'<span class="gv-event-badge">📌 PINNED</span>':''}${e.featured?'<span class="gv-event-badge">⭐ FEATURED</span>':''}<span class="gv-event-badge ${state}">${state==='live'?'🔴 LIVE':state==='upcoming'?'⏳ UPCOMING':'✓ ENDED'}</span>${e.category?`<span class="gv-event-badge">${escapeHtmlUser(e.category)}</span>`:''}</div>${e.imageUrl?`<img src="${escapeHtmlUser(e.imageUrl)}" style="width:100%;max-height:165px;object-fit:cover;border-radius:11px;margin:2px 0 8px;display:block;" onerror="this.style.display='none'">`:''}<div style="font-size:15px;font-weight:1000;color:var(--accent-cyan);">🎉 ${escapeHtmlUser(e.title||'Game Verse Event')}</div>${e.description?`<div style="margin-top:5px;font-size:12px;color:var(--text-muted);white-space:pre-wrap;">${escapeHtmlUser(e.description)}</div>`:''}${e.startAt?`<div class="gv-event-time">🗓️ ${state==='upcoming'?'Starts':'Started'}: ${formatEventDate(eventTimeValue(e.startAt))}</div>`:''}${e.endAt?`<div class="gv-event-time">⏱️ Ends: ${formatEventDate(eventTimeValue(e.endAt))}</div>`:''}<div class="gv-event-countdown">${eventCountdownText(e,state)}</div>${e.link&&state!=='ended'?`<a class="gv-event-cta" href="${escapeHtmlUser(e.link)}" target="_blank" rel="noopener noreferrer">${escapeHtmlUser(e.ctaText||'View Event')} ↗</a>`:''}</div>`;
             }).join('');
-        }
-
-        function joinTournament(tKey, tTitle, entryFee) {
-            db.ref('tournaments/' + tKey).once('value').then(tSnap => {
-                const t = tSnap.val();
-                if (!t || (t.status && t.status !== 'open')) {
-                    return alert('This tournament is no longer accepting participants.');
-                }
-
-                db.ref('tournament_participants/' + tKey + '/' + currentUid).once('value').then(snap => {
-                    if(snap.exists()) {
-                        return alert('You have already joined this tournament!');
-                    }
-
-                    if(entryFee > 0) {
-                        if(currentBalance < entryFee) {
-                            return alert('Insufficient balance! Please deposit funds to join this paid tournament.');
-                        }
-                        const newBal = currentBalance - entryFee;
-                        db.ref('users/' + currentUid).update({ [walletField()]: newBal });
-                    }
-
-                    db.ref('tournament_participants/' + tKey + '/' + currentUid).set({
-                        uid: userCustomUid,
-                        joinedAt: Date.now()
-                    }).then(() => alert(`Successfully registered for tournament: ${tTitle}!`));
-                });
-            });
         }
 
         function copyAdminUpi() {
@@ -6954,6 +6885,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                                 <span class="dt-odd" id="dtOddTiger">×1.95</span>
                             </button>
                         </div>
+                        <div class="gv-dt-foot">Odds set by admin · Cards dealt face-down · One bet per round</div>
                     </div>
                 `;
                 applyDragonTigerConfigFromDb();
@@ -8704,7 +8636,7 @@ body::before,body::after{opacity:.18 !important;filter:blur(95px) !important;}
 .explore-icon{width:40px !important;height:40px !important;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);}
 .explore-title{font-size:13px !important;}
 .explore-sub{font-size:10.5px !important;color:#777 !important;}
-.section-card,.profile-hero,.profile-stat,.refer-stat,.prediction-card,.reward-card,.tournament-card{background:linear-gradient(145deg,#0d0f13,#060709) !important;border-color:rgba(255,255,255,.09) !important;box-shadow:0 10px 26px rgba(0,0,0,.22) !important;}
+.section-card,.profile-hero,.profile-stat,.refer-stat,.prediction-card,.reward-card{background:linear-gradient(145deg,#0d0f13,#060709) !important;border-color:rgba(255,255,255,.09) !important;box-shadow:0 10px 26px rgba(0,0,0,.22) !important;}
 input,select,textarea{background:#07080a !important;border-color:rgba(255,255,255,.12) !important;}
 button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient(145deg,#111318,#07080a) !important;border-color:rgba(255,255,255,.13) !important;box-shadow:0 8px 18px rgba(0,0,0,.20) !important;}
 .bottom-tab-bar{background:linear-gradient(180deg,rgba(9,10,13,.93),rgba(2,2,3,.99)) !important;border-top:1px solid rgba(255,255,255,.10) !important;box-shadow:0 -14px 35px rgba(0,0,0,.72) !important;padding-top:7px !important;}
@@ -9183,6 +9115,434 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
   text-shadow:0 1px 3px rgba(0,0,0,.9)!important;
   box-shadow:0 0 0 1px rgba(255,255,255,.42),0 0 11px rgba(255,255,255,.25),inset 0 2px 6px rgba(255,255,255,.42),0 3px 8px rgba(0,0,0,.25)!important;
 }
+</style>
+<script>
+/* ===== Refer & Earn v2 (user app) ===== */
+let referralConfig = { enabled: true, bonus: 0, mode: 'signup', minDeposit: 0, maxReferrals: 0, milestones: [], appLink: '', shareText: '' };
+let referralConfigRaw = null;
+let rfLegacyBonus = 0;
+const rfState = { friends: [], earnings: [], deposits: {}, earnedBy: {}, filter: 'all', loading: false, loadedAt: 0, forUid: '', myQualified: 0, milestonesPaid: {}, totalEarned: 0 };
+let rfProfileRef = null, rfProfileCb = null, rfProfileUid = '';
+
+function rfNormalizeConfig(raw, legacyBonus) {
+    raw = raw || {};
+    const mode = ['signup', 'first_deposit', 'min_deposit'].includes(raw.mode) ? raw.mode : 'signup';
+    const list = Array.isArray(raw.milestones) ? raw.milestones : Object.values(raw.milestones || {});
+    const ms = list.map(m => ({ count: Math.floor(Number(m && m.count) || 0), reward: Number(m && m.reward) || 0 }))
+        .filter(m => m.count > 0 && m.reward > 0).sort((a, b) => a.count - b.count);
+    return {
+        enabled: raw.enabled !== false,
+        bonus: raw.bonus !== undefined ? Math.max(0, Number(raw.bonus) || 0) : Math.max(0, Number(legacyBonus) || 0),
+        mode: mode,
+        minDeposit: Math.max(0, Number(raw.minDeposit) || 0),
+        maxReferrals: Math.max(0, Math.floor(Number(raw.maxReferrals) || 0)),
+        milestones: ms,
+        appLink: String(raw.appLink || '').trim(),
+        shareText: String(raw.shareText || '').trim()
+    };
+}
+db.ref('control/referBonus').on('value', snap => { rfLegacyBonus = Number(snap.val()) || 0; rfApplyConfig(); });
+db.ref('control/referralConfig').on('value', snap => { referralConfigRaw = snap.val(); rfApplyConfig(); });
+function rfApplyConfig() {
+    referralConfig = rfNormalizeConfig(referralConfigRaw, rfLegacyBonus);
+    globalReferBonus = referralConfig.bonus;
+    rfRender();
+}
+
+function rfEsc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+function rfMoney(n) { n = Number(n) || 0; return '₹' + (Math.round(n * 100) / 100).toLocaleString('en-IN'); }
+function rfMask(uid) { uid = String(uid || ''); return uid.length > 4 ? uid.slice(0, 2) + '••' + uid.slice(-2) : uid; }
+function rfDate(ts) { return ts ? new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'; }
+
+function rfConditionText(c) {
+    if (c.mode === 'first_deposit') return 'when your friend makes their first approved deposit';
+    if (c.mode === 'min_deposit') return 'when your friend makes an approved deposit of ' + rfMoney(c.minDeposit) + ' or more';
+    return 'when your friend signs up with your code';
+}
+
+/* ---------- Rendering ---------- */
+function rfRender() { rfRenderLink(); rfRenderHero(); rfRenderSteps(); rfRenderStats(); rfRenderMilestones(); rfRenderFriends(); rfRenderEarnings(); }
+
+function rfRenderHero() {
+    const el = document.getElementById('rfHero'); if (!el) return;
+    const c = referralConfig;
+    if (!c.enabled) {
+        el.innerHTML = '<div class="rf-hero-eyebrow">Referral program</div><div class="rf-hero-amount off">Paused</div><div class="rf-hero-sub">Referral rewards are paused right now. Your code and friends list are safe — check back soon.</div>';
+        return;
+    }
+    const totalMs = c.milestones.reduce((s, m) => s + m.reward, 0);
+    const amt = c.bonus > 0 ? rfMoney(c.bonus) + '<span>per friend</span>' : (totalMs > 0 ? rfMoney(totalMs) + '<span>in bonuses</span>' : 'Invite friends');
+    const lines = [];
+    if (c.bonus > 0) lines.push('Earn ' + rfMoney(c.bonus) + ' ' + rfConditionText(c) + '.');
+    else if (!totalMs) lines.push('Share your code and grow your team.');
+    if (totalMs > 0 && c.bonus > 0) lines.push('Unlock ' + rfMoney(totalMs) + ' more in milestone bonuses.');
+    if (totalMs > 0 && c.bonus <= 0) lines.push('Reach milestones as your friends qualify ' + rfConditionText(c).replace('when your friend', 'when they') + '.');
+    if (c.maxReferrals > 0) lines.push('Rewards apply to your first ' + c.maxReferrals + ' qualified friends.');
+    el.innerHTML = '<div class="rf-hero-eyebrow">Invite & earn</div><div class="rf-hero-amount">' + amt + '</div><div class="rf-hero-sub">' + rfEsc(lines.join(' ')) + '</div>';
+}
+
+function rfRenderSteps() {
+    const el = document.getElementById('rfSteps'); if (!el) return;
+    const c = referralConfig; let earn;
+    if (!c.enabled) earn = 'Paused for now';
+    else if (c.bonus <= 0) earn = 'Milestone bonuses';
+    else if (c.mode === 'signup') earn = rfMoney(c.bonus) + ' instantly';
+    else if (c.mode === 'first_deposit') earn = rfMoney(c.bonus) + ' after their 1st deposit';
+    else earn = rfMoney(c.bonus) + ' after a ' + rfMoney(c.minDeposit) + '+ deposit';
+    const steps = [['📤', 'Share', 'Send your code or link'], ['📝', 'Friend joins', 'They sign up with your code'], ['🎁', 'You earn', earn]];
+    el.innerHTML = steps.map(s => '<div class="rf-step"><i>' + s[0] + '</i><b>' + s[1] + '</b><small>' + rfEsc(s[2]) + '</small></div>').join('');
+}
+
+function rfRenderStats() {
+    const el = document.getElementById('rfStats'); if (!el) return;
+    const f = rfState.friends, ready = !!rfState.loadedAt, c = referralConfig;
+    const q = f.filter(x => rfNormalizeFriendStatus(x.status) === 'qualified').length, p = f.filter(x => rfNormalizeFriendStatus(x.status) === 'pending').length;
+    const v = n => ready ? n : '—';
+    const potential = (c.enabled && c.bonus > 0 && p > 0) ? '<small>' + rfMoney(p * c.bonus) + ' to unlock</small>' : '';
+    el.innerHTML =
+        '<div class="rf-stat"><span>Friends invited</span><b>' + v(f.length) + '</b></div>' +
+        '<div class="rf-stat"><span>Qualified</span><b class="g">' + v(q) + '</b></div>' +
+        '<div class="rf-stat"><span>Pending</span><b class="y">' + v(p) + '</b>' + potential + '</div>' +
+        '<div class="rf-stat"><span>Total earned</span><b class="g">' + (ready ? rfMoney(rfState.totalEarned) : '—') + '</b></div>';
+}
+
+function rfRenderMilestones() {
+    const card = document.getElementById('rfMilestoneCard'), box = document.getElementById('rfMilestones');
+    if (!card || !box) return;
+    const ms = referralConfig.milestones;
+    if (!ms.length || !referralConfig.enabled) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    const n = rfState.myQualified, next = ms.find(m => n < m.count);
+    let bar;
+    if (next) {
+        const prev = ms.slice().reverse().find(m => m.count <= n), base = prev ? prev.count : 0;
+        const pct = Math.max(4, Math.min(100, ((n - base) / (next.count - base)) * 100));
+        bar = '<div class="rf-progress-head"><span>' + n + ' / ' + next.count + ' qualified friends</span><b>+' + rfMoney(next.reward) + '</b></div><div class="rf-progress"><i style="width:' + pct + '%"></i></div>';
+    } else {
+        bar = '<div class="rf-progress-head"><span>🎉 All milestones unlocked!</span></div><div class="rf-progress"><i style="width:100%"></i></div>';
+    }
+    box.innerHTML = bar + ms.map(m => {
+        const done = n >= m.count || !!rfState.milestonesPaid['m' + m.count];
+        return '<div class="rf-ms ' + (done ? 'done' : '') + '"><span class="rf-ms-dot">' + (done ? '✓' : m.count) + '</span><div><b>' + m.count + ' friends</b><small>' +
+            (done ? 'Unlocked' : Math.max(0, m.count - n) + ' more to go') + '</small></div><strong>+' + rfMoney(m.reward) + '</strong></div>';
+    }).join('');
+}
+
+function rfNormalizeFriendStatus(value) {
+    const s = String(value == null ? '' : value).trim().toLowerCase().replace(/[\s-]+/g, '_');
+    if (['qualified','approved','paid','completed','complete','success','successful','eligible','verified','rewarded'].includes(s)) return 'qualified';
+    if (['capped','limit_reached','max_reached','limit'].includes(s)) return 'capped';
+    if (['rejected','not_eligible','ineligible','blocked','deleted','invalid','disqualified'].includes(s)) return 'rejected';
+    return 'pending';
+}
+
+function rfSetFilter(f) {
+    const allowed = ['all', 'qualified', 'pending'];
+    f = String(f || 'all').trim().toLowerCase();
+    if (!allowed.includes(f)) f = 'all';
+    rfState.filter = f;
+    const labels = { all: 'All', qualified: 'Qualified', pending: 'Pending' };
+    const tabs = document.getElementById('rfTabs');
+    if (tabs) tabs.querySelectorAll('button[data-f]').forEach(b => {
+        const key = String(b.dataset.f || '').toLowerCase();
+        b.textContent = labels[key] || key;
+        b.classList.toggle('active', key === f);
+        b.setAttribute('aria-pressed', key === f ? 'true' : 'false');
+    });
+    // Filtering is presentation-only: use the in-memory cached friends list.
+    try { rfRenderFriends(); } catch (err) {
+        console.warn('Referral filter render failed:', err);
+        const el = document.getElementById('userReferralDepositsList');
+        if (el) el.innerHTML = '<div class="rf-empty">Could not display referrals. Tap Refresh to try again.</div>';
+    }
+}
+
+function rfRenderFriends() {
+    const el = document.getElementById('userReferralDepositsList');
+    if (!el) return;
+    const activeFilter = ['all', 'qualified', 'pending'].includes(String(rfState.filter || '').toLowerCase()) ? String(rfState.filter).toLowerCase() : 'all';
+    rfState.filter = activeFilter;
+    const labels = { all: 'All', qualified: 'Qualified', pending: 'Pending' };
+    const tabs = document.getElementById('rfTabs');
+    if (tabs) tabs.querySelectorAll('button[data-f]').forEach(b => {
+        const key = String(b.dataset.f || '').toLowerCase();
+        // Explicitly restore visible labels to avoid global button styles/scripts leaving blank text.
+        b.textContent = labels[key] || key;
+        b.classList.toggle('active', key === activeFilter);
+        b.setAttribute('aria-pressed', key === activeFilter ? 'true' : 'false');
+    });
+    if (!rfState.loadedAt) { el.innerHTML = '<div class="rf-empty">Loading friends...</div>'; return; }
+    const c = referralConfig || {};
+    const normalized = (Array.isArray(rfState.friends) ? rfState.friends : []).filter(Boolean).map(x => ({
+        ...x,
+        customUid: String(x.customUid || x.uid || x.key || ''),
+        status: rfNormalizeFriendStatus(x.status || x.referralStatus || x.qualificationStatus)
+    }));
+    const list = normalized.filter(x => activeFilter === 'all' || x.status === activeFilter);
+    if (!normalized.length) { el.innerHTML = '<div class="rf-empty"><i>🤝</i>No friends yet. Share your code to get started!</div>'; return; }
+    if (!list.length) { el.innerHTML = '<div class="rf-empty">Nothing here yet.</div>'; return; }
+    const chips = { qualified: ['ok', '✓ Qualified'], pending: ['wait', '⏳ Pending'], capped: ['mute', 'Limit reached'], rejected: ['bad', 'Not eligible'] };
+    el.innerHTML = list.slice(0, 100).map(x => {
+        const ch = chips[x.status] || chips.pending;
+        const dep = rfState.deposits && rfState.deposits[x.customUid];
+        const earned = (rfState.earnedBy && rfState.earnedBy[x.customUid]) || 0;
+        let hint = '';
+        if (x.status === 'pending' && c.enabled !== false) {
+            if (c.mode === 'first_deposit') hint = 'Waiting for first deposit';
+            else if (c.mode === 'min_deposit') hint = 'Needs a ' + rfMoney(c.minDeposit) + '+ deposit';
+            else hint = 'Reward processing';
+        }
+        return '<div class="rf-friend"><div class="rf-avatar">' + rfEsc(String(x.customUid || '').slice(0, 2).toUpperCase()) + '</div><div class="rf-friend-main">' +
+            '<div class="rf-friend-top"><b>' + rfEsc(rfMask(x.customUid)) + '</b><span class="rf-chip ' + ch[0] + '">' + ch[1] + '</span></div>' +
+            '<div class="rf-friend-sub">Joined ' + rfDate(x.joinedAt) + (hint ? ' · ' + rfEsc(hint) : '') + '</div>' +
+            '<div class="rf-friend-nums"><span>Deposited <b>' + (dep == null ? '—' : rfMoney(dep)) + '</b></span><span>You earned <b class="g">' + rfMoney(earned) + '</b></span></div>' +
+            '</div></div>';
+    }).join('') + (list.length > 100 ? '<div class="rf-empty">+' + (list.length - 100) + ' more friends</div>' : '');
+}
+
+function rfRenderEarnings() {
+    const el = document.getElementById('rfEarnings'); if (!el) return;
+    if (!rfState.loadedAt) { el.innerHTML = '<div class="rf-empty">Loading earnings...</div>'; return; }
+    if (!rfState.earnings.length) { el.innerHTML = '<div class="rf-empty"><i>💸</i>Your referral rewards will show up here.</div>'; return; }
+    el.innerHTML = rfState.earnings.slice(0, 20).map(e => {
+        const ms = e.type === 'milestone';
+        const title = ms ? 'Milestone reached: ' + (e.milestoneCount || '') + ' friends' : 'Friend ' + rfMask(e.fromCustomUid) + (e.type === 'signup' ? ' joined' : ' qualified');
+        return '<div class="rf-earn"><div class="rf-earn-ico">' + (ms ? '🏆' : '🎉') + '</div><div class="rf-earn-main"><b>' + rfEsc(title) + '</b><small>' + rfDate(e.timestamp) + '</small></div><strong>+' + rfMoney(e.amount) + '</strong></div>';
+    }).join('');
+}
+
+function rfRenderLink() {
+    const el = document.getElementById('rfLinkText'); if (!el) return;
+    const link = rfShareLink();
+    if (!link) { el.textContent = userCustomUid ? 'Invite link unavailable here — share your code instead.' : 'Loading...'; return; }
+    const i = link.lastIndexOf('=');
+    el.innerHTML = rfEsc(link.slice(0, i + 1)) + '<b>' + rfEsc(link.slice(i + 1)) + '</b>';
+}
+
+/* ---------- Sharing ---------- */
+function rfShareLink() {
+    const code = String(userCustomUid || '').trim();
+    if (!code) return '';
+    let base = String((referralConfig && referralConfig.appLink) || '').trim();
+    if (!base && location.origin && location.origin !== 'null') base = location.origin + location.pathname;
+    if (!base) return '';
+    try {
+        const url = new URL(base, location.href);
+        // Keep the configured app path but never append query parameters after a hash route.
+        url.hash = '';
+        url.searchParams.set('ref', code);
+        return url.toString();
+    } catch (e) {
+        base = base.split('#')[0];
+        const cleanBase = base.replace(/[?&](ref|refer|invite|code|referral|referraluid|referralcode)=[^&]*/ig, '').replace(/[?&]$/, '');
+        return cleanBase + (cleanBase.indexOf('?') >= 0 ? '&' : '?') + 'ref=' + encodeURIComponent(code);
+    }
+}
+function rfShareMessage() {
+    const tpl = referralConfig.shareText || 'Join me on Game Verse! Sign up with my referral code {code} and start playing. {link}';
+    return tpl.replace(/\{code\}/g, userCustomUid || '').replace(/\{link\}/g, rfShareLink()).replace(/\{amount\}/g, referralConfig.bonus || '').replace(/\s+$/, '');
+}
+function rfNeedCode() { if (userCustomUid) return false; alert('Your referral code is still loading. Please try again in a moment.'); return true; }
+function rfCopyText(text, btn) {
+    const done = () => { if (!btn) return; const o = btn.dataset.orig || btn.innerText; btn.dataset.orig = o; btn.innerText = '✅ Copied'; setTimeout(() => { btn.innerText = o; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopyToClipboard(text, done));
+    else fallbackCopyToClipboard(text, done);
+}
+function rfCopyCode(btn) { if (rfNeedCode()) return; rfCopyText(userCustomUid, btn); }
+function rfCopyLink(btn) {
+    if (rfNeedCode()) return;
+    const link = rfShareLink();
+    if (!link) return alert('The invite link is not available here. Ask the admin to set the app link, or share your code instead.');
+    rfCopyText(link, btn);
+}
+function rfShare() {
+    if (rfNeedCode()) return;
+    if (navigator.share) navigator.share({ title: 'Game Verse', text: rfShareMessage() }).catch(() => {});
+    else rfOpenWhatsApp();
+}
+function rfOpenWhatsApp() { if (rfNeedCode()) return; window.open('https://wa.me/?text=' + encodeURIComponent(rfShareMessage()), '_blank'); }
+function rfOpenTelegram() { if (rfNeedCode()) return; window.open('https://t.me/share/url?url=' + encodeURIComponent(rfShareLink() || ' ') + '&text=' + encodeURIComponent(rfShareMessage()), '_blank'); }
+
+/* ---------- Data loading (queries only this user's own downline + earnings) ---------- */
+function rfWatchMyProgress() {
+    if (!currentUid || rfProfileUid === currentUid) return;
+    if (rfProfileRef && rfProfileCb) { try { rfProfileRef.off('value', rfProfileCb); } catch (e) {} }
+    rfProfileUid = currentUid;
+    rfProfileRef = db.ref('users/' + currentUid);
+    rfProfileCb = s => {
+        const u = s.val() || {};
+        rfState.myQualified = Number(u.referralQualifiedCount) || 0;
+        rfState.milestonesPaid = u.referralMilestonesPaid || {};
+        rfRenderMilestones();
+    };
+    rfProfileRef.on('value', rfProfileCb);
+}
+
+function loadUserReferralDeposits(myCustomUid) {
+    if (!myCustomUid || !currentUid || rfState.loading) return;
+    if (rfState.forUid !== myCustomUid) {
+        Object.assign(rfState, { friends: [], earnings: [], deposits: {}, earnedBy: {}, loadedAt: 0, totalEarned: 0, forUid: myCustomUid });
+    }
+    rfState.loading = true;
+    rfWatchMyProgress();
+    Promise.all([
+        db.ref('users').orderByChild('referredBy').equalTo(myCustomUid).once('value'),
+        db.ref('referral_earnings').orderByChild('referrerCustomUid').equalTo(myCustomUid).once('value')
+    ]).then(([us, es]) => {
+        const earnings = [], earnedBy = {}, paidSet = {}; let total = 0;
+        es.forEach(ch => {
+            const v = ch.val() || {}; earnings.push(v);
+            const a = Number(v.amount) || 0; total += a;
+            if (v.type !== 'milestone') earnedBy[v.fromCustomUid] = (earnedBy[v.fromCustomUid] || 0) + a;
+            if (v.type === 'signup' || v.type === 'qualified') paidSet[v.fromCustomUid] = true;
+        });
+        const friends = [];
+        us.forEach(ch => {
+            const v = ch.val() || {};
+            if (v.referredBy !== myCustomUid || v.status === 'deleted' || v.status === 'blocked') return;
+            let st = String(v.referralStatus || '').trim();
+            if (!st) st = paidSet[v.customUid] ? 'qualified' : 'pending';
+            st = rfNormalizeFriendStatus(st);
+            // An earning record is the strongest signal that a referral has qualified.
+            if (paidSet[v.customUid]) st = 'qualified';
+            friends.push({ customUid: v.customUid || ch.key, joinedAt: Number(v.joinedAt) || Number(v.createdAt) || 0, status: st });
+        });
+        friends.sort((a, b) => b.joinedAt - a.joinedAt);
+        earnings.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        Object.assign(rfState, { friends: friends, earnings: earnings, earnedBy: earnedBy, totalEarned: total, loadedAt: Date.now() });
+        rfRender();
+        return Promise.all(friends.slice(0, 40).map(f =>
+            db.ref('deposits').orderByChild('customUid').equalTo(f.customUid).once('value').then(s => {
+                let t = 0;
+                s.forEach(d => { const x = d.val() || {}; if (String(x.status || '') === 'approved' && String(x.currency || 'INR').toUpperCase() !== 'USDT') t += Number(x.amount) || 0; });
+                rfState.deposits[f.customUid] = t;
+            }).catch(() => {})
+        ));
+    }).catch(e => {
+        console.warn('Referral data could not be loaded:', e);
+        rfState.loadedAt = rfState.loadedAt || Date.now();
+    }).then(() => { rfState.loading = false; rfRender(); });
+}
+function rfRefresh(btn) {
+    if (!userCustomUid) return;
+    if (btn) { btn.innerText = '↻ Updating...'; setTimeout(() => { btn.innerText = '↻ Refresh'; }, 1200); }
+    rfState.loading = false;
+    loadUserReferralDeposits(userCustomUid);
+}
+
+/* ---------- Invite link (?ref=CODE): open Create Account with the code pre-filled ---------- */
+function rfInviteCodeFromUrl() {
+    return typeof gvReferralCodeFromLocation === 'function' ? gvReferralCodeFromLocation() : '';
+}
+function rfApplyInvite() {
+    const code = rfInviteCodeFromUrl();
+    if (!code) return;
+    const inp = document.getElementById('regReferUid');
+    const reg = document.getElementById('authRegister');
+    if (!inp || !reg) return;
+    if (typeof currentUid !== 'undefined' && currentUid) return;
+    inp.value = code;
+    inp.setAttribute('value', code);
+    if (typeof showRegisterScreen === 'function') showRegisterScreen();
+    // Reapply after any auth-screen startup handlers that may switch back to Login.
+    const enforceRegister = () => {
+        if (typeof currentUid !== 'undefined' && currentUid) return;
+        const login = document.getElementById('authLogin');
+        const register = document.getElementById('authRegister');
+        if (login) login.classList.add('hidden');
+        if (register) register.classList.remove('hidden');
+        document.body.classList.add('auth-mode');
+        const field = document.getElementById('regReferUid');
+        if (field) { field.value = code; field.setAttribute('value', code); }
+    };
+    enforceRegister();
+    if (!document.getElementById('rfInviteNote') && inp.parentNode) {
+        const n = document.createElement('div');
+        n.id = 'rfInviteNote'; n.className = 'rf-invite-note';
+        n.innerHTML = '🎁 You were invited with code <b>' + rfEsc(code) + '</b>';
+        inp.parentNode.insertBefore(n, inp);
+    }
+}
+
+rfApplyInvite();
+document.addEventListener('DOMContentLoaded', rfApplyInvite);
+window.addEventListener('load', rfApplyInvite);
+window.addEventListener('pageshow', rfApplyInvite);
+setTimeout(rfApplyInvite, 250);
+setTimeout(rfApplyInvite, 1500);
+
+/* Pays the referral reward for one referred user (idempotent: a status transaction guarantees it runs once). */
+async function gvQualifyReferral(childKey, cfg, opts) {
+    opts = opts || {};
+    const childRef = db.ref('users/' + childKey);
+    const child = (await childRef.once('value')).val() || {};
+    const refUid = String(child.referredBy || '').trim();
+    if (!refUid || refUid.toUpperCase() === 'ADMIN') return null;
+    if (child.status === 'deleted' || child.status === 'blocked') return null;
+
+    // Claim the qualification exactly once.
+    const claim = await db.ref('users/' + childKey + '/referralStatus').transaction(cur =>
+        (cur === 'qualified' || cur === 'rejected' || cur === 'capped') ? undefined : 'qualified');
+    if (!claim.committed) return null;
+
+    const rs = await db.ref('users').orderByChild('customUid').equalTo(refUid).once('value');
+    let rKey = null;
+    rs.forEach(ch => { if (!rKey) rKey = ch.key; });
+    if (!rKey || rKey === childKey) { await childRef.update({ referralStatus: 'pending' }); return null; }
+
+    // Older accounts were already paid at signup under the previous rules: never pay them twice.
+    const prior = await db.ref('referral_earnings').orderByChild('referrerCustomUid').equalTo(refUid).once('value');
+    let already = false;
+    prior.forEach(ch => {
+        const v = ch.val() || {};
+        if (v.fromCustomUid === child.customUid && (v.type === 'signup' || v.type === 'qualified')) already = true;
+    });
+    if (already) { await childRef.update({ referralQualifiedAt: Date.now(), referralBonus: 0 }); return { paid: 0, legacy: true }; }
+
+    let paid = 0, capped = false, milestoneList = [];
+    const tx = await db.ref('users/' + rKey).transaction(u => {
+        paid = 0; capped = false; milestoneList = [];
+        if (!u) return u;
+        const qc = Number(u.referralQualifiedCount) || 0;
+        if (cfg.maxReferrals > 0 && qc >= cfg.maxReferrals) { capped = true; return u; }
+        const next = Object.assign({}, u);
+        const newQc = qc + 1;
+        const mp = Object.assign({}, u.referralMilestonesPaid || {});
+        let add = Number(cfg.bonus) || 0;
+        (cfg.milestones || []).forEach(m => {
+            if (newQc >= m.count && !mp['m' + m.count]) { mp['m' + m.count] = Date.now(); add += m.reward; milestoneList.push(m); }
+        });
+        next.referralQualifiedCount = newQc;
+        next.referralMilestonesPaid = mp;
+        next.balance = Number(((Number(u.balance) || 0) + add).toFixed(2));
+        paid = add;
+        return next;
+    });
+    if (!tx.committed) { await childRef.update({ referralStatus: 'pending' }); return null; }
+    if (capped) { await childRef.update({ referralStatus: 'capped' }); return { paid: 0, capped: true }; }
+
+    const now = Date.now();
+    await childRef.update({ referralQualifiedAt: now, referralBonus: Number(cfg.bonus) || 0 });
+    const base = { referrerUid: rKey, referrerCustomUid: refUid, fromCustomUid: child.customUid || '', timestamp: now };
+    const jobs = [];
+    if (cfg.bonus > 0) jobs.push(db.ref('referral_earnings').push(Object.assign({ type: 'qualified', amount: cfg.bonus, trigger: opts.trigger || cfg.mode }, base)));
+    milestoneList.forEach(m => jobs.push(db.ref('referral_earnings').push(Object.assign({ type: 'milestone', amount: m.reward, milestoneCount: m.count }, base))));
+    if (paid > 0) jobs.push(gvRecordReferralBonus(rKey, paid, { fromCustomUid: child.customUid || '' }));
+    await Promise.all(jobs);
+    return { paid: paid, milestones: milestoneList, referrerKey: rKey };
+}
+
+function gvRecordReferralBonus(uid, amount, extra) { return recordBonusCreditForUser(uid, 'referral_bonus', amount, 'INR', extra); }
+
+</script>
+
+
+<style id="gv-referral-final-visibility-fix">
+#rfTabs{display:flex!important;gap:6px!important;visibility:visible!important;opacity:1!important;}
+#rfTabs button,#rfTabs button:hover,#rfTabs button:focus,#rfTabs button:active,#rfTabs button.active{display:block!important;visibility:visible!important;opacity:1!important;text-indent:0!important;text-transform:none!important;font-size:12px!important;line-height:1.35!important;font-weight:800!important;-webkit-text-fill-color:currentColor!important;text-shadow:none!important;overflow:visible!important;white-space:nowrap!important;}
+#rfTabs button{flex:1 1 0!important;min-width:0!important;color:#f3f4f6!important;background:#171b24!important;border:1px solid rgba(255,255,255,.22)!important;padding:8px 4px!important;}
+#rfTabs button.active,#rfTabs button.active:hover,#rfTabs button.active:focus{color:#06120d!important;-webkit-text-fill-color:#06120d!important;background:#a7f3d0!important;border-color:#a7f3d0!important;}
+#rfTabs button:active{transform:none!important;}
 </style>
 </body>
 </html>
