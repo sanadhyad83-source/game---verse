@@ -2204,12 +2204,12 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             <button type="button" class="input-toggle-btn" onclick="toggleAuthPasswordVisibility('regPassword', this)">👁️</button>
         </div>
         <div class="input-icon-wrap">
-            <span class="input-icon">🎟️</span>
+            <span class="input-icon">🎫</span>
             <input id="regReferUid" type="text" placeholder="Referrer's UID (Required)" style="border-color: rgba(16, 185, 129, 0.4);">
         </div>
 
         <button onclick="registerUser()" class="btn-green" style="margin-top: 15px;">Complete Registration</button>
-        <button onclick="showLoginScreen()" class="btn-gray" style="margin-top: 10px;">Already have an account? Login</button>
+        <button onclick="showLoginScreen(true)" class="btn-gray auth-switch-btn" style="margin-top: 10px;">Already have an account? Login</button>
     </div>
 
     <!-- User Dashboard -->
@@ -2431,10 +2431,10 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             </div>
             <div class="info-box" style="margin-bottom:14px;">
                 <p style="font-size:12px; color:var(--accent-cyan); margin-bottom:8px; border-bottom: 1px solid rgba(120, 120, 120, 0.3); padding-bottom: 8px;">
-                    🎟️ <b>Have a Gift Code?</b> Enter it below to instantly claim its reward.
+                    🎫 <b>Have a Gift Code?</b> Enter it below to instantly claim its reward.
                 </p>
                 <input id="giftCodeInput" type="text" placeholder="Enter Gift Code" maxlength="12" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
-                <button type="button" onclick="redeemGiftCode()" class="btn-yellow" style="margin-top:8px;">🎟️ Redeem Gift Code</button>
+                <button type="button" onclick="redeemGiftCode()" class="btn-yellow" style="margin-top:8px;">🎫 Redeem Gift Code</button>
             </div>
             <div id="userRewardsList" style="max-height: 420px; overflow-y: auto;">Loading daily rewards...</div>
 
@@ -2710,7 +2710,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     <div><b>💰</b><span>Real Rewards</span></div>
                 </div>
             </div>
-            <div class="gv-games-section-head"><span>🎟 Lottery</span><small>Period games</small></div>
+            <div class="gv-games-section-head"><span>🎫 Lottery</span><small>Period games</small></div>
             <div class="gv-sq-grid" id="gvLotteryGrid">
                 <div id="colourClashTopCard" class="game-hub-card gv-sq-card">
                     <div class="gh-row">
@@ -3351,18 +3351,23 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
             if (typeof gvPrefillReferralCode === 'function') gvPrefillReferralCode();
         }
 
-        function showLoginScreen() {
-            // Keep invite traffic on registration, including if another startup handler requests Login.
+        function showLoginScreen(forceLogin = false) {
+            // Automatic startup stays on registration for referral links; an explicit tap on
+            // “Already have an account? Login” must always be allowed to open Login.
             const inviteCode = typeof gvReferralCodeFromLocation === 'function' ? gvReferralCodeFromLocation() : '';
-            if (inviteCode && !(typeof currentUid !== 'undefined' && currentUid)) {
+            if (!forceLogin && inviteCode && !(typeof currentUid !== 'undefined' && currentUid)) {
                 showRegisterScreen();
                 return;
             }
             const register = document.getElementById('authRegister');
             const login = document.getElementById('authLogin');
+            const dash = document.getElementById('dash');
             if (register) register.classList.add('hidden');
+            if (dash && !(typeof currentUid !== 'undefined' && currentUid)) dash.classList.add('hidden');
             if (login) login.classList.remove('hidden');
             document.body.classList.add('auth-mode');
+            // Keep the referral code in registration if the user switches back again.
+            if (inviteCode) { const input = document.getElementById('regReferUid'); if (input) input.value = inviteCode; }
         }
 
         function toggleAuthPasswordVisibility(inputId, btn) {
@@ -5083,7 +5088,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                     const card = document.createElement('div');
                     card.className = 'gift-history-item';
                     card.innerHTML = `
-                        <span class="gh-code">🎟️ ${entry.code}</span>
+                        <span class="gh-code">🎫 ${entry.code}</span>
                         <span class="gh-amount">+₹${entry.amount}</span>
                         <span class="gh-date">${dateStr}</span>
                     `;
@@ -5903,7 +5908,7 @@ body.gv-wingo-entry-open{overflow:hidden!important;overscroll-behavior:none!impo
                   <div class="cc-brand-strip">
                     <button type="button" class="cc-back-btn" onclick="closeActiveGame()">‹</button>
                     <div class="cc-brand-mark"><span class="cc-brand-crown">◆</span><span class="cc-brand-word">WINGO</span></div>
-                    <div class="cc-brand-actions"><span>🎟️</span><span id="ccFairnessState" title="Fairness status">✓ Fair</span></div>
+                    <div class="cc-brand-actions"><span>🎫</span><span id="ccFairnessState" title="Fairness status">✓ Fair</span></div>
                   </div>
 
                   <div class="cc-info-ticket">
@@ -9544,6 +9549,45 @@ function gvRecordReferralBonus(uid, amount, extra) { return recordBonusCreditFor
 #rfTabs button.active,#rfTabs button.active:hover,#rfTabs button.active:focus{color:#06120d!important;-webkit-text-fill-color:#06120d!important;background:#a7f3d0!important;border-color:#a7f3d0!important;}
 #rfTabs button:active{transform:none!important;}
 </style>
+
+<style id="gv-auth-refresh-v4">
+/* Game Verse authentication screens: clean, responsive, high-contrast redesign */
+body.auth-mode { min-height:100vh; background:radial-gradient(ellipse at 50% 0%,rgba(16,185,129,.13),transparent 48%),linear-gradient(160deg,#080b12 0%,#101722 48%,#07090e 100%) !important; }
+body.auth-mode #authLogin, body.auth-mode #authRegister {
+  box-sizing:border-box !important; width:min(100% - 28px,460px) !important; max-width:460px !important;
+  margin:clamp(22px,6vh,64px) auto 30px !important; padding:28px clamp(18px,5vw,30px) 26px !important;
+  border:1px solid rgba(148,163,184,.25) !important; border-radius:26px !important;
+  background:linear-gradient(155deg,rgba(20,27,39,.97),rgba(9,13,21,.98)) !important;
+  box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05) !important;
+  color:#f8fafc !important; overflow:hidden;
+}
+body.auth-mode #authRegister { border-color:rgba(52,211,153,.35) !important; }
+body.auth-mode #authLogin h1, body.auth-mode #authRegister h1,
+body.auth-mode #authLogin h2, body.auth-mode #authRegister h2 { letter-spacing:.06em; text-align:center; }
+body.auth-mode #authLogin input, body.auth-mode #authRegister input {
+  box-sizing:border-box !important; min-height:52px !important; border-radius:15px !important;
+  border:1px solid rgba(148,163,184,.28) !important; background:rgba(4,8,15,.72) !important;
+  color:#f8fafc !important; transition:border-color .18s,box-shadow .18s,background .18s;
+}
+body.auth-mode #authLogin input:focus, body.auth-mode #authRegister input:focus {
+  outline:none !important; border-color:#34d399 !important; background:#0a121b !important;
+  box-shadow:0 0 0 3px rgba(52,211,153,.13) !important;
+}
+body.auth-mode #authLogin button, body.auth-mode #authRegister button {
+  min-height:48px; border-radius:14px !important; font-weight:800; letter-spacing:.01em;
+  transition:transform .15s ease,filter .15s ease,box-shadow .15s ease;
+}
+body.auth-mode #authLogin button:active, body.auth-mode #authRegister button:active { transform:scale(.985); }
+body.auth-mode #authLogin button.auth-switch-btn, body.auth-mode #authRegister button.auth-switch-btn {
+  width:100%; background:rgba(255,255,255,.035) !important; color:#e2e8f0 !important;
+  border:1px solid rgba(148,163,184,.28) !important; box-shadow:none !important;
+}
+body.auth-mode .auth-logo { width:76px !important;height:76px !important;margin-bottom:18px !important;border-radius:21px !important; }
+body.auth-mode .input-icon { font-size:18px !important; width:22px !important; height:22px !important; }
+body.auth-mode .input-icon-wrap input { padding-left:46px !important; }
+@media(max-width:480px){body.auth-mode #authLogin,body.auth-mode #authRegister{margin:18px auto 24px!important;padding:23px 17px 20px!important;border-radius:22px!important;width:calc(100% - 24px)!important}}
+</style>
+
 </body>
 </html>
 
