@@ -11826,3 +11826,27 @@ setInterval(() => {
 }, 3000);
 
 </script>
+<style id="gv-referral-ticket-icon-alignment-fix-v1">
+/* Align the referral ticket icon vertically inside the referral UID field. */
+body.auth-mode #authRegister .input-icon-wrap:has(#regReferUid){
+  position:relative!important;display:block!important;width:100%!important;
+  min-height:52px!important;margin-top:0!important;
+}
+body.auth-mode #authRegister .input-icon-wrap:has(#regReferUid) .input-icon{
+  position:absolute!important;left:16px!important;top:50%!important;
+  transform:translateY(-50%)!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;
+  width:22px!important;height:22px!important;margin:0!important;
+  line-height:1!important;font-size:18px!important;z-index:2!important;
+  pointer-events:none!important;
+}
+body.auth-mode #authRegister #regReferUid{
+  display:block!important;width:100%!important;min-height:52px!important;
+  margin:0!important;padding:0 14px 0 48px!important;
+  line-height:normal!important;text-align:left!important;
+}
+@media(max-width:480px){
+  body.auth-mode #authRegister .input-icon-wrap:has(#regReferUid) .input-icon{left:15px!important}
+  body.auth-mode #authRegister #regReferUid{padding-left:46px!important}
+}
+</style>
