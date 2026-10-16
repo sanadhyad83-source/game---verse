@@ -2426,7 +2426,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             <div class="section-card gv-profile-details">
                 <div class="gv-profile-section-title"><span class="gv-profile-title-icon">🪪</span><div><b>Account details</b><small>Keep your account information handy</small></div></div>
                 <div class="gv-profile-detail-row"><span>Unique user ID</span><strong id="profileUidDetail">—</strong><button type="button" onclick="copyTextToClipboard('profileUid', this)" class="gv-profile-copy-btn">Copy UID</button></div>
-                <div class="gv-profile-detail-row"><span>Password</span><strong class="gv-profile-security"><span class="gv-profile-security-dot"></span>Hidden for security</strong><button type="button" class="gv-profile-copy-btn" onclick="gvProfileSendPasswordReset(this)">Reset password</button></div>
+                <div class="gv-profile-detail-row"><span>Password</span><strong class="gv-profile-security"><span class="gv-profile-security-dot"></span>Hidden for security</strong></div>
             </div>
             <div class="gv-profile-quick-actions">
                 <button type="button" class="gv-profile-action" onclick="openFeature('Deposit')"><span>＋</span><b>Deposit</b><small>Add funds</small></button>
@@ -12047,21 +12047,7 @@ body.auth-mode #authRegister #regReferUid{
 </script>
 
 
-<script id="gv-profile-password-reset-helper">
-async function gvProfileSendPasswordReset(btn){
-  const authUser = (window.firebase && firebase.auth && firebase.auth().currentUser) || null;
-  const email = String((authUser && authUser.email) || document.getElementById('profileEmail')?.textContent || '').trim();
-  if(!email || !email.includes('@')) { alert('Your account email is not available. Please sign in again and retry.'); return; }
-  if(btn){btn.disabled=true;btn.textContent='Sending…';}
-  try {
-    await firebase.auth().sendPasswordResetEmail(email);
-    alert('Password reset instructions have been sent to your registered email address.');
-  } catch(err) {
-    console.error('Password reset request failed:',err);
-    alert(err && err.code === 'auth/too-many-requests' ? 'Too many attempts. Please try again later.' : 'Could not send the password reset email. Please check your email and try again.');
-  } finally { if(btn){btn.disabled=false;btn.textContent='Reset password';} }
-}
-</script>
+
 
 <style id="gv-profile-redesign-and-support-icon">
   #tabProfile .tab-panel-header{margin-bottom:12px}
