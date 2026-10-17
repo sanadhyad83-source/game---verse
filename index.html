@@ -2339,7 +2339,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             <div id="gvExperienceHub" class="gv-experience-stack hidden"></div>
 
             <div class="home-action-row">
-                <button type="button" class="home-action-btn btn-green" onclick="openFeature('Deposit')">
+                <button type="button" class="home-action-btn btn-yellow" onclick="openFeature('Deposit')">
                     <span class="ha-icon">➕</span>
                     Deposit
                 </button>
@@ -5849,6 +5849,19 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             return n;
         }
 
+
+        // ===== Unique, per-game period labels (fix: WINGO and K3 showed the SAME period number) =====
+        // Internal round ids (DB keys, forced results, settlement) are unchanged. Only the label the
+        // player sees is built per game: PREFIX + IST date + that day's round sequence.
+        function gvPeriodLabel(prefix, roundId, cycleMs){
+            const id=Math.max(1,Number(roundId)||1), cyc=Math.max(1000,Number(cycleMs)||35000);
+            const IST=19800000, DAY=86400000;
+            const t=(id-1)*cyc+IST, day=Math.floor(t/DAY), d=new Date(day*DAY);
+            const seq=Math.floor((t-day*DAY)/cyc)+1;
+            const ymd=d.getUTCFullYear()+String(d.getUTCMonth()+1).padStart(2,'0')+String(d.getUTCDate()).padStart(2,'0');
+            return prefix+ymd+String(seq).padStart(4,'0');
+        }
+        function wingoPeriodLabel(roundId){ return gvPeriodLabel('WG',roundId,colourClashCycleMs()); }
         function colourClashCycleMs(){
             const entry=Math.max(5,Number(colourClashConfig.entrySeconds)||30);
             const cooldown=Math.max(2,Number(colourClashConfig.cooldownSeconds)||5);
@@ -5868,7 +5881,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             const el=document.getElementById('colourClashTopStatus'); if(!el) return;
             if(globalGamesPaused || !colourClashConfig.enabled){ el.innerText='🔒 Game currently unavailable'; return; }
             const r=getColourClashRoundState();
-            el.innerText=`Round #${r.roundId} • ${r.phase==='open'?'Entries OPEN':'COOLDOWN'} • ${Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000))}s`;
+            el.innerText=`Round #${wingoPeriodLabel(r.roundId)} • ${r.phase==='open'?'Entries OPEN':'COOLDOWN'} • ${Math.max(0,Math.ceil((r.phaseEnd-Date.now())/1000))}s`;
         }
         function tryPlayColourClash(){
             if(globalGamesPaused || !colourClashConfig.enabled){
@@ -5977,7 +5990,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <div class="cc-ticket-right">
                       <div class="cc-time-label">Time remaining</div>
                       <div id="ccTimer" class="cc-digital-timer">${String(Math.floor(remaining/60)).padStart(2,'0')}<b>:</b>${String(remaining%60).padStart(2,'0')}</div>
-                      <div class="cc-period-number">${r.roundId}</div>
+                      <div class="cc-period-number" title="Period">${wingoPeriodLabel(r.roundId)}</div>
                     </div>
                   </div>
 
@@ -6384,7 +6397,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 const statusCls = e.status==='win'?'cc-status-win':e.status==='loss'?'cc-status-loss':'cc-status-pending';
                 const statusLabel = e.status==='win'?`WON ₹${e.winAmount||0}`:e.status==='loss'?'LOST':'PENDING';
                 return `<div class="cc-history-item" data-entry-key="${e.key}">
-                    <span class="cc-history-left">Round #${e.roundId} • ₹${e.amount} → <span class="cc-chip ${chipCls}">${betLabel}</span></span>
+                    <span class="cc-history-left">Round #${wingoPeriodLabel(e.roundId)} • ₹${e.amount} → <span class="cc-chip ${chipCls}">${betLabel}</span></span>
                     <span class="cc-status-badge ${statusCls}">${statusLabel}</span>
                 </div>`;
             }).join('');
@@ -6453,7 +6466,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 <div class="cc-settlement-title">${isWin?'CONGRATS YOU WIN':'YOU LOSE'}</div>
                 <div class="cc-settlement-amount">${isWin?'+'+money(won):'-'+money(amount)}</div>
                 <div class="cc-settlement-details">
-                    <div class="row"><span class="label">Round</span><span class="value">#${ccSettlementText(entry.roundId||'—')}</span></div>
+                    <div class="row"><span class="label">Round</span><span class="value">#${entry.roundId?wingoPeriodLabel(entry.roundId):'—'}</span></div>
                     <div class="row"><span class="label">Your Pick</span><span class="value">${ccSettlementText(ccSettlementPickLabel(entry))}</span></div>
                     <div class="row"><span class="label">Bet Amount</span><span class="value">${money(amount)}</span></div>
                     <div class="row"><span class="label">Round Result</span><span class="value">${ccSettlementText(result)}</span></div>
@@ -6602,7 +6615,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 if(chartEl){
                     const chartRows=rows.slice(0,10).map(x=>{
                         const n=x.d.resultNumber!==undefined?Number(x.d.resultNumber):null;
-                        return `<div class="cc-chart-row"><span>#${x.d.roundId||x.id}</span><strong class="${n===null?'':ccNumberCssClass(n)}">${n===null?'—':n}</strong><span>${n===null?'—':ccNumberSize(n)}</span><span>${n===null?'—':ccNumberColour(n)}</span></div>`;
+                        return `<div class="cc-chart-row"><span>#${wingoPeriodLabel(x.d.roundId||x.id)}</span><strong class="${n===null?'':ccNumberCssClass(n)}">${n===null?'—':n}</strong><span>${n===null?'—':ccNumberSize(n)}</span><span>${n===null?'—':ccNumberColour(n)}</span></div>`;
                     }).join('');
                     chartEl.innerHTML=chartRows||'<div class="cc-empty-modern">No completed rounds yet.</div>';
                 }
@@ -6613,7 +6626,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     const colour=n===null?'':ccNumberColour(n);
                     const colourClass=colour==='GREEN'?'green':colour==='RED'?'red':'violet';
                     return `<div class="cc-history-row">
-                        <span class="cc-period-cell">${x.d.roundId||x.id}</span>
+                        <span class="cc-period-cell">${wingoPeriodLabel(x.d.roundId||x.id)}</span>
                         <strong class="cc-history-number ${n===null?'':ccNumberCssClass(n)}">${n===null?'—':n}</strong>
                         <span class="cc-size-cell">${n===null?'—':ccNumberSize(n)}</span>
                         <span class="cc-colour-cell">
@@ -10956,7 +10969,7 @@ db.ref('control/k3Config').on('value', snap => {
   if (document.getElementById('k3GameRoot')) {
     const r = getK3RoundState();
     const lab = document.getElementById('k3PeriodLabel');
-    if (lab) lab.innerText = 'Period #' + r.roundId;
+    if (lab) lab.innerText = k3PeriodLabel(r.roundId);
   }
 }, () => { k3ConfigReady = true; });
 
@@ -10972,6 +10985,7 @@ db.ref('control/k3Config').once('value').then(snap => {
   }
 }).catch(()=>{});
 
+function k3PeriodLabel(roundId) { return gvPeriodLabel('K3', roundId, k3CycleMs()); }
 function k3CycleMs() {
   const entry = Math.max(5, Number(k3Config.entrySeconds) || 60);
   const cooldown = Math.max(2, Number(k3Config.cooldownSeconds) || 5);
@@ -11074,7 +11088,7 @@ function updateK3HubStatus() {
   }
   const r = getK3RoundState();
   const left = Math.max(0, Math.ceil((r.phaseEnd - k3Now()) / 1000));
-  st.innerText = `Round #${r.roundId} • ${r.phase === 'open' ? 'Entries OPEN' : 'COOLDOWN'} • ${left}s`;
+  st.innerText = `Round #${k3PeriodLabel(r.roundId)} • ${r.phase === 'open' ? 'Entries OPEN' : 'COOLDOWN'} • ${left}s`;
   if (pill) { pill.innerText = 'LIVE'; pill.className = 'status-pill active'; }
 }
 
@@ -11128,7 +11142,7 @@ function renderK3() {
     <div class="k3-topbar">
       <div>
         <div class="k3-brand">K3</div>
-        <div class="k3-period" id="k3PeriodLabel">Period #${r.roundId}</div>
+        <div class="k3-period" id="k3PeriodLabel">${k3PeriodLabel(r.roundId)}</div>
       </div>
       <div class="k3-timer-wrap">
         <div class="k3-timer-label">Time remaining</div>
@@ -11149,10 +11163,10 @@ function renderK3() {
     <div class="k3-total-grid" id="k3TotalGrid">${totalBtns}</div>
 
     <div class="k3-sb-row">
-      <button type="button" class="k3-sb k3-btn-small" data-k3="Small" onclick="k3PickSize('Small')" style="background:#5ba3f5!important;background-color:#5ba3f5!important;background-image:none!important;color:#fff!important;"><span>Small</span><small>${sm}X · 3–10</small></button>
-      <button type="button" class="k3-sb k3-btn-big" data-k3="Big" onclick="k3PickSize('Big')" style="background:#f5a623!important;background-color:#f5a623!important;background-image:none!important;color:#fff!important;"><span>Big</span><small>${sm}X · 11–18</small></button>
-      <button type="button" class="k3-sb k3-btn-even" data-k3="Even" onclick="k3PickParity('Even')" style="background:#2dbd6e!important;background-color:#2dbd6e!important;background-image:none!important;color:#fff!important;"><span>Even</span><small>${pm}X</small></button>
-      <button type="button" class="k3-sb k3-btn-odd" data-k3="Odd" onclick="k3PickParity('Odd')" style="background:#f04444!important;background-color:#f04444!important;background-image:none!important;color:#fff!important;"><span>Odd</span><small>${pm}X</small></button>
+      <button type="button" class="k3-sb k3-btn-small" data-k3="Small" onclick="k3PickSize('Small')"><span>Small</span><small>${sm}X · 3–10</small></button>
+      <button type="button" class="k3-sb k3-btn-big" data-k3="Big" onclick="k3PickSize('Big')"><span>Big</span><small>${sm}X · 11–18</small></button>
+      <button type="button" class="k3-sb k3-btn-even" data-k3="Even" onclick="k3PickParity('Even')"><span>Even</span><small>${pm}X</small></button>
+      <button type="button" class="k3-sb k3-btn-odd" data-k3="Odd" onclick="k3PickParity('Odd')"><span>Odd</span><small>${pm}X</small></button>
     </div>
 
     <div class="k3-bet-bar" style="padding:10px 12px;">
@@ -11461,7 +11475,7 @@ async function k3PlaceBet() {
     try { updateWalletCurrencyUI(); } catch(e) {}
     const wb = document.getElementById('k3WalletBalance');
     if (wb) wb.innerText = k3Money(cur === 'USDT' ? currentUsdtBalance : currentBalance, cur);
-    alert('Bet placed on period #' + r.roundId);
+    alert('Bet placed on period #' + k3PeriodLabel(r.roundId));
     try { loadK3MyHistory(); } catch(e) {}
     // Attach one-shot listener so status flips to win/loss when settled
     try {
@@ -11745,7 +11759,7 @@ function startK3Timer() {
       phase.className = 'k3-phase-pill ' + (r.phase === 'open' ? 'open' : 'cool');
     }
     const lab = document.getElementById('k3PeriodLabel');
-    if (lab) lab.innerText = 'Period #' + r.roundId;
+    if (lab) lab.innerText = k3PeriodLabel(r.roundId);
     const wb = document.getElementById('k3WalletBalance');
     if (wb) wb.innerText = k3Money(selectedWalletCurrency === 'USDT' ? currentUsdtBalance : currentBalance, selectedWalletCurrency);
 
@@ -11806,7 +11820,7 @@ function loadK3History() {
       const d = x.d;
       const sum = d.resultSum != null ? d.resultSum : d.sum;
       const dice = '<span class="k3-mini-die-wrap">'+(d.dice||[]).map(function(n){return k3MiniDiceHtml(n);}).join('')+'</span>';
-      return `<div class="k3-hist-row"><span class="p">#${d.roundId || x.id}</span><span class="s">${sum}</span><span class="sz">${d.size || k3SizeOf(sum)}</span><span class="pr">${d.parity || k3ParityOf(sum)}</span><span class="d">${dice}</span></div>`;
+      return `<div class="k3-hist-row"><span class="p">${k3PeriodLabel(d.roundId || x.id)}</span><span class="s">${sum}</span><span class="sz">${d.size || k3SizeOf(sum)}</span><span class="pr">${d.parity || k3ParityOf(sum)}</span><span class="d">${dice}</span></div>`;
     }).join('');
   }).catch(() => {
     el.innerHTML = '<div class="k3-hist-empty">Could not load history</div>';
@@ -11842,7 +11856,7 @@ function loadK3MyHistory() {
       const target = e.betType === 'total' ? ('Total ' + e.target) : (e.target || e.betType || '—');
       const res = (e.resultSum != null) ? (' · sum ' + e.resultSum) : '';
       return `<div class="k3-hist-row" style="grid-template-columns:1.1fr 1fr .9fr 1.1fr;">
-        <span class="p">#${e.roundId || '—'}${res}</span>
+        <span class="p">${e.roundId ? k3PeriodLabel(e.roundId) : '—'}${res}</span>
         <span>${target}</span>
         <span>${k3Money(e.amount, cur)}</span>
         <span style="color:${stColor};font-weight:900;">${stLabel}</span>
@@ -12080,6 +12094,106 @@ body.auth-mode #authRegister #regReferUid{
   @media(max-width:420px){#tabProfile .gv-profile-quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}#tabProfile .gv-profile-action{flex-direction:row;justify-content:flex-start;padding:9px!important;text-align:left}#tabProfile .gv-profile-action>span{flex:0 0 30px}#tabProfile .gv-profile-action b,#tabProfile .gv-profile-action small{text-align:left}#tabProfile .gv-profile-action>span{margin-right:2px}}
 </style>
 
+<style id="gv-polish-v2">
+/* ===================================================================
+   GAME VERSE — polish v2  (black / silver theme, uses --accent-rgb)
+   =================================================================== */
+:root{--gv-r-lg:18px;--gv-r-md:12px;--gv-ring:rgba(var(--accent-rgb),.38);--gv-ring-strong:rgba(var(--accent-rgb),.7);--gv-surface:linear-gradient(160deg,#101012 0%,#060607 100%)}
+
+/* ---------- User app: shared polish ---------- */
+.container{border-radius:26px;box-shadow:0 0 0 1px rgba(var(--accent-rgb),.28),0 18px 50px rgba(0,0,0,.65),0 0 34px rgba(var(--accent-rgb),.10),inset 0 1px 0 rgba(255,255,255,.10)}
+input,select,textarea{border-color:rgba(var(--accent-rgb),.45);background:#050505}
+input:focus,select:focus,textarea:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(var(--accent-rgb),.22)}
+button{-webkit-tap-highlight-color:transparent}
+.btn-green{background:linear-gradient(135deg,#22c55e,#15a34a)!important;letter-spacing:.3px}
+.game-hub-card,.invest-plan-card,.info-box,.income-history-item,.invest-history-item,.event-card{border:1px solid var(--gv-ring);background:var(--gv-surface);box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+.game-hub-card:hover{border-color:var(--gv-ring-strong);box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 22px rgba(var(--accent-rgb),.2)}
+.gv-games-section-head{display:flex;align-items:baseline;justify-content:space-between;margin:16px 2px 10px;padding-bottom:8px;border-bottom:1px solid rgba(var(--accent-rgb),.2)}
+.gv-games-section-head span{font-size:14px;font-weight:900;letter-spacing:.4px;color:#fff}
+.gv-games-section-head small{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted)}
+.gv-sq-grid .game-hub-card{transition:transform .18s,border-color .18s,box-shadow .18s}
+.gv-sq-grid .game-hub-card:active{transform:scale(.97)}
+.gv-sq-grid .game-hub-card .btn-green{padding:10px 8px;border-radius:11px;font-size:12.5px}
+.gv-sq-grid .gh-meta{font-variant-numeric:tabular-nums;font-size:10.5px}
+.status-pill{letter-spacing:.8px;font-weight:900}
+.status-pill.active{box-shadow:0 0 10px rgba(52,211,153,.3)}
+.game-wallet-panel{border-radius:16px;border-color:var(--gv-ring);background:var(--gv-surface)}
+.game-currency-btn{transition:all .18s}
+.invest-stat{background:var(--gv-surface);border-color:var(--gv-ring)}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:rgba(var(--accent-rgb),.35);border-radius:6px}::-webkit-scrollbar-track{background:transparent}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* WINGO period chip (long period labels must never overflow) */
+#gameContentBox .cc-period-number{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:11px!important;letter-spacing:.3px;font-variant-numeric:tabular-nums;max-width:100%}
+#gameContentBox .cc-period-cell{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:9px!important;letter-spacing:.1px}
+
+/* ---------- K3 : restyled to the black / silver theme ---------- */
+.k3-root{background:radial-gradient(120% 70% at 50% 0%,rgba(var(--accent-rgb),.10) 0%,transparent 60%),#050505;border:1px solid var(--gv-ring);border-radius:20px;padding:14px 12px 16px;box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 26px rgba(var(--accent-rgb),.10),inset 0 1px 0 rgba(255,255,255,.07)}
+.k3-topbar{align-items:center;padding:10px 12px;margin:0 0 12px;border-radius:14px;background:var(--gv-surface);border:1px solid rgba(var(--accent-rgb),.25)}
+.k3-brand{font-size:20px;font-weight:1000;letter-spacing:2px;background:linear-gradient(90deg,#fff,var(--blue),#8a8a8a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1}
+.k3-period{display:inline-block;margin-top:5px;padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#cfcfd4;font:700 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.3px;word-break:normal;white-space:nowrap}
+.k3-timer-label{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--text-muted)}
+.k3-timer{display:inline-block;margin-top:2px;padding:3px 10px;border-radius:9px;background:#000;border:1px solid rgba(255,255,255,.14);font-size:24px;letter-spacing:2px;box-shadow:inset 0 0 14px rgba(0,0,0,.8)}
+.k3-timer.bet{color:#fff;text-shadow:0 0 12px rgba(var(--accent-rgb),.7)}
+.k3-timer.res{color:#34d399;text-shadow:0 0 12px rgba(52,211,153,.6)}
+.k3-phase-pill{margin-top:6px;padding:4px 10px;font-size:9.5px;letter-spacing:.8px;border:1px solid transparent}
+.k3-phase-pill.open{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.12);animation:k3Pulse 1.8s ease-in-out infinite}
+.k3-phase-pill.cool{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.1)}
+@keyframes k3Pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.35)}50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
+
+.k3-stage{margin:0 0 14px;padding:14px 10px 12px;border-radius:16px;background:radial-gradient(90% 120% at 50% 0%,rgba(var(--accent-rgb),.16),transparent 65%),#0a0a0c;border:1px solid var(--gv-ring-strong);box-shadow:inset 0 0 30px rgba(0,0,0,.7),0 0 18px rgba(var(--accent-rgb),.12)}
+.k3-stage-label{font-size:10px;letter-spacing:1.4px;color:var(--text-muted)}
+.k3-dice-row{gap:12px}
+.k3-die{width:60px;height:60px;border-radius:14px;background:linear-gradient(145deg,#ff6b6b 0%,#e11d2a 55%,#9f1239 100%);border:1px solid rgba(255,255,255,.55);box-shadow:0 10px 18px rgba(0,0,0,.55),0 0 16px rgba(239,68,68,.25),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -4px 8px rgba(0,0,0,.25)}
+.k3-die.waiting{background:linear-gradient(145deg,#1c1c20,#0a0a0c);border:1px dashed rgba(255,255,255,.25);box-shadow:none}
+.k3-die.rolling{background:linear-gradient(145deg,#d4d4d8,#71717a);box-shadow:0 0 22px rgba(var(--accent-rgb),.45)}
+.k3-pip.on{background:#fff;box-shadow:0 0 5px rgba(255,255,255,.7),inset 0 -1px 1px rgba(0,0,0,.25)}
+.k3-sum-badge{margin-top:12px;padding:6px 16px;background:#000;border:1px solid rgba(var(--accent-rgb),.5);color:#fff;letter-spacing:.4px;box-shadow:0 0 14px rgba(var(--accent-rgb),.15)}
+
+.k3-section-label{color:#fff;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin:16px 0 10px}
+.k3-section-label::before{content:'';width:3px;height:14px;border-radius:3px;background:linear-gradient(180deg,#fff,var(--blue-deep))}
+.k3-total-grid{gap:8px 6px;padding:10px 6px;border-radius:16px;background:var(--gv-surface);border:1px solid rgba(var(--accent-rgb),.2)}
+.k3-ball{transition:transform .15s}
+.k3-ball:active{transform:scale(.93)}
+.k3-ball .k3-ball-n{width:40px;height:40px;font-size:15px;border:1px solid rgba(255,255,255,.35);box-shadow:0 4px 10px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.3)}
+.k3-ball.k3-red .k3-ball-n{background:radial-gradient(circle at 30% 28%,#ff8a8a,#dc2626 60%,#8f1414)}
+.k3-ball.k3-green .k3-ball-n{background:radial-gradient(circle at 30% 28%,#8df0b3,#16a34a 60%,#0d6b2f)}
+.k3-ball small{font-size:10px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.k3-ball.sel .k3-ball-n{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px rgba(var(--accent-rgb),.28),0 0 20px rgba(255,255,255,.35)}
+.k3-ball.sel small{color:#fff}
+
+.k3-sb-row{gap:8px;margin-top:14px}
+#k3GameRoot button.k3-sb{border-radius:13px!important;min-height:58px!important;border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 8px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3)!important;text-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition:transform .15s,filter .15s!important}
+#k3GameRoot button.k3-sb:active{transform:scale(.95)!important}
+#k3GameRoot button.k3-sb.k3-btn-small{background:linear-gradient(160deg,#6db3ff,#2f7de1)!important}
+#k3GameRoot button.k3-sb.k3-btn-big{background:linear-gradient(160deg,#ffc04d,#e08a00)!important}
+#k3GameRoot button.k3-sb.k3-btn-even{background:linear-gradient(160deg,#43d98a,#1e9d56)!important}
+#k3GameRoot button.k3-sb.k3-btn-odd{background:linear-gradient(160deg,#ff6b6b,#d62b2b)!important}
+#k3GameRoot button.k3-sb.sel{outline:2px solid #fff!important;outline-offset:2px!important;filter:brightness(1.1)!important}
+
+.k3-bet-bar{margin-top:14px;border-radius:16px;background:var(--gv-surface);border:1px solid rgba(var(--accent-rgb),.25)}
+.k3-limits{color:var(--text-muted)}.k3-limits b{color:#fff}
+.k3-selected{border-radius:10px;background:rgba(255,255,255,.05);border:1px dashed rgba(var(--accent-rgb),.45);color:#e5e5e8;font-weight:700}
+.k3-chip{border-radius:999px!important;background:#0c0c0e!important;border:1px solid rgba(var(--accent-rgb),.4)!important}
+.k3-chip:hover{border-color:#fff!important}
+#k3Amount:focus{border-color:#fff!important;box-shadow:0 0 0 3px rgba(var(--accent-rgb),.22)!important}
+#k3PlaceBtn{background:linear-gradient(135deg,#22c55e,#15a34a)!important;border:1px solid rgba(255,255,255,.25)!important}
+
+.k3-hist-tabs{gap:6px;margin:18px 0 10px;padding:4px;border:1px solid rgba(var(--accent-rgb),.25);border-radius:14px;background:#000}
+.k3-hist-tab{margin:0!important;padding:9px 6px!important;border-radius:10px!important;border:0!important;color:var(--text-muted)!important;transition:all .18s}
+.k3-hist-tab.on{background:linear-gradient(180deg,#2a2a2e,#111114)!important;color:#fff!important;box-shadow:0 0 0 1px rgba(var(--accent-rgb),.5),0 4px 10px rgba(0,0,0,.4)!important}
+#k3HistoryGamePanel,#k3HistoryMinePanel{border:1px solid rgba(var(--accent-rgb),.22);border-radius:14px;overflow:hidden;background:#07070a}
+.k3-hist-head-row{grid-template-columns:1.9fr .4fr .6fr .6fr .9fr;background:#101013;color:var(--text-muted);letter-spacing:.6px;border-bottom:1px solid rgba(var(--accent-rgb),.2)}
+.k3-history{max-height:270px;background:transparent}
+.k3-hist-row{grid-template-columns:1.9fr .4fr .6fr .6fr .9fr;padding:9px 6px}
+.k3-hist-row:nth-child(even){background:rgba(255,255,255,.025)}
+.k3-hist-row .p{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px;color:#a1a1aa;letter-spacing:.1px}
+.k3-hist-row .sz{color:#7dbbff}.k3-hist-row .pr{color:#7ee6a8}
+.k3-hist-empty{padding:22px 16px;color:var(--text-muted)}
+.k3-locked-banner{border-radius:12px}
+@media(max-width:430px){.k3-die{width:52px;height:52px}.k3-dice-row{gap:9px}.k3-timer{font-size:21px}.k3-hist-row .p,.k3-hist-head-row{font-size:8.5px}}
+
+</style>
 </body></html>
 
 <style id="gv-support-drag-theme-final">
