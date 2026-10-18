@@ -3164,11 +3164,44 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             });
         }
 
+        // ===== Maintenance access list: Gmails added by the admin can still use the app while it is disabled =====
+        function gvMaintNorm(email){
+            const lower=String(email||'').trim().toLowerCase(); const at=lower.lastIndexOf('@'); if(at===-1) return lower;
+            let local=lower.slice(0,at), domain=lower.slice(at+1);
+            const plus=local.indexOf('+'); if(plus!==-1) local=local.slice(0,plus);
+            if(domain==='gmail.com'||domain==='googlemail.com'){ local=local.replace(/\./g,''); domain='gmail.com'; }
+            return local+'@'+domain;
+        }
+        function gvMaintKey(email){
+            // Firebase-safe deterministic key (same in User + Admin app): base64url of the normalised email.
+            return btoa(unescape(encodeURIComponent(gvMaintNorm(email)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+        }
+
+        let gvAppDisabled = false, gvMaintAllowed = false, gvMaintReady = false, gvMaintWatchKey = null, gvMaintWatchRef = null;
+        function gvIsMaintenanceAllowed(email){
+            if(!email) return Promise.resolve(false);
+            return db.ref('control/maintenanceAllowList/' + gvMaintKey(email)).once('value').then(s => s.exists()).catch(() => false);
+        }
+        function gvEnforceMaintenance(){
+            if(!gvAppDisabled || gvMaintAllowed || !gvMaintReady) return; // wait until this user's access entry has been read
+            const u = firebase.auth().currentUser;
+            if(!u) return; // login screen handles logged-out visitors
+            alert('⚠️ Application is currently under maintenance mode by the administrator.');
+            gvSignOutAndClearPresence().then(() => location.reload());
+        }
+        function gvWatchMaintenanceAccess(user){
+            if(gvMaintWatchRef){ try{ gvMaintWatchRef.off(); }catch(e){} gvMaintWatchRef = null; gvMaintWatchKey = null; }
+            gvMaintAllowed = false; gvMaintReady = false;
+            if(!user || !user.email){ return; }
+            gvMaintWatchKey = gvMaintKey(user.email);
+            gvMaintWatchRef = db.ref('control/maintenanceAllowList/' + gvMaintWatchKey);
+            // Live: if the admin removes this user from the list during maintenance, they are signed out immediately.
+            gvMaintWatchRef.on('value', s => { gvMaintAllowed = s.exists(); gvMaintReady = true; gvEnforceMaintenance(); }, () => { gvMaintAllowed = false; gvMaintReady = true; gvEnforceMaintenance(); });
+        }
+        firebase.auth().onAuthStateChanged(u => gvWatchMaintenanceAccess(u));
         db.ref('control/appStatus').on('value', snap => {
-            if(snap.val() === 'disabled') {
-                alert('⚠️ Application is currently under maintenance mode by the administrator.');
-                gvSignOutAndClearPresence().then(() => location.reload());
-            }
+            gvAppDisabled = snap.val() === 'disabled';
+            gvEnforceMaintenance();
         });
 
         db.ref('control/investmentConfig').on('value', snap => {
@@ -3619,11 +3652,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             if(!e || !p) return alert('Please enter email and password.');
 
             db.ref('control/appStatus').once('value', statusSnap => {
-                if(statusSnap.val() === 'disabled') {
-                    return alert('App is currently under maintenance. Login is temporarily disabled.');
-                }
-
-                firebase.auth().signInWithEmailAndPassword(e, p).then(res => {
+                const appOff = statusSnap.val() === 'disabled';
+                const proceedLogin = () => firebase.auth().signInWithEmailAndPassword(e, p).then(res => {
                     const uid = res.user.uid;
                     
                     db.ref('users/' + uid).once('value').then(snap => {
@@ -3642,6 +3672,12 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                         loadUserDashboard(uid);
                     });
                 }).catch(err => alert(err.message));
+                if(!appOff) return proceedLogin();
+                // App is in maintenance: only Gmails on the admin's access list may log in.
+                gvIsMaintenanceAllowed(e).then(ok => {
+                    if(ok) proceedLogin();
+                    else alert('App is currently under maintenance. Login is temporarily disabled.');
+                });
             });
         }
 
