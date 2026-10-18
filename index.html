@@ -5726,7 +5726,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         // has ever changed entrySeconds/cooldownSeconds away from these defaults, using this placeholder
         // even briefly would compute the wrong cycle length and therefore the wrong round id, writing
         // round-history entries that don't line up with the real current round sequence at all.
-        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, violetMultiplier:3, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:false, fairRandomOnly:false, auditRounds:true };
+        let colourClashConfig = { enabled:true, entrySeconds:30, cooldownSeconds:5, minBet:10, maxBet:5000, minBetUsdt:0.1, maxBetUsdt:5000, multiplier:2, violetMultiplier:3, blueMultiplier:3, numberMultiplier:9, sizeMultiplier:2, autoResult:true, randomizedResult:true, noConsecutiveRepeat:false, cryptoRandom:true, livePattern:null, fairRandomOnly:false, auditRounds:true };
         let colourClashConfigReady = false;
         let colourClashSelected = '';
         let colourClashAmount = 0;
@@ -5750,6 +5750,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 sizeMultiplier: Math.max(1, Number(d.sizeMultiplier) || 2),
                 autoResult: d.autoResult !== false,
                 randomizedResult: true,
+                cryptoRandom: d.cryptoRandom !== false,
+                livePattern: ccPatCfgNormalize(d.livePattern),
                 noConsecutiveRepeat: false,
                 patternMode: d.patternMode==='random' ? 'random' : 'pro',
                 patternStrength: d.patternStrength!==undefined&&d.patternStrength!==null&&d.patternStrength!=='' ? Math.min(100,Math.max(0,Number(d.patternStrength)||0)) : 30,
@@ -5912,6 +5914,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             for(let n=0;n<10;n++){r-=w[n];if(r<0)return n;}
             return 9;
         }
+
         async function ccLoadRecentResults(roundId,count){
             const base=Math.max(1,Number(roundId)||1), reads=[];
             for(let i=1;i<=count&&base-i>=1;i++)reads.push(db.ref('colour_clash/rounds/'+(base-i)).once('value').then(s=>{const v=s.val()||{};return v.resultNumber!==undefined&&v.resultNumber!==null?Number(v.resultNumber):null;}).catch(()=>null));
@@ -5924,20 +5927,137 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             const recent=await ccLoadRecentResults(roundId,10);
             return ccPickPatternNumber(recent,ccSecureRandomInt,{strength:colourClashConfig.patternStrength,chaos:colourClashConfig.chaosChance});
         }
+        function ccPatternNext(type, hist, ri){
+            const h=(hist||[]).map(Number).filter(v=>!isNaN(v)).slice(0,14);
+            const h0=h[0], h1=h[1], ALL=[0,1,2,3,4,5,6,7,8,9];
+            const chance=p=>ri(1000)<p*1000, pick=a=>a[ri(a.length)];
+            const notIn=(ex,pool)=>{const base=pool||ALL;const c=base.filter(n=>!ex.includes(n));return c.length?pick(c):pick(base);};
+            const isBig=n=>n>=5, isSmallFn=n=>n<=4, isOdd=n=>n%2===1, isEven=n=>n%2===0;
+            const run=fn=>{let k=0;while(k<h.length&&fn(h[k])===fn(h[0]))k++;return k;};
+            const SMALL=[0,1,2,3,4], BIG=[5,6,7,8,9];
+            // one streak of members of a set, then a single separator number, then a new streak
+            const streak=(inSet,pool,sepPool,startPool,asc)=>{
+                if(h0===undefined||!inSet(h0)) return pick(startPool||pool);
+                const k=run(inSet), p=k<4?1:k===4?.75:k===5?.5:k===6?.3:0;
+                if(chance(p)){
+                    if(asc&&asc(h0)&&chance(.55)) return h0+1;
+                    return notIn([h0],pool);
+                }
+                return pick(sepPool);
+            };
+            const cycle=(p,Lmax)=>{
+                const first=h.slice(0,p);
+                if(h.length>=p&&new Set(first).size===p){
+                    let k=0;while(k<h.length-p&&h[k]===h[k+p])k++;
+                    return (p+k<Lmax)?h[p-1]:notIn(first);
+                }
+                return notIn(h.slice(0,p-1));
+            };
+            const sr=()=>run(x=>x);
+            const sgn=(a,b)=>a>b?1:a<b?-1:0;
+            switch(Number(type)){
+                case 1: // hop up, step down:  2,1,4,3,8,7,2,9
+                    if(h0===undefined) return pick(ALL);
+                    if(h1!==undefined&&h0===h1-1) return notIn([h0]);
+                    return h0>0?h0-1:notIn([h0]);
+                case 2: {const s=sr(); if(h0===undefined) return pick(ALL); if(s<3||(s<5&&chance(.75))) return h0; return notIn([h0]);}
+                case 3: {if(h0===undefined) return pick(ALL); return sr()===1?h0:notIn([h0]);}
+                case 4: {if(h0===undefined) return pick(ALL); return sr()<3?h0:notIn([h0]);}
+                case 5: return streak(isBig,BIG,SMALL,[5,6,6,7],n=>n<9);
+                case 6: return streak(isSmallFn,SMALL,BIG,[0,0,1,2],n=>n<4);
+                case 7: {if(h0===undefined) return pick(ALL); return notIn([h1,h[3]],isBig(h0)?SMALL:BIG);}
+                case 8: {if(h0===undefined) return pick(ALL); const pool=isOdd(h0)?[0,2,4,6,8]:[1,3,5,7,9];
+                         if(chance(.4)){const c=h0<9?h0+1:h0-1; if(pool.includes(c)) return c;} return notIn([h1,h[3]],pool);}
+                case 9: {const r=streak(isEven,[2,4,6,8],[1,3,7,9],[2,4,6,8]); return (isEven(r)&&chance(.08))?0:r;}
+                case 10:{const r=streak(isOdd,[1,3,7,9],[2,4,6,8],[1,3,7,9]); return (isOdd(r)&&chance(.08))?5:r;}
+                case 11:{const g=chance(.5)?3:4, v=h[g-1];
+                         if(v!==undefined&&v!==h0&&!h.slice(0,g-1).includes(v)&&chance(.7)) return v; return notIn(h.slice(0,3));}
+                case 12:{if(h0===undefined) return pick([2,4,6]);
+                         if(isEven(h0)) return h0>0?h0-1:pick([1,3,5]);
+                         const c=[h0+1,h0+2,h0+3].filter(n=>n<=8&&isEven(n)); return c.length?pick(c):pick([2,4,6,8]);}
+                case 13: return cycle(2,8);
+                case 14: return cycle(3,9);
+                case 15:{
+                    if(h0===undefined) return pick([1,2,3]);
+                    if(h1===undefined||h0===h1) return h0+2<=9?h0+2:h0-2;
+                    const d0=sgn(h0,h1); let n0=0; while(h[n0+1]!==undefined&&sgn(h[n0],h[n0+1])===d0) n0++;
+                    let n1=0; while(h[n0+n1+1]!==undefined&&sgn(h[n0+n1],h[n0+n1+1])===-d0) n1++;
+                    const st=Math.abs(h0-h1), s=(st===1||st===2)?st:2;
+                    const up=()=>h0+s<=9?h0+s:h0-s, down=()=>h0-s>=0?h0-s:h0+s;
+                    if(d0>0) return (n0<2||(n0===2&&chance(.4)))?up():down();
+                    return (n0<n1&&h0-s>=0)?down():up();
+                }
+                case 16: return h0===undefined?pick([0,1,2]):(h0<9?h0+1:pick([0,1,2]));
+                case 17: return h0===undefined?pick([7,8,9]):(h0>0?h0-1:pick([7,8,9]));
+                case 18: {if(h0===undefined) return pick(ALL); return notIn([h1,h[3]],h0<=4?[6,7,8,9]:[0,1,2,3]);}
+                case 19: {
+                    if(!h.length) return pick(ALL);
+                    const cnt={}; h.forEach(v=>cnt[v]=(cnt[v]||0)+1);
+                    let F=h[2]!==undefined?h[2]:h[0], best=0; h.forEach(v=>{if(cnt[v]>best&&cnt[v]>=2){best=cnt[v];F=v;}});
+                    const idx=h.indexOf(F);
+                    if(idx===2||idx===3||(idx>=4&&chance(.7))) return F;
+                    return notIn([F,h0]);
+                }
+                case 20:{const s=sr(); if(h0===undefined) return pick(ALL); if((s===1&&chance(.65))||(s===2&&chance(.45))) return h0; return notIn([h0]);}
+                case 21: return streak(isOdd,[1,3,5,7,9],[0,2,4,6,8],[1,3,5,7,9]);
+                case 22: return streak(isEven,[0,2,4,6,8],[1,3,5,7,9],[0,2,4,6,8]);
+                case 23: return cycle(2,6);
+                case 24: {if(h0===undefined) return pick(ALL); return sr()===1?h0:notIn([h0],isBig(h0)?SMALL:BIG);}
+                case 25: return notIn(h.slice(0,7));
+            }
+            return null;
+        }
+        // ===== LIVE RESULT PATTERN RUNTIME (shared logic: User + Admin) =====
+        // Used ONLY when Cryptographic Random Results is OFF (and Fairness Lock is OFF) and an admin
+        // pattern is enabled. The admin mirrors the saved pattern into control/colourClashConfig/livePattern,
+        // so players and the admin read the identical pattern through the config listener they already have.
+        function ccPatCfgNormalize(v){
+            if(!v||v.enabled!==true) return null;
+            const seq=Array.isArray(v.seq)?v.seq.map(Number):[];
+            if(!seq.length||seq.length>50||!seq.every(n=>Number.isInteger(n)&&n>=0&&n<=9)) return null;
+            const len=Math.min(50,Math.max(1,Math.trunc(Number(v.length))||seq.length));
+            return {enabled:true,patternId:String(v.patternId||''),seq:seq,length:len,repeat:v.repeat==='stop'?'stop':'repeat',useRules:v.useRules===true,libId:Number(v.libId)||0,anchorRoundId:Math.trunc(Number(v.anchorRoundId))||0};
+        }
+        function ccPatSeqAt(p,idx){
+            if(idx<0) return null;
+            if(p.repeat==='stop'){ const n=Math.min(p.length,p.seq.length); return idx<n?p.seq[idx]:null; }
+            return p.seq[(idx%Math.max(1,p.length))%p.seq.length];
+        }
+        function ccLivePatternActive(cfg){ return cfg&&cfg.cryptoRandom===false&&cfg.fairRandomOnly!==true&&!!cfg.livePattern; }
+        async function ccLivePatternNumber(cfg,roundId){
+            if(!ccLivePatternActive(cfg)) return null;
+            const p=cfg.livePattern; let n=null;
+            if(p.useRules&&p.libId){
+                const recent=await ccLoadRecentResults(roundId,14);
+                n=ccPatternNext(p.libId,recent,ccSecureRandomInt);
+            }else{
+                n=ccPatSeqAt(p,Number(roundId)-(p.anchorRoundId||Number(roundId)));
+            }
+            if(n===null||n===undefined) return null;
+            n=Number(n);
+            return (Number.isInteger(n)&&n>=0&&n<=9)?n:null;
+        }
+        async function ccGetSecureAutomaticResult(roundId){
+            try{ const pn=await ccLivePatternNumber(colourClashConfig,roundId); if(pn!==null) return {n:pn,src:'pattern'}; }catch(e){ console.warn('[WINGO] pattern result failed, using secure random:',e); }
+            return {n:await ccGetSecureAutomaticNumber(roundId),src:'crypto'};
+        }
 
 
         // ===== Unique, per-game period labels (fix: WINGO and K3 showed the SAME period number) =====
         // Internal round ids (DB keys, forced results, settlement) are unchanged. Only the label the
         // player sees is built per game: PREFIX + IST date + that day's round sequence.
-        function gvPeriodLabel(prefix, roundId, cycleMs){
+        function gvPeriodLabel(prefix, roundId, cycleMs, shiftFrac){
             const id=Math.max(1,Number(roundId)||1), cyc=Math.max(1000,Number(cycleMs)||35000);
             const IST=19800000, DAY=86400000;
             const t=(id-1)*cyc+IST, day=Math.floor(t/DAY), d=new Date(day*DAY);
-            const seq=Math.floor((t-day*DAY)/cyc)+1;
+            let seq=Math.floor((t-day*DAY)/cyc)+1;
+            // Each game gets its own sequence offset, so two games using the same entry/cooldown seconds
+            // (e.g. WINGO and K3) never show the same period number at the same time.
+            if(shiftFrac){ const N=Math.ceil(DAY/cyc), sh=Math.max(1,Math.round(N*shiftFrac)); seq=((seq-1+sh)%N)+1; }
             const ymd=d.getUTCFullYear()+String(d.getUTCMonth()+1).padStart(2,'0')+String(d.getUTCDate()).padStart(2,'0');
             return prefix+ymd+String(seq).padStart(4,'0');
         }
-        function wingoPeriodLabel(roundId){ return gvPeriodLabel('WG',roundId,colourClashCycleMs()); }
+        function wingoPeriodLabel(roundId){ return gvPeriodLabel('WG',roundId,colourClashCycleMs(),0.37); }
         function colourClashCycleMs(){
             const entry=Math.max(5,Number(colourClashConfig.entrySeconds)||30);
             const cooldown=Math.max(2,Number(colourClashConfig.cooldownSeconds)||5);
@@ -6705,14 +6825,16 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 }
                 const hasConfirmed=current.confirmedResultNumber!==undefined&&current.confirmedResultNumber!==null;
                 if(!hasConfirmed&&!colourClashConfig.autoResult)return;
-                const resultNumber=(hasConfirmed && colourClashConfig.fairRandomOnly !== true) ? Number(current.confirmedResultNumber) : await ccGetSecureAutomaticNumber(roundId);
+                let ccAutoSrc={src:'crypto'}; let resultNumber;
+                if(hasConfirmed && colourClashConfig.fairRandomOnly !== true){ resultNumber=Number(current.confirmedResultNumber); } else { ccAutoSrc=await ccGetSecureAutomaticResult(roundId); resultNumber=ccAutoSrc.n; }
                 const res=await ref.transaction(cur=>{
                     cur=cur||{};
                     if(cur.status==='resolved'&&cur.resultNumber!==undefined&&cur.resultNumber!==null)return cur;
                     const confirmed=cur.confirmedResultNumber!==undefined&&cur.confirmedResultNumber!==null;
                     if(!confirmed&&!colourClashConfig.autoResult)return cur;
                     const n=(confirmed && colourClashConfig.fairRandomOnly !== true)?Number(cur.confirmedResultNumber):resultNumber;
-                    return Object.assign({},cur,{roundId,status:'resolved',resultNumber:n,result:ccNumberColour(n),resultColours:ccNumberColours(n),resultSize:ccNumberSize(n),resolvedNumberAt:Date.now(),resolvedAt:Date.now(),audit:{rng:'Web Crypto getRandomValues',fairRandomOnly:colourClashConfig.fairRandomOnly===true,generatedAfterEntry:true},modeNumber:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual':'auto',mode:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual-number':'auto',randomSource:'crypto.getRandomValues'});
+                    const ccViaPattern=!(confirmed&&!colourClashConfig.fairRandomOnly)&&ccAutoSrc.src==='pattern';
+                    return Object.assign({},cur,{roundId,status:'resolved',resultNumber:n,result:ccNumberColour(n),resultColours:ccNumberColours(n),resultSize:ccNumberSize(n),resolvedNumberAt:Date.now(),resolvedAt:Date.now(),audit:{rng:ccViaPattern?'Admin result pattern':'Web Crypto getRandomValues',fairRandomOnly:colourClashConfig.fairRandomOnly===true,generatedAfterEntry:true},modeNumber:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual':'auto',mode:(confirmed&&!colourClashConfig.fairRandomOnly)?'manual-number':(ccViaPattern?'pattern':'auto'),randomSource:ccViaPattern?'admin-pattern':'crypto.getRandomValues'});
                 });
                 const out=res.snapshot.val();
                 if(!out||out.resultNumber===undefined||out.resultNumber===null)return;
