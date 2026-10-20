@@ -12843,9 +12843,9 @@ button{-webkit-tap-highlight-color:transparent}
 #tabHome .rh-notice::before{content:"♛";position:absolute;left:4px;top:-7px;font-size:10px;color:#ffe7a3;text-shadow:0 0 7px rgba(245,189,69,.7);pointer-events:none;}
 #tabHome .rh-notice-ico{flex:0 0 auto;font-size:15px;}
 #tabHome .rh-marq{flex:1;min-width:0;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
-#tabHome .rh-marq span{display:inline-block;padding-left:0;font-size:12px;font-weight:700;color:#fff1c2;animation:none;will-change:transform;}
-#tabHome .rh-marq.is-overflow .rh-marq-track{display:inline-block;padding-left:100%;animation:rhMarq var(--rh-dur,30s) linear infinite;}
-@keyframes rhMarq{to{transform:translateX(-100%);}}
+#tabHome .rh-marq span{display:inline-block;width:max-content;max-width:none;padding-left:0;font-size:12px;font-weight:700;color:#fff1c2;white-space:nowrap;animation:none;will-change:transform;}
+#tabHome .rh-marq.is-overflow #rhNoticeText{animation:rhMarq var(--rh-dur,30s) linear infinite;}
+@keyframes rhMarq{from{transform:translateX(100%);}to{transform:translateX(-100%);}}
 #tabHome .rh-notice-btn{flex:0 0 auto;width:auto !important;margin:0 !important;padding:6px 13px !important;min-height:0 !important;border-radius:999px !important;border:1px solid var(--rh-a2) !important;background:linear-gradient(135deg,var(--rh-a2),var(--rh-a) 55%,var(--rh-a3)) !important;color:#1c1300 !important;font-size:11px !important;font-weight:900 !important;box-shadow:0 3px 10px rgba(0,0,0,.4) !important;-webkit-text-fill-color:#1c1300 !important;}
 
 /* ---- wallet ---- */
@@ -13114,7 +13114,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
       n.classList.toggle('hidden', !(cfg.notice.enabled && txt));
       var t = $('rhNoticeText');
       if (t && t.textContent !== txt) { t.textContent = txt; }
-      if (t) { var marquee = t.parentElement; if (marquee) { marquee.classList.remove('is-overflow'); t.style.animation = 'none'; t.style.paddingLeft = '0'; t.style.transform = 'none'; requestAnimationFrame(function(){ var overflow = t.scrollWidth > marquee.clientWidth + 8; marquee.classList.toggle('is-overflow', overflow); if (overflow) { t.style.paddingLeft = '100%'; t.style.animation = 'rhMarq ' + Math.max(28, Math.round(txt.length * 0.65)) + 's linear infinite'; } else { t.style.animation = 'none'; t.style.paddingLeft = '0'; } }); } }
+      if (t) { var marquee = t.parentElement; if (marquee) { marquee.classList.remove('is-overflow'); t.style.animation = 'none'; t.style.paddingLeft = '0'; t.style.transform = 'translateX(0)'; t.style.setProperty('--rh-dur', Math.max(18, Math.round(txt.length * 0.42)) + 's'); requestAnimationFrame(function(){ var overflow = t.scrollWidth > marquee.clientWidth + 8; marquee.classList.toggle('is-overflow', overflow); if (overflow) { t.style.animation = 'rhMarq var(--rh-dur) linear infinite'; } else { t.style.animation = 'none'; t.style.transform = 'none'; } }); } }
       var b = $('rhNoticeBtn');
       if (b) { var hasDetail = !!(cfg.notice.title || cfg.notice.body); b.style.display = hasDetail ? '' : 'none'; b.textContent = cfg.notice.buttonLabel || 'Detail'; }
     }
