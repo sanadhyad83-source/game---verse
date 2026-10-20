@@ -1626,6 +1626,22 @@
 @keyframes rocketV3Exhaust{from{height:52px;opacity:.42}to{height:82px;opacity:.92}}
 @media(max-width:620px){.rocket-v3-stage{height:360px}.rocket-v3-control{grid-template-columns:1fr}.rocket-v3-ship{transform:translateX(-50%) rotate(-10deg) scale(.88)}.rocket-v3-mult strong{font-size:48px}}
 
+
+/* ROYAL FINANCE UI — deposit and withdrawal */
+#depositArea, #withdrawArea{--royal-gold:#f7d778;--royal-gold2:#b9852d;--royal-ink:#080b18;}
+#depositArea>h3,#withdrawArea>h3{font-size:19px;letter-spacing:1.1px;color:#ffe8a0;text-shadow:0 0 16px rgba(247,215,120,.25);}
+#depositArea .section-card,#withdrawArea .section-card{position:relative;overflow:hidden;border:1px solid rgba(247,215,120,.55)!important;border-radius:20px!important;background:radial-gradient(circle at 100% 0%,rgba(247,215,120,.14),transparent 35%),linear-gradient(155deg,#17213d 0%,#0a1022 52%,#070a14 100%)!important;box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,232,160,.12)!important;padding:16px!important;}
+#depositArea .section-card:before,#withdrawArea .section-card:before{content:"♛";position:absolute;right:13px;top:8px;font-size:25px;color:rgba(247,215,120,.17);pointer-events:none;}
+#depositArea .wallet-currency-btn,#withdrawArea .wallet-currency-btn{border-color:rgba(247,215,120,.45)!important;background:linear-gradient(145deg,#101a32,#080d1b)!important;color:#f8e7b0!important;}
+#depositArea .wallet-currency-btn.active,#withdrawArea .wallet-currency-btn.active{background:linear-gradient(135deg,#ffe7a3,#d6a640 58%,#8e5e18)!important;color:#211603!important;border-color:#fff0b5!important;box-shadow:0 0 18px rgba(247,215,120,.24)!important;}
+#depositArea input,#withdrawArea input{border-color:rgba(247,215,120,.36)!important;background:#080e1d!important;border-radius:12px!important;}
+#depositArea input:focus,#withdrawArea input:focus{border-color:#ffe7a3!important;box-shadow:0 0 0 2px rgba(247,215,120,.14),0 0 15px rgba(247,215,120,.12)!important;}
+#depositArea .btn-green,#withdrawArea .btn-green{background:linear-gradient(135deg,#ffe7a3,#e3b64f 54%,#98651e)!important;color:#211603!important;border:1px solid #fff0b5!important;box-shadow:0 7px 18px rgba(185,133,45,.25)!important;font-weight:900!important;}
+#depositArea .meta-chip,#withdrawArea .meta-chip{border:1px solid rgba(247,215,120,.35)!important;background:rgba(247,215,120,.07)!important;color:#f8e7b0!important;border-radius:999px!important;}
+#depositArea .upi-row,#depositArea #depositUsdtWrap,#depositArea #depositQrWrap{border-color:rgba(247,215,120,.38)!important;background:rgba(4,9,21,.7)!important;border-radius:14px!important;}
+.gv-finance-tip{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;margin:10px 0;border:1px solid rgba(247,215,120,.22);border-radius:12px;background:rgba(247,215,120,.055);color:#dbe3f5;font-size:11px;line-height:1.5;text-align:left;}
+.gv-finance-tip b{color:#ffe7a3;}
+@media(prefers-reduced-motion:reduce){#tabHome .rh-marq.is-overflow #rhNoticeText{animation-duration:90s!important;}}
 </style>
 
 <style id="gv-colour-mines-refresh-v4">
@@ -2793,7 +2809,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <button type="button" class="wallet-currency-btn active" data-currency="INR" onclick="switchWalletCurrency('INR')">₹ INR</button>
                     <button type="button" class="wallet-currency-btn" data-currency="USDT" onclick="switchWalletCurrency('USDT')">₮ USDT</button>
                 </div>
-                <p class="section-hint" id="depositHelpText">Pay to the UPI ID below, then submit your details. Admin will verify and credit your wallet.</p>
+                <p class="section-hint" id="depositHelpText">Pay using the verified payment details below, then submit your transaction reference. Your wallet is credited after review.</p>
+                <div class="gv-finance-tip"><span>🛡️</span><div><b>Secure deposit</b><br><span id="depositInstructionsText">Use the exact amount entered below and keep your payment reference for tracking.</span></div></div>
                 <div id="depositUpiWrap" class="upi-row">
                     <div style="flex:1;min-width:0;"><div style="font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase;">Admin UPI ID</div><div class="upi-value" id="displayAdminUpi">Loading...</div></div>
                     <button type="button" class="copy-upi-btn" onclick="copyAdminUpi()">📋 Copy</button>
@@ -2804,11 +2821,12 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <button type="button" class="btn-gray" onclick="copyAdminUsdtAddress()">📋 Copy BEP-20 Address</button>
                 </div>
                 <div id="depositQrWrap" class="hidden" style="text-align:center;margin:12px 0;"><p style="margin:0 0 8px 0;color:var(--text-muted);font-size:12px;">Or scan QR to pay</p><img id="depositQrImage" src="" alt="Deposit QR Code" style="max-width:180px;width:100%;border-radius:14px;border:1.5px solid rgba(var(--accent-rgb),.4);background:#fff;padding:8px;"></div>
-                <div class="meta-row"><span class="meta-chip">Min deposit: <strong id="displayMinDeposit">₹0</strong></span><span class="meta-chip" id="depositBonusInfo">Deposit bonus: <strong>None</strong></span></div>
+                <div class="meta-row"><span class="meta-chip">Min deposit: <strong id="displayMinDeposit">₹0</strong></span><span class="meta-chip">Max deposit: <strong id="displayMaxDeposit">No limit</strong></span><span class="meta-chip" id="depositBonusInfo">Deposit bonus: <strong>None</strong></span></div>
                 <input id="depUid" type="text" placeholder="Your UID" readonly style="color:var(--blue);font-family:ui-monospace,monospace;font-weight:700;">
                 <input id="depPhone" type="tel" placeholder="Phone Number" inputmode="numeric">
                 <input id="depAmount" type="number" placeholder="Amount (INR)" min="1">
-                <input id="depUtr" type="text" placeholder="UTR / Transaction Reference / TXID">
+                <input id="depUtr" type="text" placeholder="UTR / Transaction Reference / TXID" autocomplete="off">
+                <div class="gv-finance-tip"><span>⏱️</span><div><b>Processing estimate</b><br><span id="depositProcessingText">Requests are reviewed by the Game Verse team.</span></div></div>
                 <button onclick="submitDepositRequest()" class="btn-green" style="margin-top:8px;">✅ Submit Deposit Request</button>
             </div>
             <h4 style="margin:16px 0 8px;font-size:13px;font-weight:800;color:var(--blue);">📜 Your Deposit History</h4>
@@ -2824,15 +2842,17 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <button type="button" class="wallet-currency-btn active" data-currency="INR" onclick="switchWalletCurrency('INR')">₹ INR</button>
                     <button type="button" class="wallet-currency-btn" data-currency="USDT" onclick="switchWalletCurrency('USDT')">₮ USDT</button>
                 </div>
-                <p class="section-hint">Admin reviews the request and pays manually. Any configured first-withdrawal fee is charged from your wallet and tax is deducted from the requested amount.</p>
-                <div class="meta-row"><span class="meta-chip">Min withdraw: <strong id="displayMinWithdraw">₹0</strong></span><span class="meta-chip" style="color:#f87171;border-color:rgba(248,113,113,.35);">Tax: <strong id="displayWithdrawTax" style="color:#f87171;">0%</strong></span></div>
+                <p class="section-hint">Review the payout details carefully before submitting. Any configured fee or tax is shown before you confirm.</p>
+                <div class="gv-finance-tip"><span>👑</span><div><b>Royal payout desk</b><br><span id="withdrawInstructionsText">Use a payment address or UPI ID that belongs to you. Double-check it before submitting.</span></div></div>
+                <div class="meta-row"><span class="meta-chip">Min withdraw: <strong id="displayMinWithdraw">₹0</strong></span><span class="meta-chip">Max withdraw: <strong id="displayMaxWithdraw">No limit</strong></span><span class="meta-chip" style="color:#f87171;border-color:rgba(248,113,113,.35);">Tax: <strong id="displayWithdrawTax" style="color:#f87171;">0%</strong></span></div>
                 <div id="withdrawRestrictionStatus" class="withdraw-restriction-card"><div class="wr-title">Withdrawal Requirements</div><div class="wr-line">Loading current requirements...</div></div>
                 <input id="withdrawAmount" type="number" placeholder="Withdrawal Amount (INR)" min="1" oninput="calculateWithdrawBreakdown()">
                 <div id="withdrawTaxBreakdown" class="tax-breakdown-box hidden"><p style="margin:2px 0;">Gross Amount: <b id="calcGrossAmt" style="color:var(--text-main);">₹0</b></p><p style="margin:2px 0;color:#f87171;">Tax Deducted (<span id="calcTaxPercent">0%</span>): <b id="calcTaxAmt">-₹0</b></p><p style="margin:6px 0 0;color:#34d399;font-size:14px;font-weight:800;">You Receive: <span id="calcNetAmt">₹0</span></p></div>
                 <input id="withdrawTg" type="text" placeholder="Telegram Username (e.g. @username)">
                 <input id="withdrawUpi" type="text" placeholder="UPI ID (e.g. name@paytm)">
                 <input id="withdrawUsdtAddress" class="hidden" type="text" placeholder="Your USDT BEP-20 Withdrawal Address">
-                <button onclick="submitWithdrawal()" class="btn-green" style="margin-top:8px;">🚀 Send Withdrawal Request</button>
+                <div class="gv-finance-tip"><span>⏳</span><div><b>Estimated processing</b><br><span id="withdrawProcessingText">Withdrawal requests are reviewed by the Game Verse team.</span></div></div>
+                <button onclick="submitWithdrawal()" class="btn-green" style="margin-top:8px;">♛ Submit Withdrawal Request</button>
             </div>
             <h4 style="margin:16px 0 8px;font-size:13px;font-weight:800;color:var(--blue);">📜 Your Withdrawal History</h4>
             <div id="userWithdrawList" class="history-list">Loading status...</div>
@@ -3164,6 +3184,9 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             const wdMin = c === 'USDT' ? adminMinWithdrawUsdt : adminMinWithdraw;
             const depMinEl = document.getElementById('displayMinDeposit'); if (depMinEl) depMinEl.innerText = formatWalletAmount(depMin,c);
             const wdMinEl = document.getElementById('displayMinWithdraw'); if (wdMinEl) wdMinEl.innerText = formatWalletAmount(wdMin,c);
+            const depMax=Number(c==='USDT'?window.gvDepositMaxUsdt:window.gvDepositMaxInr)||0, wdMax=Number(c==='USDT'?window.gvWithdrawMaxUsdt:window.gvWithdrawMaxInr)||0;
+            const depMaxEl=document.getElementById('displayMaxDeposit'); if(depMaxEl) depMaxEl.innerText=depMax>0?formatWalletAmount(depMax,c):'No limit';
+            const wdMaxEl=document.getElementById('displayMaxWithdraw'); if(wdMaxEl) wdMaxEl.innerText=wdMax>0?formatWalletAmount(wdMax,c):'No limit';
             const taxEl = document.getElementById('displayWithdrawTax'); if (taxEl) taxEl.innerText = `${c === 'USDT' ? adminWithdrawTaxUsdt : adminWithdrawTax}%`;
             const bonusInfo = document.getElementById('depositBonusInfo');
             if(bonusInfo){
@@ -3413,6 +3436,10 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         db.ref('control/depositConfig').on('value', snap => {
             const data = snap.val() || {};
             adminMinDeposit = Number(data.minDeposit) || 0;
+            window.gvDepositMaxInr = Math.max(0, Number(data.maxDeposit) || 0); window.gvDepositMaxUsdt = Math.max(0, Number(data.maxDepositUsdt) || 0);
+            const depHelp=document.getElementById('depositInstructionsText'); if(depHelp) depHelp.textContent=data.instructions||'Use the exact amount entered below and keep your payment reference for tracking.';
+            const depTime=document.getElementById('depositProcessingText'); if(depTime) depTime.textContent=data.processingTime||'Requests are reviewed by the Game Verse team.';
+            const depMaxChip=document.getElementById('displayMinDeposit'); if(depMaxChip) depMaxChip.title=(selectedWalletCurrency==='USDT'?window.gvDepositMaxUsdt:window.gvDepositMaxInr)>0?'Maximum: '+formatWalletAmount(selectedWalletCurrency==='USDT'?window.gvDepositMaxUsdt:window.gvDepositMaxInr,selectedWalletCurrency):'No maximum configured';
             adminMinDepositUsdt = Number(data.minDepositUsdt) || 0;
             depositBonusConfig = {
                 type:String(data.depositBonusType||'off').toLowerCase(),
@@ -3457,6 +3484,10 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         db.ref('control/withdrawConfig').on('value', snap => {
             const data = snap.val() || {};
             adminMinWithdraw = Number(data.minWithdraw) || 0;
+            window.gvWithdrawMaxInr = Math.max(0, Number(data.maxWithdraw) || 0); window.gvWithdrawMaxUsdt = Math.max(0, Number(data.maxWithdrawUsdt) || 0);
+            const wdHelp=document.getElementById('withdrawInstructionsText'); if(wdHelp) wdHelp.textContent=data.instructions||'Use a payment address or UPI ID that belongs to you. Double-check it before submitting.';
+            const wdTime=document.getElementById('withdrawProcessingText'); if(wdTime) wdTime.textContent=data.processingTime||'Withdrawal requests are reviewed by the Game Verse team.';
+            const wdMinChip=document.getElementById('displayMinWithdraw'); if(wdMinChip) wdMinChip.title=(selectedWalletCurrency==='USDT'?window.gvWithdrawMaxUsdt:window.gvWithdrawMaxInr)>0?'Maximum: '+formatWalletAmount(selectedWalletCurrency==='USDT'?window.gvWithdrawMaxUsdt:window.gvWithdrawMaxInr,selectedWalletCurrency):'No maximum configured';
             adminWithdrawTax = Number(data.taxPercent) || 0;
             adminMinWithdrawUsdt = Number(data.minWithdrawUsdt) || 0;
             adminWithdrawTaxUsdt = Number(data.taxPercentUsdt) || 0;
@@ -10181,6 +10212,7 @@ body.auth-mode .input-icon-wrap input { padding-left:46px !important; }
 @media(max-width:480px){body.auth-mode #authLogin,body.auth-mode #authRegister{margin:18px auto 24px!important;padding:23px 17px 20px!important;border-radius:22px!important;width:calc(100% - 24px)!important}}
 </style>
 
+
 </body>
 </html>
 
@@ -13114,7 +13146,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
       n.classList.toggle('hidden', !(cfg.notice.enabled && txt));
       var t = $('rhNoticeText');
       if (t && t.textContent !== txt) { t.textContent = txt; }
-      if (t) { var marquee = t.parentElement; if (marquee) { marquee.classList.remove('is-overflow'); t.style.animation = 'none'; t.style.paddingLeft = '0'; t.style.transform = 'translateX(0)'; t.style.setProperty('--rh-dur', Math.max(18, Math.round(txt.length * 0.42)) + 's'); requestAnimationFrame(function(){ var overflow = t.scrollWidth > marquee.clientWidth + 8; marquee.classList.toggle('is-overflow', overflow); if (overflow) { t.style.animation = 'rhMarq var(--rh-dur) linear infinite'; } else { t.style.animation = 'none'; t.style.transform = 'none'; } }); } }
+      if (t) { var marquee = t.parentElement; if (marquee) { marquee.classList.remove('is-overflow'); t.style.animation = 'none'; t.style.paddingLeft = '0'; t.style.transform = 'translateX(0)'; /* Slow enough to read: roughly 65 characters per 20 seconds. */ t.style.setProperty('--rh-dur', Math.max(24, Math.round(txt.length * 0.78)) + 's'); var measureNotice=function(){ var overflow = t.scrollWidth > marquee.clientWidth + 8; marquee.classList.toggle('is-overflow', overflow); if (overflow) { t.style.animation = 'rhMarq var(--rh-dur) linear infinite'; } else { t.style.animation = 'none'; t.style.transform = 'none'; } }; requestAnimationFrame(measureNotice); setTimeout(measureNotice,120); } }
       var b = $('rhNoticeBtn');
       if (b) { var hasDetail = !!(cfg.notice.title || cfg.notice.body); b.style.display = hasDetail ? '' : 'none'; b.textContent = cfg.notice.buttonLabel || 'Detail'; }
     }
@@ -13188,6 +13220,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
 })();
 </script>
 
+
 </body></html>
 
 <style id="gv-support-drag-theme-final">
@@ -13249,3 +13282,25 @@ body.auth-mode #authRegister > div[style*="dashed"] {
 }
 @media(max-width:480px){body.auth-mode #authLogin,body.auth-mode #authRegister{margin:18px auto 24px!important;padding:23px 17px 20px!important;}}
 </style>
+
+
+<script>
+/* Royal finance UX guardrails: limits configured in Admin > Deposits/Withdrawals. */
+(function(){
+  var originalDeposit=window.submitDepositRequest;
+  if(typeof originalDeposit==='function') window.submitDepositRequest=async function(){
+    var amount=Number(document.getElementById('depAmount')?.value)||0, c=String(typeof selectedWalletCurrency!=='undefined'?selectedWalletCurrency:'INR').toUpperCase();
+    var min=Number(c==='USDT'?(typeof adminMinDepositUsdt!=='undefined'?adminMinDepositUsdt:0):(typeof adminMinDeposit!=='undefined'?adminMinDeposit:0))||0, max=Number(c==='USDT'?window.gvDepositMaxUsdt:window.gvDepositMaxInr)||0;
+    if(max>0&&amount>max){alert('Maximum deposit is '+formatWalletAmount(max,c)+'.');return;}
+    if(min>0&&amount<min){alert('Minimum deposit is '+formatWalletAmount(min,c)+'.');return;}
+    return originalDeposit.apply(this,arguments);
+  };
+  var originalWithdraw=window.submitWithdrawal;
+  if(typeof originalWithdraw==='function') window.submitWithdrawal=async function(){
+    var amount=Number(document.getElementById('withdrawAmount')?.value)||0, c=String(typeof selectedWalletCurrency!=='undefined'?selectedWalletCurrency:'INR').toUpperCase();
+    var max=Number(c==='USDT'?window.gvWithdrawMaxUsdt:window.gvWithdrawMaxInr)||0;
+    if(max>0&&amount>max){alert('Maximum withdrawal is '+formatWalletAmount(max,c)+'.');return;}
+    return originalWithdraw.apply(this,arguments);
+  };
+})();
+</script>
