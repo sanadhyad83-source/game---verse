@@ -2312,94 +2312,93 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             </div>
         </div>
                 <!-- ========== HOME TAB ========== -->
-        <div id="tabHome" class="tab-panel active">
+        <div id="tabHome" class="tab-panel active rh-home" data-accent="gold">
+
+            <!-- Royal greeting -->
+            <div id="rhGreet" class="rh-greet">
+                <div class="rh-crest" aria-hidden="true">👑</div>
+                <div class="rh-greet-text"><small id="rhGreetHello">Welcome back</small><b id="rhGreetName">Royal Player</b></div>
+                <button type="button" id="rhUidChip" class="rh-uid" onclick="rhCopyUid()" title="Tap to copy your UID">UID <span id="rhUidVal">---</span></button>
+            </div>
+
+            <!-- Notice bar -->
+            <div id="rhNotice" class="rh-notice">
+                <span class="rh-notice-ico" aria-hidden="true">📢</span>
+                <div class="rh-marq"><span id="rhNoticeText"></span></div>
+                <button type="button" id="rhNoticeBtn" class="rh-notice-btn" onclick="rhOpenNotice()">Detail</button>
+            </div>
+
             <!-- Admin-controlled banner slider (hidden when admin has no active banner) -->
             <div id="gvBannerSlider" class="gv-bn hidden" aria-label="Promotions"></div>
-            <!-- Wallet Card -->
-            <div class="wallet-card">
-                <div class="wallet-top-row">
-                    <div class="wallet-label">Total Wallet Balance</div>
-                    <div class="wallet-badge-row">
-                        <div id="walletGBadge" class="g-badge-profile hidden" aria-label="Official Game Verse G Badge">
-                            <span class="g-badge-mark" aria-hidden="true"></span>
-                            <span class="g-badge-copy"><b>G BADGE</b><small id="walletGBadgeRole">Official Game Verse Member</small><em>OFFICIAL MEMBER</em></span>
-                        </div>
+
+            <!-- Royal wallet -->
+            <div class="rh-wallet" id="rhWallet">
+                <span class="rh-orn tl"></span><span class="rh-orn tr"></span><span class="rh-orn bl"></span><span class="rh-orn br"></span>
+                <div class="rh-wallet-top">
+                    <div class="rh-wallet-label">👑 ROYAL TREASURY</div>
+                    <div id="walletGBadge" class="g-badge-profile hidden" aria-label="Official Game Verse G Badge">
+                        <span class="g-badge-mark" aria-hidden="true"></span>
+                        <span class="g-badge-copy"><b>G BADGE</b><small id="walletGBadgeRole">Official Game Verse Member</small><em>OFFICIAL MEMBER</em></span>
                     </div>
                 </div>
-                <div class="wallet-currency-switch" style="display:flex;gap:8px;margin:10px 0 4px;">
-                <button type="button" class="wallet-currency-btn active" data-currency="INR" onclick="switchWalletCurrency('INR')" style="margin:0;padding:8px 12px;">₹ INR</button>
-                <button type="button" class="wallet-currency-btn" data-currency="USDT" onclick="switchWalletCurrency('USDT')" style="margin:0;padding:8px 12px;">₮ USDT</button>
-            </div>
-            <div class="wallet-amount-row">
-                    <span id="walletBalanceDisplay" class="wallet-amount">₹0</span>
+                <div class="rh-wallet-mid">
+                    <span id="walletBalanceDisplay" class="rh-amount">₹0</span>
+                    <button type="button" id="rhEyeBtn" class="rh-eye" onclick="rhToggleBalance()" aria-label="Hide or show balance" title="Hide / show balance"><svg id="rhEyeSvg" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
                 </div>
-                <div class="wallet-tagline">Your Winning Journey Begins!</div>
+                <div class="rh-wallet-row">
+                    <div class="rh-cur">
+                        <button type="button" class="wallet-currency-btn active" data-currency="INR" onclick="switchWalletCurrency('INR')">₹ INR</button>
+                        <button type="button" class="wallet-currency-btn" data-currency="USDT" onclick="switchWalletCurrency('USDT')">₮ USDT</button>
+                    </div>
+                    <div class="rh-tagline" id="rhTagline">Your Winning Journey Begins!</div>
+                </div>
+                <div class="rh-quick" id="rhQuick">
+                    <button type="button" class="rh-q rh-q-primary" onclick="openFeature('Deposit')"><span>➕</span>Deposit</button>
+                    <button type="button" class="rh-q" onclick="openFeature('Withdraw')"><span>⬆️</span>Withdraw</button>
+                    <button type="button" class="rh-q" onclick="openFeature('History')"><span>🕐</span>History</button>
+                </div>
             </div>
 
             <div id="gvExperienceHub" class="gv-experience-stack hidden"></div>
 
-            <div class="home-action-row">
-                <button type="button" class="home-action-btn btn-yellow" onclick="openFeature('Deposit')">
-                    <span class="ha-icon">➕</span>
-                    Deposit
-                </button>
-                <button type="button" class="home-action-btn btn-yellow" onclick="openFeature('Withdraw')">
-                    <span class="ha-icon">⬆️</span>
-                    Withdraw
-                </button>
+            <!-- Royal menu grid (rendered from control/homeSettings) -->
+            <div id="rhMenuWrap">
+                <div class="rh-sec"><span id="rhMenuTitle">Royal Menu</span></div>
+                <div id="rhMenu" class="rh-menu cols-3"></div>
             </div>
-            <div class="home-history-link" onclick="openFeature('History')">🕐 Transaction History</div>
 
-            <div class="section-label">✦ Explore</div>
-            <div class="explore-list">
-                <div class="explore-item" onclick="openFeature('Play Games')">
-                    <div class="explore-icon" style="background:rgba(80,80,80,0.25);">🎮</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Play Games Hub</div>
-                        <div class="explore-sub">Play exciting games & win rewards</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
-                <div class="explore-item" onclick="openFeature('Predictions')">
-                    <div class="explore-icon" style="background:rgba(var(--accent-rgb),0.2);">📊</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Predictions Hub</div>
-                        <div class="explore-sub">Predict & win big</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
-                <div class="explore-item" onclick="openFeature('Invest')">
-                    <div class="explore-icon" style="background:rgba(16,185,129,0.22);">📈</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Invest & Earn</div>
-                        <div class="explore-sub">Invest smart & grow your money</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
-                <div class="explore-item" onclick="openFeature('Membership')">
-                    <div class="explore-icon" style="background:rgba(217,119,6,0.25);">👑</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Membership</div>
-                        <div class="explore-sub">Exclusive membership benefits</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
-                <div class="explore-item" onclick="openFeature('Income')">
-                    <div class="explore-icon" style="background:rgba(16,185,129,0.22);">💰</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Income</div>
-                        <div class="explore-sub">Track your earnings</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
-                <div class="explore-item" onclick="openFeature('Support')">
-                    <div class="explore-icon" style="background:rgba(148,163,184,0.2);">🎧</div>
-                    <div class="explore-text">
-                        <div class="explore-title">Support</div>
-                        <div class="explore-sub">Help & customer support</div>
-                    </div>
-                    <div class="explore-chevron">›</div>
-                </div>
+            <!-- Featured games strip -->
+            <div id="rhGamesWrap">
+                <div class="rh-sec"><span id="rhGamesTitle">Featured Games</span><a href="javascript:void(0)" onclick="openFeature('Play Games')">See all ›</a></div>
+                <div id="rhGames" class="rh-games"></div>
+            </div>
+
+            <!-- Promo cards -->
+            <div id="rhDaily" class="rh-promo rh-promo-daily hidden" onclick="switchTab('daily')">
+                <div class="rh-promo-ico">🎁</div>
+                <div class="rh-promo-body"><b id="rhDailyTitle">Daily Royal Reward</b><small id="rhDailySub">Check in &amp; spin the wheel every day</small></div>
+                <div class="rh-promo-go">Claim ›</div>
+            </div>
+            <div id="rhRefer" class="rh-promo rh-promo-refer" onclick="switchTab('refer')">
+                <div class="rh-promo-ico">🤝</div>
+                <div class="rh-promo-body"><b id="rhReferTitle">Invite Friends, Earn Rewards</b><small id="rhReferSub">Share your link and get rewarded</small></div>
+                <div class="rh-promo-go">Invite ›</div>
+            </div>
+
+            <!-- Footer -->
+            <div id="rhFooter" class="rh-footer" onclick="openFeature('Support')">
+                <span class="rh-footer-ico">🎧</span><span id="rhFooterText">Need help? Our royal support team is here for you.</span><span class="rh-footer-go">›</span>
+            </div>
+            <div class="rh-crown-div" aria-hidden="true"><i></i><span>♛</span><i></i></div>
+        </div>
+
+        <!-- Notice detail popup -->
+        <div id="rhNoticeModal" class="rh-modal hidden" onclick="if(event.target===this) rhCloseNotice()">
+            <div class="rh-modal-card" role="dialog" aria-modal="true" aria-labelledby="rhNoticeModalTitle">
+                <div class="rh-modal-crown">👑</div>
+                <h4 id="rhNoticeModalTitle">Notice</h4>
+                <div id="rhNoticeModalBody" class="rh-modal-body"></div>
+                <button type="button" class="rh-modal-ok" onclick="rhCloseNotice()">Got it</button>
             </div>
         </div>
 
@@ -2509,22 +2508,60 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             <div id="missionsListContainer">Loading missions...</div>
         </div>
 
-        <!-- ========== DAILY REWARD TAB ========== -->
+        <!-- ========== ROYAL REWARDS TAB ========== -->
         <div id="tabDaily" class="tab-panel">
-            <div class="tab-panel-header">
-                <h3 style="color:var(--accent-cyan);">🎁 Rewards</h3>
-            </div>
-            <div class="info-box" style="margin-bottom:14px;">
-                <p style="font-size:12px; color:var(--accent-cyan); margin-bottom:8px; border-bottom: 1px solid rgba(120, 120, 120, 0.3); padding-bottom: 8px;">
-                    🎫 <b>Have a Gift Code?</b> Enter it below to instantly claim its reward.
-                </p>
-                <input id="giftCodeInput" type="text" placeholder="Enter Gift Code" maxlength="12" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
-                <button type="button" onclick="redeemGiftCode()" class="btn-yellow" style="margin-top:8px;">🎫 Redeem Gift Code</button>
-            </div>
-            <div id="userRewardsList" style="max-height: 420px; overflow-y: auto;">Loading daily rewards...</div>
+            <div class="gvr">
+                <div class="gvr-hero">
+                    <div class="gvr-hero-glow"></div>
+                    <div class="gvr-crown">👑</div>
+                    <div class="gvr-eyebrow">ROYAL REWARDS</div>
+                    <div class="gvr-title">Claim · Spin · Win</div>
+                    <div class="gvr-balance">Wallet <b id="gvrWallet">₹0.00</b></div>
+                    <div class="gvr-stats">
+                        <div><span id="gvrStatEarned">₹0</span><small>Total Earned</small></div>
+                        <div><span id="gvrStatStreak">0</span><small>Day Streak</small></div>
+                        <div><span id="gvrStatSpins">0</span><small>Spins Left</small></div>
+                        <div><span id="gvrStatGifts">0</span><small>Gift Codes</small></div>
+                    </div>
+                </div>
 
-            <h4 style="color:var(--accent-cyan); margin:16px 0 8px 0; font-size:14px;">📜 Your Gift Code Claims</h4>
-            <div id="userGiftCodeHistoryList" style="max-height: 200px; overflow-y: auto;">Loading gift code history...</div>
+                <div id="gvrAnnounce" class="gvr-announce hidden"></div>
+
+                <section class="gvr-card">
+                    <div class="gvr-card-head"><span class="gvr-ico">📅</span><div><h4>Daily Check-in</h4><p id="gvrCheckinSub">Log in every day to grow your streak</p></div></div>
+                    <div id="gvrCheckin"><div class="gvr-empty">Loading…</div></div>
+                </section>
+
+                <section class="gvr-card">
+                    <div class="gvr-card-head"><span class="gvr-ico">🎡</span><div><h4>Lucky Spin</h4><p id="gvrSpinSub">Spin the royal wheel for instant cash</p></div></div>
+                    <div id="gvrSpin"><div class="gvr-empty">Loading…</div></div>
+                </section>
+
+                <section class="gvr-card">
+                    <div class="gvr-card-head"><span class="gvr-ico">🎫</span><div><h4>Gift Code</h4><p>Enter a code to instantly claim its reward</p></div></div>
+                    <div class="gvr-gift">
+                        <input id="giftCodeInput" type="text" placeholder="ENTER CODE" maxlength="12" autocomplete="off" autocapitalize="characters" oninput="this.value = this.value.toUpperCase();">
+                        <button type="button" class="gvr-btn gvr-btn-gold" onclick="redeemGiftCode()">Redeem</button>
+                    </div>
+                </section>
+
+                <section class="gvr-card">
+                    <div class="gvr-card-head"><span class="gvr-ico">🎁</span><div><h4>Reward Vault</h4><p>Special rewards from the Royal Court</p></div></div>
+                    <div class="gvr-chips" id="gvrChips">
+                        <button type="button" class="on" data-f="all" onclick="gvrSetFilter('all')">All</button>
+                        <button type="button" data-f="available" onclick="gvrSetFilter('available')">Available</button>
+                        <button type="button" data-f="claimed" onclick="gvrSetFilter('claimed')">Claimed</button>
+                    </div>
+                    <div id="userRewardsList">Loading rewards...</div>
+                </section>
+
+                <section class="gvr-card">
+                    <div class="gvr-card-head"><span class="gvr-ico">📜</span><div><h4>Reward Activity</h4><p>Your latest check-ins, spins and claims</p></div></div>
+                    <div id="gvrActivity"><div class="gvr-empty">No reward activity yet.</div></div>
+                    <div class="gvr-sub">Gift Code Claims</div>
+                    <div id="userGiftCodeHistoryList">Loading gift code history...</div>
+                </section>
+            </div>
         </div>
 
         <!-- ========== EVENTS TAB ========== -->
@@ -5029,89 +5066,311 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             }).catch(err => alert('Could not place prediction: ' + err.message));
         }
 
+        /* ================= ROYAL REWARDS PAGE ================= */
+        const gvr = { cfg: null, checkin: null, spin: null, log: [], gifts: [], rewards: [], filter: 'all', rot: 0, busy: false, spinning: false, refs: [], uid: null, tick: null };
+        const GVR_IST = 19800000, GVR_DAY = 86400000;
+        const GVR_DEFAULT_CFG = {
+            announcement: '',
+            checkin: { enabled: false, resetOnMiss: true, days: [5, 10, 15, 20, 25, 30, 50] },
+            spin: { enabled: false, perDay: 1, prizes: [
+                { label: 'Try Again', amount: 0, weight: 30 }, { label: '₹5', amount: 5, weight: 30 },
+                { label: '₹10', amount: 10, weight: 20 }, { label: '₹20', amount: 20, weight: 10 },
+                { label: '₹50', amount: 50, weight: 6 }, { label: '₹100', amount: 100, weight: 3 },
+                { label: '₹200', amount: 200, weight: 1 }, { label: '₹500', amount: 500, weight: 0 }
+            ] }
+        };
+        function gvrEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+        function gvrMoney(n) { n = Number(n) || 0; return '₹' + (Math.abs(n - Math.round(n)) < 0.005 ? Math.round(n) : n.toFixed(2)); }
+        function gvrArr(v) { return Array.isArray(v) ? v : (v && typeof v === 'object' ? Object.keys(v).sort((a, b) => a - b).map(k => v[k]) : []); }
+        function gvrIstDay(ts) { return new Date(ts + GVR_IST).toISOString().slice(0, 10); }
+        function gvrEl(id) { return document.getElementById(id); }
+        function gvrNormalizeCfg(v) {
+            v = v || {};
+            const d = GVR_DEFAULT_CFG, c = v.checkin || {}, s = v.spin || {};
+            let days = gvrArr(c.days).map(x => Math.max(0, Number(x) || 0)).slice(0, 7);
+            while (days.length < 7) days.push(d.checkin.days[days.length]);
+            let prizes = gvrArr(s.prizes).map(p => ({ label: String((p && p.label) || '').slice(0, 14), amount: Math.max(0, Number(p && p.amount) || 0), weight: Math.max(0, Number(p && p.weight) || 0) }));
+            if (prizes.length < 2) prizes = d.spin.prizes.map(p => Object.assign({}, p));
+            return {
+                announcement: String(v.announcement || '').slice(0, 300),
+                checkin: { enabled: c.enabled === true, resetOnMiss: c.resetOnMiss !== false, days },
+                spin: { enabled: s.enabled === true, perDay: Math.max(1, Math.floor(Number(s.perDay) || 1)), prizes: prizes.slice(0, 12) }
+            };
+        }
+        function gvrBlocked() {
+            try {
+                const r = (typeof gvExtraManualRestriction === 'function') ? gvExtraManualRestriction(currentUserProfile) : {};
+                if (r.freeze || r.blockRewards) { showRestrictionPopup('Rewards Restricted', 'Daily rewards and bonuses are currently blocked for your account by the administrator.'); return true; }
+            } catch (e) {}
+            return false;
+        }
+        function gvrInit(uid) {
+            if (gvr.uid === uid && gvr.refs.length) return;
+            gvr.refs.forEach(r => { try { r.off(); } catch (e) {} });
+            gvr.refs = []; gvr.uid = uid; gvr.cfg = gvrNormalizeCfg(null);
+            const watch = (path, fn) => { const ref = db.ref(path); ref.on('value', fn); gvr.refs.push(ref); };
+            watch('reward_settings', s => { gvr.cfg = gvrNormalizeCfg(s.val()); gvrRenderAll(); });
+            watch('reward_checkin/' + uid, s => { gvr.checkin = s.val(); gvrRenderAll(); });
+            watch('reward_spin/' + uid, s => { gvr.spin = s.val(); if (!gvr.spinning) gvrRenderSpin(); gvrRenderHero(); });
+            watch('user_reward_log/' + uid, s => { const a = []; s.forEach(c => { a.push(c.val()); }); gvr.log = a.sort((x, y) => (y.timestamp || 0) - (x.timestamp || 0)); gvrRenderActivity(); gvrRenderHero(); });
+            watch('user_gift_claims/' + uid, s => { const a = []; s.forEach(c => { a.push(c.val()); }); gvr.gifts = a; gvrRenderHero(); });
+            if (gvr.tick) clearInterval(gvr.tick);
+            gvr.tick = setInterval(() => { const t = gvrEl('tabDaily'); if (t && t.classList.contains('active')) gvrTick(); }, 1000);
+            gvrRenderAll();
+        }
+        function gvrCheckinView() {
+            const cfg = gvr.cfg.checkin, st = gvr.checkin || {}, now = Date.now(), today = gvrIstDay(now), yest = gvrIstDay(now - GVR_DAY);
+            const claimedToday = st.lastDay === today;
+            let es = Number(st.streak) || 0;
+            if (cfg.resetOnMiss && !claimedToday && st.lastDay !== yest) es = 0;
+            const done = claimedToday ? (((es - 1) % 7) + 1) : (es % 7);
+            return { claimedToday, streak: es, done, next: claimedToday ? -1 : done, total: Number(st.total) || 0 };
+        }
+        function gvrSpinsLeft() {
+            const cfg = gvr.cfg.spin, st = gvr.spin || {}, today = gvrIstDay(Date.now());
+            const used = st.day === today ? (Number(st.used) || 0) : 0;
+            return Math.max(0, cfg.perDay - used);
+        }
+        function gvrRenderAll() { gvrRenderHero(); gvrRenderAnnounce(); gvrRenderCheckin(); if (!gvr.spinning) gvrRenderSpin(); gvrRenderActivity(); gvrRenderRewards(); }
+        function gvrRenderHero() {
+            if (!gvr.cfg) return;
+            const w = gvrEl('gvrWallet'); if (w) w.innerText = '₹' + (Number(currentBalance) || 0).toFixed(2);
+            const earned = gvr.log.reduce((s, e) => s + (Number(e.amount) || 0), 0) + gvr.gifts.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+            const set = (id, v) => { const e = gvrEl(id); if (e) e.innerText = v; };
+            set('gvrStatEarned', gvrMoney(earned));
+            set('gvrStatStreak', gvr.cfg.checkin.enabled ? gvrCheckinView().streak : '—');
+            set('gvrStatSpins', gvr.cfg.spin.enabled ? gvrSpinsLeft() : '—');
+            set('gvrStatGifts', gvr.gifts.length);
+        }
+        function gvrRenderAnnounce() {
+            const el = gvrEl('gvrAnnounce'); if (!el) return;
+            const t = gvr.cfg.announcement;
+            if (t) { el.innerHTML = '<span>📢</span><p>' + gvrEsc(t) + '</p>'; el.classList.remove('hidden'); } else el.classList.add('hidden');
+        }
+        function gvrNextMidnightText() {
+            const now = Date.now(), next = (Math.floor((now + GVR_IST) / GVR_DAY) + 1) * GVR_DAY - GVR_IST, d = Math.max(0, next - now);
+            const p = n => String(n).padStart(2, '0');
+            return p(Math.floor(d / 3600000)) + ':' + p(Math.floor(d % 3600000 / 60000)) + ':' + p(Math.floor(d % 60000 / 1000));
+        }
+        function gvrTick() {
+            const a = gvrEl('gvrCheckinTimer'); if (a) a.innerText = gvrNextMidnightText();
+            const b = gvrEl('gvrSpinTimer'); if (b) b.innerText = gvrNextMidnightText();
+            const day = gvrIstDay(Date.now());
+            if (gvr._lastDay && gvr._lastDay !== day) { gvrRenderAll(); }
+            gvr._lastDay = day;
+            gvrRenderHero();
+        }
+        function gvrRenderCheckin() {
+            const el = gvrEl('gvrCheckin'); if (!el || !gvr.cfg) return;
+            const cfg = gvr.cfg.checkin;
+            if (!cfg.enabled) { el.innerHTML = '<div class="gvr-off">🔒 Daily check-in is not active right now. Check back soon!</div>'; return; }
+            const v = gvrCheckinView();
+            const sub = gvrEl('gvrCheckinSub');
+            if (sub) sub.innerText = v.streak > 0 ? '🔥 ' + v.streak + '-day streak — keep it going!' : 'Start your streak today';
+            let tiles = '';
+            for (let i = 0; i < 7; i++) {
+                const cls = i < v.done ? 'done' : (i === v.next ? 'today' : 'locked');
+                const big = i === 6;
+                tiles += '<div class="gvr-day ' + cls + (big ? ' big' : '') + '"><small>' + (big ? 'DAY 7 · JACKPOT' : 'DAY ' + (i + 1)) + '</small><i>' + (i < v.done ? '✅' : (big ? '🎁' : '🪙')) + '</i><b>' + gvrMoney(cfg.days[i]) + '</b></div>';
+            }
+            let btn;
+            if (v.claimedToday) btn = '<button class="gvr-btn gvr-btn-ghost" disabled>✔ Claimed today</button><div class="gvr-timer">Next reward in <b id="gvrCheckinTimer">' + gvrNextMidnightText() + '</b></div>';
+            else btn = '<button class="gvr-btn gvr-btn-gold" onclick="claimDailyCheckin()">Claim Day ' + (v.next + 1) + ' · ' + gvrMoney(cfg.days[v.next]) + '</button><div class="gvr-timer">Resets in <b id="gvrCheckinTimer">' + gvrNextMidnightText() + '</b></div>';
+            const note = cfg.resetOnMiss ? '<div class="gvr-note">Miss a day and your streak restarts from Day 1.</div>' : '';
+            el.innerHTML = '<div class="gvr-days">' + tiles + '</div>' + btn + note;
+        }
+        function gvrWheelSVG(prizes) {
+            const n = prizes.length, seg = 360 / n, R = 140, pt = (a, r) => [(r * Math.sin(a * Math.PI / 180)).toFixed(2), (-r * Math.cos(a * Math.PI / 180)).toFixed(2)];
+            const maxAmt = Math.max.apply(null, prizes.map(p => p.amount));
+            const cols = ['#3b1a7a', '#26104f'];
+            let s = '';
+            prizes.forEach((p, i) => {
+                const a0 = i * seg, a1 = (i + 1) * seg, p0 = pt(a0, R), p1 = pt(a1, R), mid = a0 + seg / 2;
+                const fill = (p.amount === maxAmt && maxAmt > 0) ? '#b8860b' : cols[i % 2];
+                s += '<path d="M0 0 L' + p0[0] + ' ' + p0[1] + ' A' + R + ' ' + R + ' 0 ' + (seg > 180 ? 1 : 0) + ' 1 ' + p1[0] + ' ' + p1[1] + ' Z" fill="' + fill + '" stroke="rgba(245,196,81,.55)" stroke-width="1.2"/>';
+                const label = p.label || (p.amount > 0 ? gvrMoney(p.amount) : 'Try Again');
+                s += '<text transform="rotate(' + mid + ') translate(0,-' + (R - 26) + ')" text-anchor="middle" dominant-baseline="middle" fill="' + (p.amount === maxAmt && maxAmt > 0 ? '#2a1500' : '#ffe29a') + '" font-size="' + (n > 8 ? 11 : 13) + '" font-weight="800">' + gvrEsc(label) + '</text>';
+            });
+            return '<svg viewBox="-150 -150 300 300" class="gvr-wheel-svg"><circle r="148" fill="#0c0420" stroke="#f5c451" stroke-width="4"/><g id="gvrWheel" style="transform:rotate(' + gvr.rot + 'deg)">' + s + '</g><circle r="22" fill="#1a0b3d" stroke="#f5c451" stroke-width="3"/><text y="1" text-anchor="middle" dominant-baseline="middle" font-size="18">👑</text></svg>';
+        }
+        function gvrRenderSpin() {
+            const el = gvrEl('gvrSpin'); if (!el || !gvr.cfg) return;
+            const cfg = gvr.cfg.spin;
+            if (!cfg.enabled) { el.innerHTML = '<div class="gvr-off">🔒 Lucky Spin is not active right now. Check back soon!</div>'; return; }
+            const prizes = cfg.prizes.filter(p => p.weight > 0);
+            if (prizes.length < 2) { el.innerHTML = '<div class="gvr-off">🔒 Lucky Spin is being set up.</div>'; return; }
+            const left = gvrSpinsLeft();
+            const sub = gvrEl('gvrSpinSub'); if (sub) sub.innerText = left > 0 ? left + ' free spin' + (left > 1 ? 's' : '') + ' available today' : 'No spins left today';
+            const btn = left > 0
+                ? '<button id="gvrSpinBtn" class="gvr-btn gvr-btn-gold gvr-spin-btn" onclick="gvrSpin()">🎡 SPIN NOW</button>'
+                : '<button class="gvr-btn gvr-btn-ghost" disabled>Come back tomorrow</button><div class="gvr-timer">New spins in <b id="gvrSpinTimer">' + gvrNextMidnightText() + '</b></div>';
+            el.innerHTML = '<div class="gvr-wheel-wrap"><div class="gvr-pointer"></div>' + gvrWheelSVG(prizes) + '</div>' + btn;
+        }
+        function gvrPick(prizes) {
+            const total = prizes.reduce((s, p) => s + p.weight, 0), buf = new Uint32Array(1);
+            (window.crypto || window.msCrypto).getRandomValues(buf);
+            let r = (buf[0] / 4294967296) * total;
+            for (let i = 0; i < prizes.length; i++) { if (r < prizes[i].weight) return i; r -= prizes[i].weight; }
+            return prizes.length - 1;
+        }
+        function gvrLog(type, amount, label) {
+            const t = Date.now(), day = gvrIstDay(t);
+            const bump = v => { v = v || { count: 0, paid: 0 }; v.count = (v.count || 0) + 1; v.paid = Number(((v.paid || 0) + amount).toFixed(2)); return v; };
+            const jobs = [
+                db.ref('user_reward_log/' + currentUid).push({ type, amount, label, timestamp: t }),
+                db.ref('reward_activity').push({ uid: currentUid, customUid: (typeof userCustomUid !== 'undefined' && userCustomUid) || '', type, amount, label, timestamp: t }),
+                db.ref('reward_stats/' + type).transaction(bump),
+                db.ref('reward_stats_daily/' + day + '/' + type).transaction(bump)
+            ];
+            return Promise.all(jobs).catch(e => console.warn('Reward log skipped:', e));
+        }
+        function gvrCredit(amount, source, label) {
+            if (!(amount > 0)) return Promise.resolve();
+            return db.ref('users/' + currentUid + '/balance').transaction(b => (Number(b) || 0) + amount)
+                .then(() => recordBonusCredit(source, amount, 'INR', { label }))
+                .then(() => gvrLog(source, amount, label));
+        }
+        function claimDailyCheckin() {
+            const cfg = gvr.cfg && gvr.cfg.checkin;
+            if (!cfg || !cfg.enabled || gvr.busy || !currentUid) return;
+            if (gvrBlocked()) return;
+            gvr.busy = true;
+            const now = Date.now(), today = gvrIstDay(now), yest = gvrIstDay(now - GVR_DAY);
+            db.ref('reward_checkin/' + currentUid).transaction(cur => {
+                cur = cur || { streak: 0, lastDay: '', total: 0, count: 0, best: 0 };
+                if (cur.lastDay === today) return;
+                const ns = (cur.lastDay === yest || !cfg.resetOnMiss) ? (Number(cur.streak) || 0) + 1 : 1;
+                const dayNo = ((ns - 1) % 7) + 1, amt = Number(cfg.days[dayNo - 1]) || 0;
+                return { streak: ns, lastDay: today, lastAmount: amt, lastDayNo: dayNo, total: Number(((Number(cur.total) || 0) + amt).toFixed(2)), count: (Number(cur.count) || 0) + 1, best: Math.max(Number(cur.best) || 0, ns) };
+            }).then(res => {
+                if (!res.committed) { gvr.busy = false; return alert('You have already checked in today. Come back tomorrow!'); }
+                const v = res.snapshot.val(), amt = Number(v.lastAmount) || 0;
+                return gvrCredit(amt, 'checkin_reward', 'Day ' + v.lastDayNo + ' check-in').then(() => {
+                    gvr.busy = false;
+                    gvrShowWin(v.lastDayNo === 7 ? '👑 JACKPOT DAY!' : 'Check-in Complete!', amt, '🔥 ' + v.streak + '-day streak · Day ' + v.lastDayNo + ' of 7');
+                });
+            }).catch(e => { gvr.busy = false; alert('Could not complete check-in: ' + e.message); });
+        }
+        function gvrSpin() {
+            const cfg = gvr.cfg && gvr.cfg.spin;
+            if (!cfg || !cfg.enabled || gvr.spinning || !currentUid) return;
+            if (gvrBlocked()) return;
+            const prizes = cfg.prizes.filter(p => p.weight > 0);
+            if (prizes.length < 2) return;
+            gvr.spinning = true;
+            const btn = gvrEl('gvrSpinBtn'); if (btn) { btn.disabled = true; btn.innerText = 'Spinning…'; }
+            const today = gvrIstDay(Date.now());
+            db.ref('reward_spin/' + currentUid).transaction(cur => {
+                cur = cur || { day: '', used: 0, total: 0 };
+                if (cur.day !== today) { cur.day = today; cur.used = 0; }
+                if ((Number(cur.used) || 0) >= cfg.perDay) return;
+                cur.used = (Number(cur.used) || 0) + 1; cur.total = (Number(cur.total) || 0) + 1;
+                return cur;
+            }).then(res => {
+                if (!res.committed) { gvr.spinning = false; gvrRenderSpin(); return alert('No spins left today. Come back tomorrow!'); }
+                const idx = gvrPick(prizes), prize = prizes[idx], seg = 360 / prizes.length;
+                const jitter = (Math.random() - 0.5) * seg * 0.7;
+                const finalMod = (((360 - (idx * seg + seg / 2) + jitter) % 360) + 360) % 360;
+                gvr.rot = gvr.rot - (gvr.rot % 360) + 360 * 6 + finalMod;
+                const w = gvrEl('gvrWheel');
+                if (w) { w.style.transition = 'transform 5s cubic-bezier(.12,.7,.1,1)'; w.style.transform = 'rotate(' + gvr.rot + 'deg)'; }
+                const label = prize.label || (prize.amount > 0 ? gvrMoney(prize.amount) : 'Try Again');
+                const credit = gvrCredit(prize.amount, 'spin_reward', 'Lucky Spin · ' + label);
+                setTimeout(() => {
+                    credit.then(() => {
+                        gvr.spinning = false; gvrRenderSpin(); gvrRenderHero();
+                        gvrShowWin(prize.amount > 0 ? 'You Won!' : 'Better Luck Next Time', prize.amount, prize.amount > 0 ? 'Lucky Spin prize added to your wallet' : 'Spin again tomorrow for another chance');
+                    });
+                }, 5200);
+            }).catch(e => { gvr.spinning = false; gvrRenderSpin(); alert('Spin failed: ' + e.message); });
+        }
+        function gvrShowWin(title, amount, sub) {
+            let m = gvrEl('gvrModal');
+            if (!m) { m = document.createElement('div'); m.id = 'gvrModal'; document.body.appendChild(m); }
+            let conf = '';
+            if (amount > 0) for (let i = 0; i < 42; i++) conf += '<s style="left:' + (Math.random() * 100).toFixed(1) + '%;background:' + ['#f5c451', '#ffe29a', '#a855f7', '#fff', '#fb7185'][i % 5] + ';animation-delay:' + (Math.random() * .8).toFixed(2) + 's;animation-duration:' + (1.8 + Math.random() * 1.4).toFixed(2) + 's"></s>';
+            m.innerHTML = '<div class="gvr-modal-bg" onclick="gvrCloseWin()"></div><div class="gvr-modal-box"><div class="gvr-confetti">' + conf + '</div><div class="gvr-modal-crown">' + (amount > 0 ? '👑' : '🎡') + '</div><h3>' + gvrEsc(title) + '</h3>' + (amount > 0 ? '<div class="gvr-modal-amt">+' + gvrMoney(amount) + '</div>' : '') + '<p>' + gvrEsc(sub || '') + '</p><button class="gvr-btn gvr-btn-gold" onclick="gvrCloseWin()">Awesome</button></div>';
+            m.className = 'show';
+        }
+        function gvrCloseWin() { const m = gvrEl('gvrModal'); if (m) m.className = ''; }
+        function gvrRenderActivity() {
+            const el = gvrEl('gvrActivity'); if (!el) return;
+            if (!gvr.log.length) { el.innerHTML = '<div class="gvr-empty">No reward activity yet. Claim your first reward!</div>'; return; }
+            const ico = { checkin_reward: '📅', spin_reward: '🎡', daily_reward: '🎁' };
+            el.innerHTML = gvr.log.slice(0, 15).map(e => {
+                const d = e.timestamp ? new Date(e.timestamp).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+                return '<div class="gvr-row"><span class="gvr-row-ico">' + (ico[e.type] || '🏆') + '</span><div><b>' + gvrEsc(e.label || 'Reward') + '</b><small>' + d + '</small></div><strong>' + (Number(e.amount) > 0 ? '+' + gvrMoney(e.amount) : '—') + '</strong></div>';
+            }).join('');
+        }
+        function gvrSetFilter(f) {
+            gvr.filter = f;
+            document.querySelectorAll('#gvrChips button').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+            gvrRenderRewards();
+        }
+        function gvrRenderRewards() {
+            const el = gvrEl('userRewardsList'); if (!el) return;
+            if (!gvr.rewards.length) { el.innerHTML = '<div class="gvr-empty">No special rewards available right now.</div>'; return; }
+            const now = Date.now();
+            let list = gvr.rewards.map(x => {
+                const max = Number(x.r.maxClaims) || 0, exp = Number(x.r.expiresAt) || 0;
+                return Object.assign({}, x, { max, exp, expired: exp > 0 && exp <= now, full: max > 0 && x.count >= max });
+            });
+            if (gvr.filter === 'available') list = list.filter(x => !x.claimed && !x.expired && !x.full);
+            else if (gvr.filter === 'claimed') list = list.filter(x => x.claimed);
+            list.sort((a, b) => ((a.claimed || a.expired || a.full) ? 1 : 0) - ((b.claimed || b.expired || b.full) ? 1 : 0) || (Number(b.r.amount) || 0) - (Number(a.r.amount) || 0));
+            if (!list.length) { el.innerHTML = '<div class="gvr-empty">Nothing here yet.</div>'; return; }
+            el.innerHTML = list.map(x => {
+                const r = x.r, amt = Number(r.amount) || 0;
+                let label = 'Claim Reward', cls = 'gvr-btn-gold', dis = false;
+                if (x.claimed) { label = '✔ Claimed'; cls = 'gvr-btn-ghost'; dis = true; }
+                else if (x.expired) { label = 'Expired'; cls = 'gvr-btn-ghost'; dis = true; }
+                else if (x.full) { label = 'Fully Claimed'; cls = 'gvr-btn-ghost'; dis = true; }
+                const pct = x.max > 0 ? Math.min(100, Math.round(x.count / x.max * 100)) : 0;
+                const prog = x.max > 0 ? '<div class="gvr-bar"><i style="width:' + pct + '%"></i></div><small>' + x.count + ' / ' + x.max + ' claimed</small>' : '<small>' + x.count + ' claimed · Unlimited</small>';
+                const expTxt = x.exp ? '<small class="gvr-exp">' + (x.expired ? 'Expired ' : 'Ends ') + new Date(x.exp).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</small>' : '';
+                return '<div class="gvr-reward ' + (dis ? 'is-off' : '') + '"><div class="gvr-reward-top"><div><b>' + gvrEsc(r.title || 'Royal Reward') + '</b><p>' + gvrEsc(r.description || 'A gift from the Royal Court.') + '</p></div><span class="gvr-reward-amt">' + gvrMoney(amt) + '</span></div>' + prog + expTxt + '<button class="gvr-btn ' + cls + '" ' + (dis ? 'disabled' : '') + ' onclick="claimDailyReward(\'' + x.key + '\', ' + amt + ', ' + x.max + ')">' + label + '</button></div>';
+            }).join('');
+        }
+
         function loadDailyRewardsForUser(uid) {
             const container = document.getElementById('userRewardsList');
-            if(!container) return;
-            
-            db.ref('daily_rewards').on('value', snap => {
-                container.innerHTML = '';
-                if(!snap.exists()) {
-                    container.innerHTML = '<p>No daily rewards available right now.</p>';
-                    return;
-                }
-
-                snap.forEach(child => {
-                    const r = child.val();
-                    const rKey = child.key;
-                    const maxClaims = Number(r.maxClaims) || 0;
-
-                    db.ref('claimed_rewards/' + rKey).once('value', claimsSnap => {
-                        const claimsCount = claimsSnap.numChildren();
-                        db.ref('claimed_rewards/' + rKey + '/' + uid).once('value', claimSnap => {
-                            const isClaimed = claimSnap.exists();
-                            const isLimitReached = maxClaims > 0 && claimsCount >= maxClaims;
-                            
-                            let cardElem = document.getElementById('reward_card_' + rKey);
-                            if(!cardElem) {
-                                cardElem = document.createElement('div');
-                                cardElem.id = 'reward_card_' + rKey;
-                                cardElem.className = 'reward-card';
-                                container.appendChild(cardElem);
-                            }
-
-                            let btnText = 'Claim Reward';
-                            let btnClass = 'btn-green';
-                            let isDisabled = false;
-
-                            if (isClaimed) {
-                                btnText = 'Already Claimed';
-                                btnClass = 'btn-gray';
-                                isDisabled = true;
-                            } else if (isLimitReached) {
-                                btnText = 'Limit Reached';
-                                btnClass = 'btn-gray';
-                                isDisabled = true;
-                            }
-
-                            cardElem.innerHTML = `
-                                <b style="color:var(--accent-cyan); font-size:14px;">🎁 Daily Reward</b><br>
-                                <p style="margin:5px 0; font-size:15px; color:#facc15; font-weight:bold;">Amount: ₹${r.amount}</p>
-                                <p style="margin:5px 0; font-size:12px; color:var(--text-muted);">${r.description || 'No description provided.'}</p>
-                                <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Claims: ${claimsCount} / ${maxClaims === 0 ? 'Unlimited' : maxClaims}</p>
-                                <button onclick="claimDailyReward('${rKey}', ${r.amount}, ${maxClaims})" class="${btnClass}" ${isDisabled ? 'disabled' : ''} style="margin-top:6px; padding:6px; font-size:12px;">
-                                    ${btnText}
-                                </button>
-                            `;
-                        });
-                    });
-                });
+            if (!container) return;
+            gvrInit(uid);
+            gvr.rewardsRefresh = function () {
+                db.ref('daily_rewards').once('value').then(snap => gvrLoadRewards(uid, snap));
+            };
+            db.ref('daily_rewards').on('value', snap => gvrLoadRewards(uid, snap));
+        }
+        function gvrLoadRewards(uid, snap) {
+            const items = [];
+            snap.forEach(c => { items.push({ key: c.key, r: c.val() || {} }); });
+            Promise.all(items.map(i => db.ref('claimed_rewards/' + i.key).once('value'))).then(cl => {
+                gvr.rewards = items.map((i, k) => Object.assign({}, i, { count: cl[k].numChildren(), claimed: cl[k].hasChild(uid) }));
+                gvrRenderRewards();
             });
         }
 
         function claimDailyReward(rKey, amount, maxClaims) {
+            if (gvr.busy) return;
+            gvr.busy = true;
+            const done = () => { gvr.busy = false; if (gvr.rewardsRefresh) gvr.rewardsRefresh(); };
             db.ref('daily_rewards/' + rKey).once('value').then(rSnap => {
-                if(!rSnap.exists()) return alert('This reward has been deleted by the admin.');
-                
-                db.ref('claimed_rewards/' + rKey).once('value', claimsSnap => {
-                    const currentClaimsCount = claimsSnap.numChildren();
-                    if(maxClaims > 0 && currentClaimsCount >= maxClaims) {
-                        return alert('Sorry, the claim limit for this reward has been reached!');
-                    }
-
-                    if(claimsSnap.hasChild(currentUid)) {
-                        return alert('You have already claimed this reward!');
-                    }
-
-                    db.ref('claimed_rewards/' + rKey + '/' + currentUid).set(true).then(() => {
-                        db.ref('users/' + currentUid + '/' + walletField()).once('value', bSnap => {
-                            const currentBal = Number(bSnap.val()) || 0;
-                            db.ref('users/' + currentUid).update({ [walletField()]: currentBal + amount }).then(() => recordBonusCredit('daily_reward',amount,selectedWalletCurrency)).then(() => {
-                                alert(`Successfully claimed ₹${amount} daily reward!`);
-                            });
-                        });
+                if (!rSnap.exists()) { done(); return alert('This reward has been deleted by the admin.'); }
+                const rv = rSnap.val() || {}, exp = Number(rv.expiresAt) || 0;
+                if (exp > 0 && exp <= Date.now()) { done(); return alert('Sorry, this reward has expired.'); }
+                amount = Number(rv.amount) || amount; maxClaims = Number(rv.maxClaims) || 0;
+                return db.ref('claimed_rewards/' + rKey).once('value').then(claimsSnap => {
+                    if (maxClaims > 0 && claimsSnap.numChildren() >= maxClaims) { done(); return alert('Sorry, the claim limit for this reward has been reached!'); }
+                    if (claimsSnap.hasChild(currentUid)) { done(); return alert('You have already claimed this reward!'); }
+                    return db.ref('claimed_rewards/' + rKey + '/' + currentUid).transaction(v => (v ? undefined : true)).then(res => {
+                        if (!res.committed) { done(); return alert('You have already claimed this reward!'); }
+                        return db.ref('users/' + currentUid + '/' + walletField()).transaction(b => (Number(b) || 0) + amount)
+                            .then(() => recordBonusCredit('daily_reward', amount, selectedWalletCurrency))
+                            .then(() => gvrLog('daily_reward', amount, rv.title || 'Royal Reward'))
+                            .then(() => { done(); gvrShowWin('Reward Claimed!', amount, rv.title || 'Royal Reward'); });
                     });
                 });
-            });
+            }).catch(e => { done(); alert('Could not claim reward: ' + e.message); });
         }
 
         function redeemGiftCode() {
@@ -11155,7 +11414,7 @@ db.ref('control/k3Config').once('value').then(snap => {
   }
 }).catch(()=>{});
 
-function k3PeriodLabel(roundId) { return gvPeriodLabel('K3', roundId, k3CycleMs()); }
+function k3PeriodLabel(roundId) { return gvPeriodLabel('', roundId, k3CycleMs()); }
 function k3CycleMs() {
   const entry = Math.max(5, Number(k3Config.entrySeconds) || 60);
   const cooldown = Math.max(2, Number(k3Config.cooldownSeconds) || 5);
@@ -12367,6 +12626,460 @@ button{-webkit-tap-highlight-color:transparent}
 @media(max-width:430px){.k3-die{width:52px;height:52px}.k3-dice-row{gap:9px}.k3-timer{font-size:21px}.k3-hist-row .p,.k3-hist-head-row{font-size:8.5px}}
 
 </style>
+<!-- ===== Royal Rewards page design ===== -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+<style id="gv-royal-rewards">
+#tabDaily .gvr{--g1:#f5c451;--g2:#ffe29a;--g3:#b8860b;--p0:#0c0420;--p1:#1a0b3d;--p2:#2a1260;--line:rgba(245,196,81,.32);max-width:640px;margin:0 auto;padding:2px 0 24px;color:#f4eaff;font-family:'Inter',system-ui,sans-serif}
+#tabDaily .gvr *{box-sizing:border-box}
+#tabDaily .gvr-hero{position:relative;overflow:hidden;text-align:center;padding:22px 14px 16px;border-radius:22px;margin-bottom:14px;background:radial-gradient(120% 90% at 50% 0%,#4a1d96 0%,#24104f 48%,#0c0420 100%);border:1px solid var(--g1);box-shadow:0 0 0 3px rgba(245,196,81,.12),0 14px 40px rgba(60,20,140,.55),inset 0 0 40px rgba(245,196,81,.10)}
+#tabDaily .gvr-hero::before,#tabDaily .gvr-hero::after{content:"";position:absolute;inset:7px;border-radius:16px;border:1px solid rgba(245,196,81,.28);pointer-events:none}
+#tabDaily .gvr-hero::after{inset:11px;border-style:dashed;border-color:rgba(245,196,81,.14)}
+#tabDaily .gvr-hero-glow{position:absolute;left:50%;top:-60px;width:280px;height:200px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,226,154,.45),transparent);pointer-events:none;animation:gvrGlow 4s ease-in-out infinite}
+@keyframes gvrGlow{50%{opacity:.55;transform:translateX(-50%) scale(1.12)}}
+#tabDaily .gvr-crown{position:relative;font-size:40px;line-height:1;filter:drop-shadow(0 4px 12px rgba(245,196,81,.7));animation:gvrFloat 3s ease-in-out infinite}
+@keyframes gvrFloat{50%{transform:translateY(-4px)}}
+#tabDaily .gvr-eyebrow{position:relative;margin-top:6px;font:800 11px 'Cinzel',Georgia,serif;letter-spacing:.34em;color:var(--g2);opacity:.9}
+#tabDaily .gvr-title{position:relative;font:800 25px 'Cinzel',Georgia,serif;margin:2px 0 8px;background:linear-gradient(180deg,#fff7d6,#f5c451 55%,#b8860b);-webkit-background-clip:text;background-clip:text;color:transparent}
+#tabDaily .gvr-balance{position:relative;display:inline-block;padding:5px 14px;border-radius:999px;font-size:12px;color:#e9d8ff;background:rgba(0,0,0,.35);border:1px solid var(--line)}
+#tabDaily .gvr-balance b{color:var(--g2);font-size:14px;margin-left:4px}
+#tabDaily .gvr-stats{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+#tabDaily .gvr-stats>div{padding:8px 2px;border-radius:12px;background:rgba(0,0,0,.30);border:1px solid rgba(245,196,81,.20)}
+#tabDaily .gvr-stats span{display:block;font-weight:800;font-size:15px;color:var(--g2)}
+#tabDaily .gvr-stats small{display:block;margin-top:2px;font-size:9.5px;letter-spacing:.04em;color:#bfa9e6;text-transform:uppercase}
+#tabDaily .gvr-announce{display:flex;gap:10px;align-items:center;padding:10px 12px;margin-bottom:14px;border-radius:14px;background:linear-gradient(90deg,rgba(245,196,81,.18),rgba(168,85,247,.12));border:1px solid var(--line);font-size:12.5px}
+#tabDaily .gvr-announce p{margin:0;color:#fff2c9;line-height:1.4}
+#tabDaily .gvr-announce.hidden{display:none}
+#tabDaily .gvr-card{position:relative;margin-bottom:14px;padding:14px;border-radius:20px;background:linear-gradient(165deg,var(--p2) 0%,var(--p1) 40%,var(--p0) 100%);border:1px solid var(--line);box-shadow:0 10px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,226,154,.14)}
+#tabDaily .gvr-card-head{display:flex;gap:11px;align-items:center;margin-bottom:12px}
+#tabDaily .gvr-card-head h4{margin:0;font:800 15px 'Cinzel',Georgia,serif;letter-spacing:.04em;color:var(--g2)}
+#tabDaily .gvr-card-head p{margin:2px 0 0;font-size:11.5px;color:#bfa9e6}
+#tabDaily .gvr-ico{flex:0 0 40px;height:40px;display:grid;place-items:center;font-size:20px;border-radius:12px;background:linear-gradient(145deg,rgba(245,196,81,.30),rgba(245,196,81,.06));border:1px solid var(--line)}
+#tabDaily .gvr-days{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+#tabDaily .gvr-day{position:relative;text-align:center;padding:9px 2px 8px;border-radius:14px;background:rgba(0,0,0,.34);border:1px solid rgba(245,196,81,.18)}
+#tabDaily .gvr-day.big{grid-column:span 2;background:linear-gradient(135deg,rgba(184,134,11,.42),rgba(74,29,150,.5));border-color:var(--g1)}
+#tabDaily .gvr-day small{display:block;font-size:9px;font-weight:700;letter-spacing:.08em;color:#bfa9e6}
+#tabDaily .gvr-day i{display:block;font-style:normal;font-size:21px;margin:3px 0}
+#tabDaily .gvr-day b{font-size:13px;color:var(--g2)}
+#tabDaily .gvr-day.done{background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.5)}
+#tabDaily .gvr-day.done b{color:#6ee7b7}
+#tabDaily .gvr-day.today{border-color:var(--g1);background:linear-gradient(160deg,rgba(245,196,81,.30),rgba(245,196,81,.07));box-shadow:0 0 18px rgba(245,196,81,.45);animation:gvrPulse 1.8s ease-in-out infinite}
+@keyframes gvrPulse{50%{box-shadow:0 0 6px rgba(245,196,81,.2)}}
+#tabDaily .gvr-day.locked{opacity:.68}
+#tabDaily .gvr-btn{display:block;width:100%;padding:13px 14px;border:0;border-radius:14px;font:800 14px 'Inter',system-ui,sans-serif;letter-spacing:.03em;cursor:pointer;transition:transform .12s,filter .12s}
+#tabDaily .gvr-btn:active:not(:disabled){transform:scale(.98)}
+#tabDaily .gvr-btn-gold{color:#2a1500;background:linear-gradient(180deg,#ffe9a8 0%,#f5c451 50%,#c8921a 100%);box-shadow:0 6px 18px rgba(245,196,81,.35),inset 0 1px 0 rgba(255,255,255,.7)}
+#tabDaily .gvr-btn-gold:hover:not(:disabled){filter:brightness(1.06)}
+#tabDaily .gvr-btn-ghost,#tabDaily .gvr-btn:disabled{color:#a894cc;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);box-shadow:none;cursor:not-allowed}
+#tabDaily .gvr-timer{margin-top:8px;text-align:center;font-size:11.5px;color:#bfa9e6}
+#tabDaily .gvr-timer b{color:var(--g2);font-variant-numeric:tabular-nums}
+#tabDaily .gvr-note{margin-top:6px;text-align:center;font-size:10.5px;color:#9985be}
+#tabDaily .gvr-off,#tabDaily .gvr-empty{padding:16px 10px;text-align:center;font-size:12.5px;color:#a894cc;border-radius:14px;background:rgba(0,0,0,.25);border:1px dashed rgba(245,196,81,.2)}
+#tabDaily .gvr-wheel-wrap{position:relative;width:min(300px,82vw);margin:4px auto 14px}
+#tabDaily .gvr-wheel-svg{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 26px rgba(120,60,220,.55))}
+#tabDaily #gvrWheel{transform-origin:0 0}
+#tabDaily .gvr-pointer{position:absolute;left:50%;top:-6px;z-index:2;width:0;height:0;transform:translateX(-50%);border-left:12px solid transparent;border-right:12px solid transparent;border-top:24px solid #f5c451;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+#tabDaily .gvr-gift{display:flex;gap:8px}
+#tabDaily .gvr-gift input{flex:1;min-width:0;width:auto;margin:0;padding:12px 14px;border-radius:14px;font:800 15px 'Inter',monospace;letter-spacing:.2em;text-transform:uppercase;text-align:center;color:var(--g2);background:rgba(0,0,0,.4);border:1px dashed var(--g1);outline:none}
+#tabDaily .gvr-gift input::placeholder{color:#7e6aa6;letter-spacing:.12em;font-weight:600}
+#tabDaily .gvr-gift .gvr-btn{width:auto;flex:0 0 auto;padding:12px 20px}
+#tabDaily .gvr-chips{display:flex;gap:6px;margin-bottom:10px}
+#tabDaily .gvr-chips button{flex:1;padding:7px 4px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:#bfa9e6;font:700 11.5px 'Inter',sans-serif;cursor:pointer}
+#tabDaily .gvr-chips button.on{color:#2a1500;background:linear-gradient(180deg,#ffe9a8,#f5c451);border-color:var(--g1)}
+#tabDaily #userRewardsList{max-height:none;overflow:visible}
+#tabDaily .gvr-reward{padding:12px;margin-bottom:10px;border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(0,0,0,.28));border:1px solid rgba(245,196,81,.25)}
+#tabDaily .gvr-reward.is-off{opacity:.7}
+#tabDaily .gvr-reward-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+#tabDaily .gvr-reward b{font-size:14px;color:#fff}
+#tabDaily .gvr-reward p{margin:3px 0 8px;font-size:11.5px;color:#bfa9e6;line-height:1.4}
+#tabDaily .gvr-reward-amt{flex:0 0 auto;padding:5px 11px;border-radius:999px;font:800 14px 'Inter',sans-serif;color:#2a1500;background:linear-gradient(180deg,#ffe9a8,#f5c451)}
+#tabDaily .gvr-reward small{display:block;font-size:10.5px;color:#9985be;margin-top:4px}
+#tabDaily .gvr-reward small.gvr-exp{color:#fca5a5}
+#tabDaily .gvr-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.10);overflow:hidden}
+#tabDaily .gvr-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a855f7,#f5c451)}
+#tabDaily .gvr-reward .gvr-btn{margin-top:10px;padding:10px}
+#tabDaily .gvr-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.07)}
+#tabDaily .gvr-row:last-child{border-bottom:0}
+#tabDaily .gvr-row>div{flex:1;min-width:0}
+#tabDaily .gvr-row b{display:block;font-size:12.5px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tabDaily .gvr-row small{font-size:10.5px;color:#9985be}
+#tabDaily .gvr-row strong{color:#6ee7b7;font-size:13px}
+#tabDaily .gvr-row-ico{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:rgba(245,196,81,.12)}
+#tabDaily .gvr-sub{margin:14px 0 6px;font:800 11px 'Cinzel',Georgia,serif;letter-spacing:.16em;color:var(--g1);text-transform:uppercase}
+#tabDaily .gift-history-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;margin-bottom:6px;border-radius:12px;background:rgba(0,0,0,.28)!important;border:1px solid rgba(245,196,81,.18)!important;font-size:12px}
+#tabDaily .gift-history-item .gh-code{color:var(--g2);font-weight:700}
+#tabDaily .gift-history-item .gh-amount{color:#6ee7b7;font-weight:800}
+#tabDaily .gift-history-item .gh-date{color:#9985be;font-size:10.5px}
+#tabDaily #userGiftCodeHistoryList{max-height:200px;overflow-y:auto;font-size:12px;color:#a894cc}
+#gvrModal{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:20px}
+#gvrModal.show{display:flex}
+#gvrModal .gvr-modal-bg{position:absolute;inset:0;background:rgba(6,2,16,.82);backdrop-filter:blur(4px)}
+#gvrModal .gvr-modal-box{position:relative;width:min(340px,100%);overflow:hidden;text-align:center;padding:26px 20px 20px;border-radius:24px;color:#f4eaff;background:radial-gradient(120% 90% at 50% 0%,#4a1d96,#1a0b3d 60%,#0c0420);border:1.5px solid #f5c451;box-shadow:0 0 50px rgba(245,196,81,.35),0 20px 60px rgba(0,0,0,.7);animation:gvrPop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes gvrPop{from{transform:scale(.6);opacity:0}}
+#gvrModal .gvr-modal-crown{font-size:54px;animation:gvrFloat 2.4s ease-in-out infinite}
+#gvrModal h3{margin:6px 0 4px;font:800 21px 'Cinzel',Georgia,serif;background:linear-gradient(180deg,#fff7d6,#f5c451);-webkit-background-clip:text;background-clip:text;color:transparent}
+#gvrModal .gvr-modal-amt{font:800 38px 'Inter',sans-serif;color:#ffe29a;text-shadow:0 0 22px rgba(245,196,81,.7);margin:4px 0}
+#gvrModal p{margin:4px 0 16px;font-size:12.5px;color:#bfa9e6}
+#gvrModal .gvr-btn{display:block;width:100%;padding:13px;border:0;border-radius:14px;font:800 14px 'Inter',sans-serif;color:#2a1500;background:linear-gradient(180deg,#ffe9a8,#f5c451 50%,#c8921a);cursor:pointer}
+#gvrModal .gvr-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#gvrModal .gvr-confetti s{position:absolute;top:-12px;width:7px;height:12px;border-radius:2px;animation:gvrFall linear forwards}
+@keyframes gvrFall{to{transform:translateY(420px) rotate(540deg);opacity:.2}}
+@media(max-width:380px){#tabDaily .gvr-title{font-size:21px}#tabDaily .gvr-stats span{font-size:13px}}
+</style>
+
+<style id="gv-royal-home-css">
+/* ===================== ROYAL HOME PAGE ===================== */
+#tabHome.rh-home{--rh-a:#f5bd45;--rh-a2:#ffe7a3;--rh-a3:#b87912;--rh-bg1:#0d2146;--rh-bg2:#06122a;--rh-rgb:245,189,69;--rh-txt:#f8fafc;--rh-mut:#9fb0cf;position:relative;}
+#tabHome.rh-home[data-accent="amethyst"]{--rh-a:#c9a0ff;--rh-a2:#efe0ff;--rh-a3:#7c3aed;--rh-bg1:#241246;--rh-bg2:#120a28;--rh-rgb:201,160,255;}
+#tabHome.rh-home[data-accent="emerald"]{--rh-a:#34d399;--rh-a2:#c4f7e2;--rh-a3:#047857;--rh-bg1:#08302a;--rh-bg2:#041a17;--rh-rgb:52,211,153;}
+#tabHome.rh-home[data-accent="crimson"]{--rh-a:#fb7185;--rh-a2:#ffd6dc;--rh-a3:#be123c;--rh-bg1:#3a0d1d;--rh-bg2:#1d0610;--rh-rgb:251,113,133;}
+#tabHome.rh-home *{box-sizing:border-box;}
+
+/* ---- greeting ---- */
+#tabHome .rh-greet{display:flex;align-items:center;gap:11px;padding:10px 12px;margin:0 0 10px;border-radius:18px;border:1px solid rgba(var(--rh-rgb),.38);background:linear-gradient(120deg,rgba(var(--rh-rgb),.18),rgba(var(--rh-rgb),.04) 70%),linear-gradient(160deg,var(--rh-bg1),var(--rh-bg2));box-shadow:0 8px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);}
+#tabHome .rh-crest{flex:0 0 42px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:21px;background:radial-gradient(circle at 30% 25%,var(--rh-a2),var(--rh-a) 48%,var(--rh-a3));box-shadow:0 0 0 2px rgba(0,0,0,.55),0 0 0 3px rgba(var(--rh-rgb),.75),0 6px 16px rgba(0,0,0,.5);}
+#tabHome .rh-greet-text{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;}
+#tabHome .rh-greet-text small{font-size:10.5px;color:var(--rh-mut);letter-spacing:.4px;}
+#tabHome .rh-greet-text b{font-size:15px;color:var(--rh-a2);font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#tabHome .rh-uid{flex:0 0 auto;width:auto !important;margin:0 !important;padding:6px 10px !important;border-radius:999px !important;border:1px solid rgba(var(--rh-rgb),.55) !important;background:rgba(0,0,0,.35) !important;color:var(--rh-a2) !important;font-size:10.5px !important;font-weight:800 !important;letter-spacing:.4px;box-shadow:none !important;min-height:0 !important;cursor:pointer;}
+#tabHome .rh-uid span{color:#fff;}
+
+/* ---- notice bar ---- */
+#tabHome .rh-notice{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 11px;margin:0 0 10px;border-radius:14px;border:1px solid rgba(var(--rh-rgb),.32);background:linear-gradient(90deg,rgba(var(--rh-rgb),.14),rgba(var(--rh-rgb),.04));}
+#tabHome .rh-notice-ico{flex:0 0 auto;font-size:15px;}
+#tabHome .rh-marq{flex:1;min-width:0;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+#tabHome .rh-marq span{display:inline-block;padding-left:100%;font-size:12px;font-weight:700;color:#f1f5f9;animation:rhMarq var(--rh-dur,16s) linear infinite;}
+@keyframes rhMarq{to{transform:translateX(-100%);}}
+#tabHome .rh-notice-btn{flex:0 0 auto;width:auto !important;margin:0 !important;padding:6px 13px !important;min-height:0 !important;border-radius:999px !important;border:1px solid var(--rh-a2) !important;background:linear-gradient(135deg,var(--rh-a2),var(--rh-a) 55%,var(--rh-a3)) !important;color:#1c1300 !important;font-size:11px !important;font-weight:900 !important;box-shadow:0 3px 10px rgba(0,0,0,.4) !important;-webkit-text-fill-color:#1c1300 !important;}
+
+/* ---- wallet ---- */
+#tabHome .rh-wallet{position:relative;overflow:hidden;margin:0 0 12px;padding:14px 14px 12px;border-radius:22px;border:1px solid rgba(var(--rh-rgb),.6);background:radial-gradient(circle at 88% -10%,rgba(var(--rh-rgb),.28),transparent 48%),linear-gradient(160deg,var(--rh-bg1) 0%,var(--rh-bg2) 100%);box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 0 3px rgba(var(--rh-rgb),.07),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 5px rgba(0,0,0,.18);}
+#tabHome .rh-wallet::before{content:"";position:absolute;inset:6px;border-radius:17px;border:1px solid rgba(var(--rh-rgb),.22);pointer-events:none;}
+#tabHome .rh-orn{position:absolute;width:14px;height:14px;border:2px solid var(--rh-a);opacity:.85;pointer-events:none;}
+#tabHome .rh-orn.tl{top:9px;left:9px;border-right:0;border-bottom:0;border-radius:6px 0 0 0;}
+#tabHome .rh-orn.tr{top:9px;right:9px;border-left:0;border-bottom:0;border-radius:0 6px 0 0;}
+#tabHome .rh-orn.bl{bottom:9px;left:9px;border-right:0;border-top:0;border-radius:0 0 0 6px;}
+#tabHome .rh-orn.br{bottom:9px;right:9px;border-left:0;border-top:0;border-radius:0 0 6px 0;}
+#tabHome .rh-wallet-top{display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;z-index:1;padding:0 6px;}
+#tabHome .rh-wallet-label{font-size:10px;font-weight:900;letter-spacing:2px;color:var(--rh-a);}
+#tabHome .rh-wallet-mid{display:flex;align-items:center;gap:10px;margin:6px 0 2px;position:relative;z-index:1;padding:0 6px;}
+#tabHome .rh-amount{flex:1;min-width:0;font-size:31px;font-weight:900;letter-spacing:-.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:linear-gradient(180deg,#fff 0%,var(--rh-a2) 38%,var(--rh-a) 72%,var(--rh-a3) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;transition:filter .2s;}
+#tabHome .rh-wallet.masked .rh-amount{filter:blur(10px);}
+#tabHome .rh-eye{flex:0 0 auto;width:36px !important;height:36px !important;margin:0 !important;padding:0 !important;min-height:0 !important;border-radius:50% !important;border:1px solid rgba(var(--rh-rgb),.5) !important;background:rgba(0,0,0,.35) !important;color:var(--rh-a2) !important;display:grid !important;place-items:center;box-shadow:none !important;}
+#tabHome .rh-wallet.no-eye .rh-eye{display:none !important;}
+#tabHome .rh-wallet-row{display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;z-index:1;padding:0 6px;margin-top:4px;}
+#tabHome .rh-cur{display:flex;gap:6px;}
+#tabHome .rh-cur .wallet-currency-btn{width:auto !important;margin:0 !important;padding:5px 11px !important;min-height:0 !important;font-size:11px !important;line-height:1.2 !important;border-radius:999px !important;border:1px solid rgba(var(--rh-rgb),.4) !important;background:rgba(0,0,0,.35) !important;color:var(--rh-a2) !important;box-shadow:none !important;}
+#tabHome .rh-cur .wallet-currency-btn.active{background:linear-gradient(135deg,var(--rh-a2),var(--rh-a) 60%,var(--rh-a3)) !important;color:#1c1300 !important;-webkit-text-fill-color:#1c1300 !important;border-color:var(--rh-a2) !important;}
+#tabHome .rh-tagline{font-size:10px;color:var(--rh-mut);font-style:italic;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#tabHome .rh-quick{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px;margin-top:12px;position:relative;z-index:1;padding:0 4px;}
+#tabHome .rh-quick.hidden{display:none !important;}
+#tabHome .rh-q{display:flex !important;align-items:center;justify-content:center;gap:6px;width:auto !important;margin:0 !important;padding:10px 6px !important;min-height:0 !important;border-radius:13px !important;border:1px solid rgba(var(--rh-rgb),.45) !important;background:rgba(255,255,255,.05) !important;color:#f8fafc !important;font-size:12px !important;font-weight:800 !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important;}
+#tabHome .rh-q-primary{background:linear-gradient(135deg,var(--rh-a2),var(--rh-a) 55%,var(--rh-a3)) !important;color:#1c1300 !important;-webkit-text-fill-color:#1c1300 !important;border-color:var(--rh-a2) !important;box-shadow:0 6px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.5) !important;}
+#tabHome .rh-q:active{transform:scale(.97);}
+
+/* ---- section heads ---- */
+#tabHome .rh-sec{display:flex;align-items:center;gap:10px;margin:16px 2px 10px;font-size:12px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;color:var(--rh-a2);}
+#tabHome .rh-sec::before{content:"♛";color:var(--rh-a);font-size:13px;}
+#tabHome .rh-sec span{white-space:nowrap;}
+#tabHome .rh-sec::after{content:"";flex:1;height:1px;order:1;background:linear-gradient(90deg,rgba(var(--rh-rgb),.6),transparent);}
+#tabHome .rh-sec a{order:2;font-size:10.5px;font-weight:800;letter-spacing:.3px;text-transform:none;color:var(--rh-a);text-decoration:none;}
+
+/* ---- menu tiles ---- */
+#tabHome .rh-menu{display:grid;gap:9px;}
+#tabHome .rh-menu.cols-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+#tabHome .rh-menu.cols-4{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+#tabHome .rh-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:13px 3px 10px;border-radius:17px;background:linear-gradient(165deg,var(--rh-bg1),var(--rh-bg2));border:1px solid rgba(var(--rh-rgb),.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.38);cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;transition:transform .15s,border-color .15s,box-shadow .15s;}
+#tabHome .rh-tile:active{transform:scale(.95);border-color:var(--rh-a);}
+#tabHome .rh-tile-ico{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:23px;background:radial-gradient(circle at 30% 25%,rgba(var(--rh-rgb),.38),rgba(var(--rh-rgb),.07) 72%);border:1px solid rgba(var(--rh-rgb),.6);box-shadow:0 0 0 3px rgba(var(--rh-rgb),.08),inset 0 0 12px rgba(var(--rh-rgb),.18);}
+#tabHome .rh-menu.cols-4 .rh-tile-ico{width:40px;height:40px;font-size:20px;}
+#tabHome .rh-tile-name{max-width:100%;padding:0 4px;font-size:11px;font-weight:800;color:#f1f5f9;text-align:center;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#tabHome .rh-menu.cols-4 .rh-tile-name{font-size:9.5px;}
+#tabHome .rh-badge{position:absolute;top:6px;right:6px;font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 6px;border-radius:999px;background:linear-gradient(135deg,var(--rh-a2),var(--rh-a));color:#201400;box-shadow:0 2px 6px rgba(0,0,0,.45);}
+#tabHome .rh-badge.hot{background:linear-gradient(135deg,#ffb199,#ef4444);color:#fff;}
+#tabHome .rh-badge.vip{background:linear-gradient(135deg,#ead7ff,#a855f7);color:#2b0a4a;}
+
+/* ---- featured games ---- */
+#tabHome .rh-games{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+#tabHome .rh-games::-webkit-scrollbar{display:none;}
+#tabHome .rh-game{flex:0 0 122px;scroll-snap-align:start;position:relative;overflow:hidden;min-height:124px;padding:12px 11px 11px;border-radius:18px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;border:1px solid rgba(var(--rh-rgb),.4);background:var(--rg,linear-gradient(150deg,#0d2146,#06122a));box-shadow:0 10px 22px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.12);-webkit-tap-highlight-color:transparent;transition:transform .15s;}
+#tabHome .rh-game:active{transform:scale(.96);}
+#tabHome .rh-game::after{content:"";position:absolute;right:-26px;top:-26px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2),transparent 70%);pointer-events:none;}
+#tabHome .rh-game-ico{font-size:32px;line-height:1;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));}
+#tabHome .rh-game-name{font-size:14px;font-weight:900;color:#fff;margin-top:8px;letter-spacing:.3px;}
+#tabHome .rh-game-sub{font-size:9.5px;color:rgba(255,255,255,.7);margin-top:1px;}
+#tabHome .rh-pill{position:absolute;top:9px;right:9px;z-index:1;font-size:8px;font-weight:900;letter-spacing:.7px;padding:2px 7px;border-radius:999px;background:rgba(16,185,129,.22);border:1px solid rgba(52,211,153,.7);color:#6ee7b7;}
+#tabHome .rh-pill.off{background:rgba(239,68,68,.18);border-color:rgba(248,113,113,.6);color:#fca5a5;}
+#tabHome .rh-pill.go{background:rgba(var(--rh-rgb),.2);border-color:rgba(var(--rh-rgb),.7);color:var(--rh-a2);}
+
+/* ---- promo cards ---- */
+#tabHome .rh-promo{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:12px 13px;margin-top:10px;border-radius:18px;cursor:pointer;border:1px solid rgba(var(--rh-rgb),.42);background:linear-gradient(120deg,rgba(var(--rh-rgb),.22),rgba(var(--rh-rgb),.04) 62%),linear-gradient(160deg,var(--rh-bg1),var(--rh-bg2));box-shadow:0 8px 20px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.09);-webkit-tap-highlight-color:transparent;}
+#tabHome .rh-promo:active{transform:scale(.985);}
+#tabHome .rh-promo.hidden{display:none !important;}
+#tabHome .rh-promo-ico{flex:0 0 44px;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:23px;background:radial-gradient(circle at 30% 25%,rgba(var(--rh-rgb),.4),rgba(var(--rh-rgb),.08));border:1px solid rgba(var(--rh-rgb),.6);}
+#tabHome .rh-promo-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+#tabHome .rh-promo-body b{font-size:13.5px;color:var(--rh-a2);font-weight:900;}
+#tabHome .rh-promo-body small{font-size:10.5px;color:var(--rh-mut);}
+#tabHome .rh-promo-go{flex:0 0 auto;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:900;color:#1c1300;background:linear-gradient(135deg,var(--rh-a2),var(--rh-a) 55%,var(--rh-a3));box-shadow:0 3px 10px rgba(0,0,0,.4);}
+
+/* ---- footer ---- */
+#tabHome .rh-footer{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 13px;border-radius:15px;cursor:pointer;font-size:11.5px;color:var(--rh-mut);border:1px dashed rgba(var(--rh-rgb),.4);background:rgba(var(--rh-rgb),.05);}
+#tabHome .rh-footer.hidden{display:none !important;}
+#tabHome .rh-footer>span:nth-child(2){flex:1;min-width:0;}
+#tabHome .rh-footer-ico{font-size:17px;}
+#tabHome .rh-footer-go{font-size:18px;color:var(--rh-a);font-weight:900;}
+#tabHome .rh-crown-div{display:flex;align-items:center;gap:10px;margin:16px 0 6px;color:var(--rh-a);opacity:.8;}
+#tabHome .rh-crown-div i{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--rh-rgb),.6),transparent);}
+#tabHome .rh-crown-div span{font-size:17px;}
+
+/* ---- notice popup ---- */
+#rhNoticeModal.rh-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,16,.82);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);}
+#rhNoticeModal.hidden{display:none !important;}
+#rhNoticeModal .rh-modal-card{position:relative;width:min(380px,100%);max-height:80vh;overflow:auto;padding:30px 20px 18px;text-align:center;border-radius:22px;border:1.5px solid #f5bd45;background:radial-gradient(circle at 50% -10%,rgba(245,189,69,.28),transparent 55%),linear-gradient(160deg,#0d2146,#06122a);box-shadow:0 24px 60px rgba(0,0,0,.7),0 0 0 4px rgba(245,189,69,.1);animation:rhPop .22s ease;}
+@keyframes rhPop{from{transform:scale(.92);opacity:0;}to{transform:scale(1);opacity:1;}}
+#rhNoticeModal .rh-modal-crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:radial-gradient(circle at 30% 25%,#ffe7a3,#f5bd45 50%,#b87912);box-shadow:0 0 0 3px #06122a,0 8px 18px rgba(0,0,0,.5);}
+#rhNoticeModal h4{margin:0 0 10px;font-size:17px;color:#ffe7a3;font-weight:900;}
+#rhNoticeModal .rh-modal-body{font-size:13px;line-height:1.6;color:#e2e8f0;white-space:pre-wrap;word-break:break-word;text-align:left;}
+#rhNoticeModal .rh-modal-ok{width:100% !important;margin:16px 0 0 !important;padding:12px !important;border-radius:14px !important;border:1px solid #ffe7a3 !important;background:linear-gradient(135deg,#ffe7a3,#f5bd45 55%,#b87912) !important;color:#1c1300 !important;-webkit-text-fill-color:#1c1300 !important;font-size:14px !important;font-weight:900 !important;box-shadow:0 6px 16px rgba(0,0,0,.45) !important;}
+
+/* ---- shimmer (admin toggle) ---- */
+#tabHome.rh-shimmer .rh-wallet::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);transform:skewX(-18deg);animation:rhSheen 5.5s ease-in-out infinite;pointer-events:none;}
+@keyframes rhSheen{0%,55%{left:-60%;}100%{left:130%;}}
+#tabHome.rh-shimmer .rh-crest{animation:rhGlow 3.2s ease-in-out infinite;}
+@keyframes rhGlow{0%,100%{box-shadow:0 0 0 2px rgba(0,0,0,.55),0 0 0 3px rgba(var(--rh-rgb),.75),0 6px 16px rgba(0,0,0,.5);}50%{box-shadow:0 0 0 2px rgba(0,0,0,.55),0 0 0 3px rgba(var(--rh-rgb),.95),0 0 22px rgba(var(--rh-rgb),.7);}}
+
+/* ---- reduced motion: keep the notice readable without animation ---- */
+html.gv-reduce-motion #tabHome .rh-marq span{animation:none !important;padding-left:0;display:block;overflow:hidden;text-overflow:ellipsis;}
+@media (prefers-reduced-motion:reduce){#tabHome .rh-marq span{animation:none !important;padding-left:0;display:block;overflow:hidden;text-overflow:ellipsis;}}
+@media (max-width:350px){#tabHome .rh-amount{font-size:26px;}#tabHome .rh-menu.cols-4{grid-template-columns:repeat(3,minmax(0,1fr));}}
+
+/* ---- royal skin for the bottom navigation ---- */
+body .bottom-tab-bar{background:linear-gradient(180deg,rgba(7,20,42,.97),#020817) !important;border-top:1.5px solid rgba(245,189,69,.6) !important;box-shadow:0 -10px 30px rgba(0,0,0,.7),0 -1px 18px rgba(245,189,69,.12) !important;}
+body .bottom-tab-bar .tab-btn.active .tab-label{color:#ffe7a3 !important;}
+body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(245,189,69,.75));}
+</style>
+
+<script id="gv-royal-home-js">
+/* ===== Royal Home page — driven by control/homeSettings (Admin > Home Settings) ===== */
+(function () {
+  'use strict';
+  var HIDE_KEY = 'gvRoyalHideBalance';
+  var TILES = [
+    { id: 'games',       icon: '🎮', label: 'Play Games',    run: function () { openFeature('Play Games'); } },
+    { id: 'predictions', icon: '📊', label: 'Predictions',   run: function () { openFeature('Predictions'); } },
+    { id: 'invest',      icon: '📈', label: 'Invest & Earn', run: function () { openFeature('Invest'); } },
+    { id: 'membership',  icon: '👑', label: 'Membership',    run: function () { openFeature('Membership'); } },
+    { id: 'income',      icon: '💰', label: 'Income',        run: function () { openFeature('Income'); } },
+    { id: 'events',      icon: '🎉', label: 'Events',        run: function () { switchTab('events'); } },
+    { id: 'missions',    icon: '🎯', label: 'Missions',      run: function () { switchTab('missions'); } },
+    { id: 'refer',       icon: '🤝', label: 'Refer & Earn',  run: function () { switchTab('refer'); } },
+    { id: 'rewards',     icon: '🎁', label: 'Rewards',       run: function () { switchTab('daily'); } },
+    { id: 'support',     icon: '🎧', label: 'Support',       run: function () { openFeature('Support'); } },
+    { id: 'history',     icon: '🕐', label: 'History',       run: function () { openFeature('History'); } }
+  ];
+  var BADGES = ['', 'NEW', 'HOT', 'VIP'];
+  var ACCENTS = ['gold', 'amethyst', 'emerald', 'crimson'];
+  var GAMES = [
+    { id: 'wingo', icon: '🎨', name: 'WINGO', sub: 'Colour lottery', bg: 'linear-gradient(150deg,#0e5a63,#06222b)' },
+    { id: 'k3',    icon: '🎲', name: 'K3',    sub: 'Dice lottery',   bg: 'linear-gradient(150deg,#4b2a8a,#1a0d3a)' },
+    { id: 'mines', icon: '💣', name: 'Mines', sub: 'Pick & cash out', bg: 'linear-gradient(150deg,#7a1f2e,#2a0a12)' },
+    { id: 'all',   icon: '🕹️', name: 'All Games', sub: 'Arcade & more', bg: 'linear-gradient(150deg,#8a6414,#2b1d05)' }
+  ];
+  var cfg = null, rewardCfg = {}, lastGamesSig = '', copyTimer = null, balHidden = loadHidden();
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+  function arr(v) { return Array.isArray(v) ? v.filter(Boolean) : (v && typeof v === 'object' ? Object.keys(v).map(function (k) { return v[k]; }) : []); }
+  function pick(o, k, d) { return (o && o[k] !== undefined && o[k] !== null) ? o[k] : d; }
+  function setText(id, t) { var e = $(id); if (e && e.textContent !== t) e.textContent = t; }
+
+  // Must match the defaults used by Admin > Home Settings.
+  function normalize(r) {
+    r = r || {};
+    var out = {
+      style: { accent: ACCENTS.indexOf(pick(r.style, 'accent', 'gold')) >= 0 ? pick(r.style, 'accent', 'gold') : 'gold', shimmer: pick(r.style, 'shimmer', true) !== false },
+      greeting: { enabled: pick(r.greeting, 'enabled', true) !== false, text: String(pick(r.greeting, 'text', 'Welcome back')), showUid: pick(r.greeting, 'showUid', true) !== false },
+      notice: { enabled: pick(r.notice, 'enabled', true) !== false, text: String(pick(r.notice, 'text', 'Welcome to Titan Game Verse — play smart, play royal!')), buttonLabel: String(pick(r.notice, 'buttonLabel', 'Detail')), title: String(pick(r.notice, 'title', '')), body: String(pick(r.notice, 'body', '')) },
+      wallet: { tagline: String(pick(r.wallet, 'tagline', 'Your Winning Journey Begins!')), hideToggle: pick(r.wallet, 'hideToggle', true) !== false, quickActions: pick(r.wallet, 'quickActions', true) !== false },
+      menu: { title: String(pick(r.menu, 'title', 'Royal Menu')), columns: Number(pick(r.menu, 'columns', 3)) === 4 ? 4 : 3, tiles: [] },
+      games: { enabled: pick(r.games, 'enabled', true) !== false, title: String(pick(r.games, 'title', 'Featured Games')), wingo: pick(r.games, 'wingo', true) !== false, k3: pick(r.games, 'k3', true) !== false, mines: pick(r.games, 'mines', true) !== false, all: pick(r.games, 'all', true) !== false },
+      daily: { enabled: pick(r.daily, 'enabled', true) !== false, title: String(pick(r.daily, 'title', 'Daily Royal Reward')), sub: String(pick(r.daily, 'sub', 'Check in & spin the wheel every day')) },
+      refer: { enabled: pick(r.refer, 'enabled', true) !== false, title: String(pick(r.refer, 'title', 'Invite Friends, Earn Rewards')), sub: String(pick(r.refer, 'sub', 'Share your link and get rewarded')) },
+      footer: { enabled: pick(r.footer, 'enabled', true) !== false, text: String(pick(r.footer, 'text', 'Need help? Our royal support team is here for you.')) }
+    };
+    var seen = {};
+    arr(r.menu && r.menu.tiles).forEach(function (t) {
+      var base = TILES.filter(function (x) { return x.id === t.id; })[0];
+      if (!base || seen[t.id]) return; seen[t.id] = 1;
+      out.menu.tiles.push({ id: t.id, enabled: t.enabled !== false, label: String(t.label || base.label), badge: BADGES.indexOf(t.badge) >= 0 ? t.badge : '' });
+    });
+    TILES.forEach(function (t) { if (!seen[t.id]) out.menu.tiles.push({ id: t.id, enabled: true, label: t.label, badge: '' }); });
+    return out;
+  }
+
+  function tileById(id) { return TILES.filter(function (t) { return t.id === id; })[0]; }
+
+  function renderMenu() {
+    var wrap = $('rhMenuWrap'), box = $('rhMenu'); if (!wrap || !box) return;
+    var tiles = cfg.menu.tiles.filter(function (t) { return t.enabled; });
+    wrap.classList.toggle('hidden', !tiles.length);
+    setText('rhMenuTitle', cfg.menu.title || 'Royal Menu');
+    box.className = 'rh-menu cols-' + cfg.menu.columns;
+    box.innerHTML = tiles.map(function (t) {
+      var b = tileById(t.id);
+      return '<div class="rh-tile" role="button" tabindex="0" data-id="' + esc(t.id) + '">' +
+        (t.badge ? '<span class="rh-badge ' + t.badge.toLowerCase() + '">' + esc(t.badge) + '</span>' : '') +
+        '<div class="rh-tile-ico">' + b.icon + '</div><div class="rh-tile-name">' + esc(t.label) + '</div></div>';
+    }).join('');
+  }
+
+  function gameLive(id) {
+    try {
+      if (typeof globalGamesPaused !== 'undefined' && globalGamesPaused) return false;
+      if (id === 'wingo') return typeof colourClashConfig === 'undefined' || colourClashConfig.enabled !== false;
+      if (id === 'k3') return typeof k3Config === 'undefined' || k3Config.enabled !== false;
+      if (id === 'mines') return typeof minesConfig === 'undefined' || minesConfig.enabled !== false;
+    } catch (e) {}
+    return true;
+  }
+  function renderGames(force) {
+    var wrap = $('rhGamesWrap'), box = $('rhGames'); if (!wrap || !box || !cfg) return;
+    var list = GAMES.filter(function (g) { return cfg.games[g.id]; });
+    var show = cfg.games.enabled && list.length > 0;
+    var sig = [show, cfg.games.title, list.map(function (g) { return g.id + (gameLive(g.id) ? 1 : 0); }).join(',')].join('|');
+    if (!force && sig === lastGamesSig) return;
+    lastGamesSig = sig;
+    wrap.classList.toggle('hidden', !show);
+    setText('rhGamesTitle', cfg.games.title || 'Featured Games');
+    box.innerHTML = list.map(function (g) {
+      var pill = g.id === 'all' ? '<span class="rh-pill go">PLAY</span>' : (gameLive(g.id) ? '<span class="rh-pill">LIVE</span>' : '<span class="rh-pill off">LOCKED</span>');
+      return '<div class="rh-game" role="button" tabindex="0" data-game="' + g.id + '" style="--rg:' + g.bg + '">' + pill +
+        '<div class="rh-game-ico">' + g.icon + '</div><div><div class="rh-game-name">' + esc(g.name) + '</div><div class="rh-game-sub">' + esc(g.sub) + '</div></div></div>';
+    }).join('');
+  }
+  function playGame(id) {
+    openFeature('Play Games');
+    try {
+      if (id === 'wingo') tryPlayColourClash();
+      else if (id === 'k3') tryPlayK3();
+      else if (id === 'mines') tryPlayGame('mines', gameLive('mines') ? 'active' : 'locked', 'Mines', 0, 0, false);
+    } catch (e) { console.warn('[Royal Home] could not open game', id, e); }
+  }
+
+  function applyDaily() {
+    var el = $('rhDaily'); if (!el || !cfg) return;
+    var on = pick(rewardCfg.checkin, 'enabled', false) === true || pick(rewardCfg.spin, 'enabled', false) === true;
+    el.classList.toggle('hidden', !(cfg.daily.enabled && on));
+    setText('rhDailyTitle', cfg.daily.title); setText('rhDailySub', cfg.daily.sub);
+  }
+
+  function refreshUser() {
+    if (!cfg) return;
+    var p = {}; try { p = currentUserProfile || {}; } catch (e) {}
+    var name = p.name || p.username || p.displayName || (p.email ? String(p.email).split('@')[0] : '') || 'Royal Player';
+    var uid = ''; try { uid = userCustomUid || ''; } catch (e) {}
+    setText('rhGreetName', name); setText('rhUidVal', uid || '---');
+  }
+
+  function loadHidden() { try { return localStorage.getItem(HIDE_KEY) === '1'; } catch (e) { return false; } }
+  function applyBalanceMask() {
+    var w = $('rhWallet'); if (!w || !cfg) return;
+    var allowed = cfg.wallet.hideToggle;
+    w.classList.toggle('no-eye', !allowed);
+    w.classList.toggle('masked', allowed && balHidden);
+    var svg = $('rhEyeSvg');
+    if (svg) svg.innerHTML = (allowed && balHidden)
+      ? '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="3" x2="21" y2="21"/>'
+      : '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>';
+  }
+
+  function apply() {
+    if (!cfg) return;
+    var home = $('tabHome'); if (!home) return;
+    home.setAttribute('data-accent', cfg.style.accent);
+    home.classList.toggle('rh-shimmer', cfg.style.shimmer);
+
+    var g = $('rhGreet'); if (g) g.classList.toggle('hidden', !cfg.greeting.enabled);
+    setText('rhGreetHello', cfg.greeting.text || 'Welcome back');
+    var chip = $('rhUidChip'); if (chip) chip.style.display = cfg.greeting.showUid ? '' : 'none';
+
+    var n = $('rhNotice'), txt = (cfg.notice.text || '').trim();
+    if (n) {
+      n.classList.toggle('hidden', !(cfg.notice.enabled && txt));
+      var t = $('rhNoticeText');
+      if (t && t.textContent !== txt) { t.textContent = txt; n.style.setProperty('--rh-dur', Math.max(10, Math.round(txt.length * 0.3 + 8)) + 's'); }
+      var b = $('rhNoticeBtn');
+      if (b) { var hasDetail = !!(cfg.notice.title || cfg.notice.body); b.style.display = hasDetail ? '' : 'none'; b.textContent = cfg.notice.buttonLabel || 'Detail'; }
+    }
+
+    var tg = $('rhTagline'); if (tg) { tg.textContent = cfg.wallet.tagline; tg.style.display = cfg.wallet.tagline ? '' : 'none'; }
+    var q = $('rhQuick'); if (q) q.classList.toggle('hidden', !cfg.wallet.quickActions);
+    applyBalanceMask();
+
+    renderMenu(); renderGames(true); applyDaily();
+
+    var r = $('rhRefer'); if (r) r.classList.toggle('hidden', !cfg.refer.enabled);
+    setText('rhReferTitle', cfg.refer.title); setText('rhReferSub', cfg.refer.sub);
+    var f = $('rhFooter'); if (f) f.classList.toggle('hidden', !cfg.footer.enabled);
+    setText('rhFooterText', cfg.footer.text);
+    refreshUser();
+  }
+
+  /* ---- public handlers used by the markup ---- */
+  window.rhToggleBalance = function () {
+    balHidden = !balHidden;                                   // in-memory state is the source of truth
+    try { localStorage.setItem(HIDE_KEY, balHidden ? '1' : '0'); } catch (e) {}   // persistence is best-effort
+    if (!cfg) cfg = normalize(null);
+    applyBalanceMask();
+  };
+  window.rhOpenNotice = function () {
+    if (!cfg) return;
+    var m = $('rhNoticeModal'); if (!m) return;
+    if (m.parentNode !== document.body) document.body.appendChild(m);   // keep the popup outside any transformed panel
+    $('rhNoticeModalTitle').textContent = cfg.notice.title || 'Notice';
+    $('rhNoticeModalBody').textContent = cfg.notice.body || cfg.notice.text;
+    m.classList.remove('hidden');
+  };
+  window.rhCloseNotice = function () { var m = $('rhNoticeModal'); if (m) m.classList.add('hidden'); };
+  window.rhCopyUid = function () {
+    var uid = ''; try { uid = userCustomUid || ''; } catch (e) {}
+    if (!uid || uid === '---') return;
+    var done = function () {
+      var chip = $('rhUidChip'); if (!chip) return;
+      chip.innerHTML = 'Copied ✓'; clearTimeout(copyTimer);
+      copyTimer = setTimeout(function () { chip.innerHTML = 'UID <span id="rhUidVal">' + esc(uid) + '</span>'; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(uid).then(done, function () {});
+    else { var ta = document.createElement('textarea'); ta.value = uid; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} document.body.removeChild(ta); }
+  };
+
+  function onActivate(e) {
+    var tile = e.target.closest && e.target.closest('.rh-tile');
+    if (tile) { var t = tileById(tile.getAttribute('data-id')); if (t) t.run(); return; }
+    var game = e.target.closest && e.target.closest('.rh-game');
+    if (game) { var id = game.getAttribute('data-game'); if (id === 'all') openFeature('Play Games'); else playGame(id); }
+  }
+
+  function connect() {
+    if (typeof db !== 'undefined' && db && typeof db.ref === 'function') {
+      db.ref('control/homeSettings').on('value', function (s) { cfg = normalize(s.val()); apply(); }, function (err) { console.warn('[Royal Home] settings read failed:', err && err.message || err); if (!cfg) { cfg = normalize(null); apply(); } });
+      db.ref('reward_settings').on('value', function (s) { rewardCfg = s.val() || {}; applyDaily(); }, function () {});
+    } else setTimeout(connect, 500);
+  }
+  function boot() {
+    var m = $('rhNoticeModal'); if (m) document.body.appendChild(m);
+    var home = $('tabHome');
+    if (home) {
+      home.addEventListener('click', onActivate);
+      home.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.rh-tile,.rh-game')) { e.preventDefault(); onActivate(e); } });
+    }
+    cfg = normalize(null); apply();           // sensible defaults until Firebase answers
+    connect();
+    setInterval(function () { refreshUser(); renderGames(false); }, 2000);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
 </body></html>
 
 <style id="gv-support-drag-theme-final">
