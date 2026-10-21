@@ -1180,7 +1180,7 @@
             flex: 1; font-family: ui-monospace, monospace; font-weight: 800;
             font-size: 15px; color: var(--blue); word-break: break-all;
         }
-        /* ===== Refer & Earn v2 ===== */
+        /* ===== Promotion v2 ===== */
         .rf-hero { position: relative; overflow: hidden; border-radius: 18px; padding: 18px 16px; margin-bottom: 12px;
             background: linear-gradient(135deg, #1b1b1b 0%, #0a0a0a 55%, #10231b 100%);
             border: 1.5px solid rgba(var(--accent-rgb),0.45); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
@@ -2189,7 +2189,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
 
 <style id="gv-royal-games-and-referral">
-/* Royal treatment for Play Games Hub and Refer & Earn */
+/* Royal treatment for Play Games Hub and Promotion */
 .gv-games-hero{border:1px solid rgba(226,190,100,.72)!important;background:radial-gradient(circle at 88% 0%,rgba(244,210,130,.18),transparent 30%),linear-gradient(145deg,#171326,#080b18 58%,#03050c)!important;box-shadow:0 16px 36px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,223,145,.08),0 0 18px rgba(202,163,76,.10)!important}
 .gv-games-hero:before{content:"♛";position:absolute;right:14px;bottom:5px;font-size:54px;color:rgba(231,194,107,.12);pointer-events:none}
 .gv-games-kicker{color:#e3c477!important;letter-spacing:2px!important}
@@ -2510,7 +2510,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             <div class="gv-profile-quick-actions">
                 <button type="button" class="gv-profile-action" onclick="openFeature('Deposit')"><span>＋</span><b>Deposit</b><small>Add funds</small></button>
                 <button type="button" class="gv-profile-action" onclick="openFeature('Withdraw')"><span>↗</span><b>Withdraw</b><small>Request payout</small></button>
-                <button type="button" class="gv-profile-action" onclick="switchTab('refer')"><span>♧</span><b>Refer & Earn</b><small>Invite friends</small></button>
+                <button type="button" class="gv-profile-action" onclick="switchTab('refer')"><span>♧</span><b>Promotion</b><small>Invite friends</small></button>
                 <button type="button" class="gv-profile-action" onclick="openFeature('Support')"><span>🎧</span><b>Get help</b><small>Contact support</small></button>
             </div>
             <div class="gv-profile-security-note"><span>🔒</span><div><b>Keep your account secure</b><p>Never share your password or verification codes with anyone, including people claiming to be support.</p></div></div>
@@ -2528,54 +2528,72 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         <!-- ========== REFER TAB ========== -->
         <div id="tabRefer" class="tab-panel">
             <div class="tab-panel-header">
-                <h3 style="margin-top:0;">👥 Refer & Earn</h3>
+                <h3 style="margin-top:0;">👥 Promotion</h3>
             </div>
 
             <div class="rf-hero" id="rfHero"></div>
 
-            <div class="rf-card">
-                <div class="rf-label">Your referral code</div>
-                <div class="rf-code-row">
-                    <div class="rf-code" id="referMyUid">Loading...</div>
-                    <button type="button" class="rf-icon-btn" onclick="rfCopyCode(this)">📋 Copy</button>
+            <!-- ===== Agency / Team commission (replaces old stats, milestones, friends, earnings) ===== -->
+            <div id="agencyWrap">
+              <div id="agMain">
+                <div class="ag-top">
+                    <button type="button" class="rf-refresh ag-refresh" onclick="rfRefresh(this)">↻ Refresh</button>
+                    <div class="ag-big" id="agYesterday">0</div>
+                    <div class="ag-pill">Yesterday's total commission</div>
+                    <div class="ag-hint" id="agHint"></div>
                 </div>
-                <div class="rf-label">Your invite link</div>
-                <div class="rf-link-row">
-                    <div class="rf-link" id="rfLinkText">Loading...</div>
-                    <button type="button" class="rf-icon-btn" onclick="rfCopyLink(this)">🔗 Copy</button>
+                <div class="ag-panel">
+                    <div class="ag-panel-head"><div>Direct subordinates</div><div>Team subordinates</div></div>
+                    <div class="ag-panel-body" id="agPanel"></div>
                 </div>
-                <div class="rf-link-hint">Friends who open this link land on Create Account with your code already filled in.</div>
 
-            </div>
-
-            <div class="rf-card">
-                <div class="rf-title">How it works</div>
-                <div class="rf-steps" id="rfSteps"></div>
-            </div>
-
-            <div class="rf-stats" id="rfStats"></div>
-
-            <div class="rf-card" id="rfMilestoneCard" style="display:none;">
-                <div class="rf-title">🏆 Milestone bonuses</div>
-                <div id="rfMilestones"></div>
-            </div>
-
-            <div class="rf-card">
-                <div class="rf-title-row">
-                    <div class="rf-title">👥 Your friends</div>
-                    <button type="button" class="rf-refresh" onclick="rfRefresh(this)">↻ Refresh</button>
+                <div class="ag-linkbox">
+                    <div class="ag-linkhead">INVITATION LINK</div>
+                    <div class="ag-linkrow">
+                        <div class="ag-linktext" id="rfLinkText">Loading...</div>
+                        <button type="button" class="ag-linkcopy" onclick="rfCopyLink(this)">📋 Copy</button>
+                    </div>
                 </div>
-                <div class="rf-tabs" id="rfTabs">
-                    <button type="button" data-f="all" class="active" onclick="rfSetFilter('all')">All</button>
-                    <button type="button" data-f="qualified" onclick="rfSetFilter('qualified')">Qualified</button>
-                    <button type="button" data-f="pending" onclick="rfSetFilter('pending')">Pending</button>
-                </div>
-                <div id="userReferralDepositsList">Loading friends...</div>
-            </div>
 
-            <div class="rf-card">
-                <div class="rf-title">💰 Earnings history</div>
-                <div id="rfEarnings">Loading earnings...</div>
+                <div class="ag-row" onclick="agCopyCode(this)">
+                    <span class="ag-row-ico">🎟️</span><span class="ag-row-label">Copy invitation code</span>
+                    <span class="ag-row-val" id="agCodeVal">—</span><span class="ag-row-copy" id="agCodeCopy">📋</span>
+                </div>
+                <div class="ag-row" onclick="agOpen('subs')">
+                    <span class="ag-row-ico">🗓️</span><span class="ag-row-label">Subordinate data</span><span class="ag-row-arrow">›</span>
+                </div>
+                <div class="ag-row" onclick="agOpen('comm')">
+                    <span class="ag-row-ico">💲</span><span class="ag-row-label">Commission detail</span><span class="ag-row-arrow">›</span>
+                </div>
+
+                <div class="ag-card">
+                    <div class="ag-card-title"><span>🏦</span> Promotion data</div>
+                    <div class="ag-promo" id="agPromo"></div>
+                </div>
+              </div>
+
+              <div id="agSubs" class="hidden">
+                <div class="ag-page-head"><button type="button" class="ag-back" onclick="agOpen('main')">‹</button><b>Subordinate data</b><span></span></div>
+                <div class="ag-search">
+                    <input id="agSearch" type="text" inputmode="numeric" placeholder="Search subordinate UID" oninput="agSetSearch(this.value)">
+                    <button type="button" onclick="agRenderSubs()">🔍</button>
+                </div>
+                <div class="ag-filters">
+                    <select id="agLevelSel" onchange="agSetLevel(this.value)"></select>
+                    <div class="ag-date"><input id="agDate" type="date" onchange="agSetDate(this.value)"><button type="button" onclick="agClearDate()">All dates</button></div>
+                </div>
+                <div class="ag-summary" id="agSummary"></div>
+                <div id="agSubList"></div>
+              </div>
+
+              <div id="agComm" class="hidden">
+                <div class="ag-page-head"><button type="button" class="ag-back" onclick="agOpen('main')">‹</button><b>Commission detail</b><span></span></div>
+                <div class="ag-chips" id="agCommChips"></div>
+                <div class="ag-filters">
+                    <div class="ag-date" style="flex:1;"><input id="agCDate" type="date" onchange="agSetCDate(this.value)"><button type="button" onclick="agClearCDate()">All dates</button></div>
+                </div>
+                <div id="agCommList"></div>
+              </div>
             </div>
         </div>
 
@@ -2795,7 +2813,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         <!-- Profile Section -->
         
 
-        <!-- Refer & Earn Section -->
+        <!-- Promotion Section -->
         
 
         <!-- Daily Reward Section -->
@@ -3935,7 +3953,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 
                 updateWalletCurrencyUI();
                 refreshWithdrawalRestrictionStatus();
-                document.getElementById('referMyUid').innerText = userCustomUid;
+                { const _rm = document.getElementById('referMyUid'); if (_rm) _rm.innerText = userCustomUid; }
                 if (typeof rfRenderLink === 'function') rfRenderLink();
                 // referCount will be updated dynamically in loadUserReferralDeposits
                 document.getElementById('profileUid').innerText = userCustomUid;
@@ -4836,7 +4854,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 switchTab('events');
             } else if (featureName === 'Profile') {
                 switchTab('profile');
-            } else if (featureName === 'Refer & Earn') {
+            } else if (featureName === 'Promotion') {
                 switchTab('refer');
             } else if (featureName === 'Daily Reward') {
                 switchTab('daily');
@@ -8764,7 +8782,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         </button>
         <button type="button" class="tab-btn" data-tab="refer" onclick="switchTab('refer')">
             <span class="tab-icon">👥</span>
-            <span class="tab-label">Refer</span>
+            <span class="tab-label">Promotion</span>
         </button>
         <button type="button" class="tab-btn" data-tab="daily" onclick="switchTab('daily')">
             <span class="tab-icon">🎁</span>
@@ -9766,7 +9784,7 @@ button:not(.btn-green):not(.btn-red):not(.btn-yellow){background:linear-gradient
 }
 </style>
 <script>
-/* ===== Refer & Earn v2 (user app) ===== */
+/* ===== Promotion v2 (user app) ===== */
 let referralConfig = { enabled: true, bonus: 0, mode: 'signup', minDeposit: 0, maxReferrals: 0, milestones: [], appLink: '', shareText: '' };
 let referralConfigRaw = null;
 let rfLegacyBonus = 0;
@@ -10186,6 +10204,336 @@ function gvRecordReferralBonus(uid, amount, extra) { return recordBonusCreditFor
 
 </script>
 
+
+<style id="gv-agency-styles">
+#tabRefer.ag-sub-open > :not(#agencyWrap){display:none!important}
+#agencyWrap .hidden{display:none!important}
+#agencyWrap{margin-top:2px}
+.ag-top{position:relative;text-align:center;padding:22px 14px 16px;margin-bottom:12px;border-radius:18px;border:1.5px solid rgba(225,188,98,.75);
+  background:radial-gradient(circle at 85% 0%,rgba(255,232,160,.45),transparent 45%),linear-gradient(160deg,#f3d27a 0%,#c99a35 55%,#6e4f16 100%);box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.ag-refresh{position:absolute;right:10px;top:10px;color:#3a2606!important;border-color:rgba(58,38,6,.45)!important;background:rgba(255,255,255,.25)!important}
+.ag-big{font-size:38px;font-weight:900;color:#4a3004;line-height:1.1}
+.ag-pill{display:inline-block;margin:8px 0 6px;padding:7px 16px;border-radius:99px;font-size:13px;font-weight:800;color:#ffe9a8;background:rgba(20,14,4,.82)}
+.ag-hint{font-size:11.5px;color:#4a3004;font-weight:700;line-height:1.4}
+.ag-panel{border-radius:16px;overflow:hidden;margin-bottom:12px;border:1.5px solid rgba(213,176,91,.42);background:linear-gradient(145deg,rgba(25,22,39,.97),rgba(7,10,19,.98))}
+.ag-panel-head{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.07)}
+.ag-panel-head div{padding:12px 6px;text-align:center;font-size:14px;font-weight:800;color:#ffe4a0}
+.ag-panel-body{display:grid;grid-template-columns:1fr 1fr;padding:6px 0}
+.ag-col{text-align:center;padding:4px 8px}
+.ag-col+.ag-col{border-left:1px solid rgba(255,255,255,.1)}
+.ag-m{padding:7px 0}
+.ag-m b{display:block;font-size:17px;color:#fff;font-weight:800}
+.ag-m b.g{color:#34d399}.ag-m b.o{color:#f4a73b}
+.ag-m span{display:block;font-size:11.5px;color:var(--text-muted);line-height:1.3}
+.ag-invite-btn{width:100%;margin:0 0 10px;padding:15px;border-radius:99px;border:none;cursor:pointer;font-size:16px;font-weight:900;letter-spacing:.8px;color:#4a3004;
+  background:linear-gradient(90deg,#ffe9a8,#d9a63c 55%,#b98424);box-shadow:0 7px 20px rgba(197,151,49,.25)}
+.ag-row{display:flex;align-items:center;gap:12px;padding:15px 14px;margin-bottom:10px;border-radius:14px;cursor:pointer;
+  background:linear-gradient(145deg,rgba(25,22,39,.97),rgba(7,10,19,.98));border:1px solid rgba(213,176,91,.35)}
+.ag-row-ico{font-size:22px;width:32px;text-align:center}
+.ag-row-label{flex:1;font-size:15px;font-weight:700;color:#fff}
+.ag-row-val{font-size:13px;color:#d1d5db;font-family:ui-monospace,monospace}
+.ag-row-copy,.ag-row-arrow{font-size:18px;color:#ffe4a0}.ag-row-arrow{font-size:26px;line-height:1}
+.ag-card{padding:14px;border-radius:16px;margin-bottom:12px;background:linear-gradient(145deg,rgba(25,22,39,.97),rgba(7,10,19,.98));border:1px solid rgba(213,176,91,.42)}
+.ag-card-title{font-size:15px;font-weight:800;color:#ffe4a0;margin-bottom:10px}
+.ag-promo{display:grid;grid-template-columns:1fr 1fr;gap:2px 0}
+.ag-promo .ag-m{text-align:center;padding:12px 6px}
+.ag-promo .ag-m:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
+.ag-promo .ag-m b{font-size:20px}
+.ag-page-head{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:12px;text-align:center;font-size:17px;color:#fff}
+.ag-back{width:38px;height:38px;margin:0;padding:0;border-radius:50%;font-size:24px;line-height:1;cursor:pointer;color:#ffe4a0;background:rgba(255,255,255,.06);border:1px solid rgba(213,176,91,.4)}
+.ag-search{display:flex;gap:8px;margin-bottom:10px;padding:6px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.ag-search input{flex:1;min-width:0;margin:0;background:transparent;border:none;outline:none;color:#fff;font-size:14px;padding:8px}
+.ag-search button{width:60px;margin:0;border:none;border-radius:99px;cursor:pointer;font-size:18px;background:linear-gradient(135deg,#ffe9a8,#c99a35)}
+.ag-filters{display:flex;gap:8px;margin-bottom:12px}
+.ag-filters select,.ag-date{flex:1;min-width:0}
+.ag-filters select{margin:0;padding:12px;border-radius:10px;font-size:14px;color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.ag-date{display:flex;gap:6px}
+.ag-date input{flex:1;min-width:0;margin:0;padding:11px 8px;border-radius:10px;font-size:13px;color:#fff;color-scheme:dark;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.ag-date button{width:auto;margin:0;padding:0 10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;color:#ffe4a0;background:transparent;border:1px solid rgba(213,176,91,.4);white-space:nowrap}
+.ag-summary{display:grid;grid-template-columns:1fr 1fr;gap:4px 0;padding:10px 6px;margin-bottom:12px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
+.ag-summary .ag-m{text-align:center;padding:10px 6px}
+.ag-summary .ag-m:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
+.ag-item{padding:12px 14px;margin-bottom:10px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
+.ag-item-top{display:flex;align-items:center;gap:8px;padding-bottom:8px;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.1)}
+.ag-item-top b{font-size:16px;color:#fff;font-weight:800}
+.ag-copy{width:auto;margin:0;padding:2px 6px;font-size:14px;cursor:pointer;background:transparent;border:none;color:#ffe4a0}
+.ag-kv{display:flex;justify-content:space-between;padding:4px 0;font-size:14px;color:var(--text-muted)}
+.ag-kv b{color:#fff;font-weight:700}.ag-kv b.o{color:#f4a73b}.ag-kv b.g{color:#34d399}.ag-kv b.m{color:var(--text-muted);font-weight:500}
+.ag-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.ag-chip{text-align:center;padding:9px 2px;border-radius:12px;background:rgba(218,179,88,.07);border:1px solid rgba(218,179,88,.25)}
+.ag-chip span{display:block;font-size:10px;font-weight:800;text-transform:uppercase;color:var(--text-muted)}
+.ag-chip b{display:block;margin-top:3px;font-size:14px;color:#ffe4a0}
+.ag-more{width:100%;margin:2px 0 10px;padding:11px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;color:#ffe4a0;background:transparent;border:1px solid rgba(213,176,91,.4)}
+.ag-empty{text-align:center;padding:26px 10px;font-size:13px;color:var(--text-muted)}
+.ag-empty i{display:block;font-style:normal;font-size:30px;margin-bottom:6px}
+#agencyWrap button.ag-refresh{position:absolute!important;right:10px!important;top:10px!important;width:auto!important;margin:0!important;padding:7px 14px!important;font-size:12px!important;font-weight:800!important;border-radius:99px!important;
+  color:#ffe9a8!important;-webkit-text-fill-color:#ffe9a8!important;background:linear-gradient(145deg,#2a1c06,#0d0904)!important;border:1px solid rgba(255,233,168,.75)!important;box-shadow:0 3px 10px rgba(0,0,0,.35)!important;text-shadow:none!important;opacity:1!important}
+#agencyWrap button.ag-back{color:#ffe4a0!important;-webkit-text-fill-color:#ffe4a0!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(213,176,91,.5)!important;box-shadow:none!important;width:38px!important}
+#agencyWrap button.ag-copy{color:#ffe4a0!important;-webkit-text-fill-color:#ffe4a0!important;background:transparent!important;border:none!important;box-shadow:none!important;width:auto!important}
+#agencyWrap button.ag-more,#agencyWrap .ag-date button{color:#ffe4a0!important;-webkit-text-fill-color:#ffe4a0!important;background:transparent!important;border:1px solid rgba(213,176,91,.5)!important;box-shadow:none!important;text-shadow:none!important}
+#agencyWrap .ag-search button{color:#3a2606!important;-webkit-text-fill-color:#3a2606!important;background:linear-gradient(135deg,#ffe9a8,#c99a35)!important;border:none!important;box-shadow:none!important}
+.ag-linkbox{margin-bottom:10px;padding:12px;border-radius:18px;background:linear-gradient(145deg,rgba(25,22,39,.97),rgba(7,10,19,.98));border:1px solid rgba(213,176,91,.45)}
+.ag-linkhead{text-align:center;padding:13px;margin-bottom:10px;border-radius:99px;font-size:16px;font-weight:900;letter-spacing:.8px;color:#4a3004;background:linear-gradient(90deg,#ffe9a8,#d9a63c 55%,#b98424);box-shadow:0 7px 20px rgba(197,151,49,.25)}
+.ag-linkrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(211,171,76,.09);border:1.5px dashed rgba(224,187,97,.5)}
+.ag-linktext{flex:1;min-width:0;font-family:ui-monospace,monospace;font-size:12px;line-height:1.4;color:#d1d5db;word-break:break-all}
+.ag-linktext b{color:#ffdf8a}
+#agencyWrap button.ag-linkcopy{width:auto!important;margin:0!important;padding:9px 14px!important;flex-shrink:0;font-size:12px!important;font-weight:800!important;border-radius:10px!important;color:#3a2606!important;-webkit-text-fill-color:#3a2606!important;background:linear-gradient(135deg,#ffe9a8,#c99a35)!important;border:none!important;box-shadow:none!important;text-shadow:none!important}
+</style>
+<script id="gv-agency-script">
+/* ===== Agency / team commission (user app) =====
+   Commission is paid by the admin app when a subordinate's deposit is approved and is stored in
+   commission_logs/{depositId}_{level}. This page reads: (1) my downline tree, (2) my own commission logs. */
+let agCfg = { enabled: false, rates: [0, 0, 0, 0, 0, 0], levels: 0, firstDepositOnly: false, minDeposit: 0 };
+const agState = { subs: [], logs: [], loadedAt: 0, loading: false, forUid: '', depth: 6, level: 'all', q: '', date: '', cDate: '', subLimit: 40, commLimit: 40 };
+
+function agNormCfg(raw) {
+    raw = raw || {};
+    let r = Array.isArray(raw.rates) ? raw.rates.slice() : Object.values(raw.rates || {});
+    r = r.slice(0, 6).map(x => Math.max(0, Math.min(100, Number(x) || 0)));
+    while (r.length < 6) r.push(0);
+    let levels = 0; r.forEach((x, i) => { if (x > 0) levels = i + 1; });
+    return { enabled: raw.enabled === true, rates: r, levels: levels, firstDepositOnly: raw.firstDepositOnly === true, minDeposit: Math.max(0, Number(raw.minDeposit) || 0) };
+}
+db.ref('control/agencyConfig').on('value', snap => {
+    const old = agState.depth;
+    agCfg = agNormCfg(snap.val());
+    agState.depth = 6; // team is always shown down to 6 levels
+    try { rfRenderHero(); rfRenderSteps(); } catch (e) {}
+    agRenderAll();
+    if (agState.loadedAt && old !== agState.depth) { agState.loadedAt = 0; agLoad(); }
+});
+
+/* ---------- helpers ---------- */
+function agN(n) { n = Math.round((Number(n) || 0) * 100) / 100; return n.toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
+function agDayKey(ts) { const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function agDayRange(key) { // [start, end) of a local YYYY-MM-DD day, or null for "all dates"
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || ''); if (!m) return null;
+    const s = new Date(+m[1], +m[2] - 1, +m[3]).getTime(); const e = new Date(+m[1], +m[2] - 1, +m[3] + 1).getTime();
+    return [s, e];
+}
+function agTodayStart() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function agDayStartOffset(n) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return d.getTime(); }
+function agWeekStart() { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); }
+function agIn(ts, r) { ts = Number(ts) || 0; return !r || (ts >= r[0] && ts < r[1]); }
+function agLevelOk(lv, f) { return f === 'all' || Number(lv) === Number(f); }
+function agFmtDate(ts) { return ts ? agDayKey(ts) : '—'; }
+function agFmtDateTime(ts) { if (!ts) return '—'; const d = new Date(ts); return agDayKey(ts) + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+function agEl(id) { return document.getElementById(id); }
+
+/* ---------- aggregation ---------- */
+function agBucket() { return { reg: 0, depN: 0, dep: 0, firstN: 0, first: 0, comm: 0 }; }
+function agStats(range, levelFilter) {
+    const d = agBucket(), t = agBucket();
+    agState.subs.forEach(s => { if (agLevelOk(s.level, levelFilter) && agIn(s.joinedAt, range)) (s.level === 1 ? d : t).reg++; });
+    agState.logs.forEach(l => {
+        if (!agLevelOk(l.level, levelFilter) || !agIn(l.timestamp, range)) return;
+        const b = Number(l.level) === 1 ? d : t;
+        b.depN++; b.dep += Number(l.depositAmount) || 0; b.comm += Number(l.amount) || 0;
+        if (l.isFirst) { b.firstN++; b.first += Number(l.depositAmount) || 0; }
+    });
+    return { direct: d, team: t };
+}
+
+/* ---------- data loading ---------- */
+async function agFetchChildren(code) {
+    const s = await db.ref('users').orderByChild('referredBy').equalTo(code).once('value');
+    const out = [];
+    s.forEach(ch => {
+        const v = ch.val() || {};
+        if (v.referredBy !== code || v.status === 'deleted') return;
+        out.push({ uid: ch.key, customUid: v.customUid || ch.key, joinedAt: Number(v.joinedAt) || Number(v.createdAt) || 0 });
+    });
+    return out;
+}
+async function agLoad() {
+    if (!userCustomUid || !currentUid || agState.loading) return;
+    if (agState.forUid !== userCustomUid) Object.assign(agState, { subs: [], logs: [], loadedAt: 0, forUid: userCustomUid });
+    agState.loading = true;
+    try {
+        const depth = Math.max(1, agState.depth), subs = [], seen = {}; seen[userCustomUid] = 1;
+        let frontier = [{ customUid: userCustomUid }];
+        for (let lvl = 1; lvl <= depth && frontier.length; lvl++) {
+            const next = [];
+            for (let i = 0; i < frontier.length; i += 15) {
+                const chunk = frontier.slice(i, i + 15);
+                const res = await Promise.all(chunk.map(f => agFetchChildren(f.customUid).catch(() => [])));
+                res.forEach((arr, idx) => arr.forEach(c => {
+                    if (seen[c.customUid]) return; seen[c.customUid] = 1;
+                    c.level = lvl; c.parent = chunk[idx].customUid; next.push(c);
+                }));
+            }
+            if (next.length > 800) next.length = 800;
+            next.forEach(n => subs.push(n)); frontier = next;
+        }
+        const ls = await db.ref('commission_logs').orderByChild('toCustomUid').equalTo(userCustomUid).once('value');
+        const logs = [];
+        ls.forEach(ch => { logs.push(Object.assign({ id: ch.key }, ch.val() || {})); });
+        logs.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+        subs.sort((a, b) => b.joinedAt - a.joinedAt);
+        agState.subs = subs; agState.logs = logs; agState.loadedAt = Date.now();
+        if (typeof rfState !== 'undefined') rfState.loadedAt = agState.loadedAt;
+    } catch (e) {
+        console.warn('Agency data could not be loaded:', e);
+        agState.loadedAt = agState.loadedAt || Date.now();
+    }
+    agState.loading = false;
+    agRenderAll();
+}
+// Old referral loader is replaced: the old friends / earnings lists no longer exist on the page.
+window.loadUserReferralDeposits = function () { agLoad(); };
+
+/* ---------- navigation ---------- */
+function agOpen(v) {
+    const ids = { main: 'agMain', subs: 'agSubs', comm: 'agComm' };
+    Object.keys(ids).forEach(k => { const el = agEl(ids[k]); if (el) el.classList.toggle('hidden', k !== v); });
+    const tab = agEl('tabRefer'); if (tab) tab.classList.toggle('ag-sub-open', v !== 'main');
+    if (v === 'subs') { const dt = agEl('agDate'); if (dt && !dt.value && agState.date === '' && !agState.dateTouched) { agState.date = agDayKey(Date.now()); } }
+    agRenderAll();
+    if (tab) { try { tab.scrollIntoView({ block: 'start' }); } catch (e) { window.scrollTo(0, 0); } }
+}
+
+/* ---------- rendering ---------- */
+function agRenderAll() { agRenderMain(); agRenderSubs(); agRenderComm(); }
+function agM(val, label, cls) { return '<div class="ag-m"><b' + (cls ? ' class="' + cls + '"' : '') + '>' + val + '</b><span>' + label + '</span></div>'; }
+
+function agRenderMain() {
+    const code = userCustomUid || '';
+    const cv = agEl('agCodeVal'); if (cv) cv.textContent = code || '—';
+    try { rfRenderLink(); } catch (e) {}
+    const ready = !!agState.loadedAt;
+    const y = [agDayStartOffset(-1), agDayStartOffset(0)];
+    const st = agStats(y, 'all');
+    const big = agEl('agYesterday'); if (big) big.textContent = ready ? agN(st.direct.comm + st.team.comm) : '0';
+    const hint = agEl('agHint');
+    if (hint) {
+        if (!agCfg.enabled || !agCfg.levels) hint.textContent = 'Agency commission is not active right now.';
+        else hint.textContent = 'Earn ' + agCfg.rates.slice(0, agCfg.levels).map((r, i) => r + '% from level ' + (i + 1)).join(' · ') + ' of your team\'s deposits' + (agCfg.firstDepositOnly ? ' (first deposit only)' : '') + '.';
+    }
+    const panel = agEl('agPanel');
+    if (panel) {
+        const col = b => agM(b.reg, 'Number of register') + agM(b.depN, 'Deposit number', 'g') + agM(agN(b.dep), 'Deposit amount', 'o') + agM(b.firstN, 'Number of people making first deposit');
+        panel.innerHTML = '<div class="ag-col">' + col(st.direct) + '</div><div class="ag-col">' + col(st.team) + '</div>';
+    }
+    const promo = agEl('agPromo');
+    if (promo) {
+        const week = agStats([agWeekStart(), Date.now() + 1], 'all');
+        const total = agState.logs.reduce((s, l) => s + (Number(l.amount) || 0), 0);
+        const direct = agState.subs.filter(s => s.level === 1).length, team = agState.subs.filter(s => s.level > 1).length;
+        promo.innerHTML = agM(agN(week.direct.comm + week.team.comm), 'This Week') + agM(agN(total), 'Total commission') +
+            agM(direct, 'Direct Subordinate') + agM(team, 'Total number of subordinates in the team');
+    }
+}
+
+function agRenderSubs() {
+    const view = agEl('agSubs'); if (!view || view.classList.contains('hidden')) return;
+    const sel = agEl('agLevelSel');
+    if (sel) {
+        const want = Math.max(1, agState.depth);
+        if (sel.options.length !== want + 1) {
+            sel.innerHTML = '<option value="all">All</option>' + Array.from({ length: want }, (_, i) => '<option value="' + (i + 1) + '">Level ' + (i + 1) + '</option>').join('');
+        }
+        sel.value = agState.level;
+    }
+    const dt = agEl('agDate'); if (dt) { dt.value = agState.date; dt.max = agDayKey(Date.now()); }
+    const range = agDayRange(agState.date);
+    const sm = agEl('agSummary'), list = agEl('agSubList');
+    if (!agState.loadedAt) { if (sm) sm.innerHTML = ''; if (list) list.innerHTML = '<div class="ag-empty">Loading team...</div>'; return; }
+    const st = agStats(range, agState.level), a = st.direct, b = st.team;
+    if (sm) sm.innerHTML =
+        agM(a.reg + b.reg, 'Number of register') + agM(agN(a.comm + b.comm), 'Commission', 'g') +
+        agM(a.depN + b.depN, 'Deposit number') + agM(agN(a.dep + b.dep), 'Deposit amount', 'o') +
+        agM(a.firstN + b.firstN, 'Number of people making first deposit') + agM(agN(a.first + b.first), 'First deposit amount', 'o');
+
+    const byUid = {};
+    agState.logs.forEach(l => {
+        if (!agIn(l.timestamp, range)) return;
+        const o = byUid[l.fromCustomUid] || (byUid[l.fromCustomUid] = { dep: 0, comm: 0 });
+        o.dep += Number(l.depositAmount) || 0; o.comm += Number(l.amount) || 0;
+    });
+    const q = agState.q.trim();
+    const rows = agState.subs.filter(s => agLevelOk(s.level, agState.level) && (!q || String(s.customUid).indexOf(q) >= 0) &&
+        (!range || agIn(s.joinedAt, range) || byUid[s.customUid]));
+    if (!rows.length) { list.innerHTML = '<div class="ag-empty"><i>👥</i>No subordinates found for this filter.</div>'; return; }
+    const shown = rows.slice(0, agState.subLimit);
+    list.innerHTML = shown.map(s => {
+        const o = byUid[s.customUid] || { dep: 0, comm: 0 };
+        return '<div class="ag-item"><div class="ag-item-top"><b>UID:' + rfEsc(s.customUid) + '</b><button type="button" class="ag-copy" onclick="rfCopyText(\'' + rfEsc(s.customUid) + '\',this)">📋</button></div>' +
+            '<div class="ag-kv"><span>Level</span><b>' + s.level + '</b></div>' +
+            '<div class="ag-kv"><span>Deposit amount</span><b class="o">' + agN(o.dep) + '</b></div>' +
+            '<div class="ag-kv"><span>Commission</span><b class="o">' + agN(o.comm) + '</b></div>' +
+            '<div class="ag-kv"><span>Time</span><b class="m">' + agFmtDate(s.joinedAt) + '</b></div></div>';
+    }).join('') + (rows.length > shown.length ? '<button type="button" class="ag-more" onclick="agState.subLimit+=40;agRenderSubs()">Show more (' + (rows.length - shown.length) + ' left)</button>' : '');
+}
+function agSetSearch(v) { agState.q = String(v || ''); agState.subLimit = 40; agRenderSubs(); }
+function agSetLevel(v) { agState.level = v; agState.subLimit = 40; agRenderSubs(); }
+function agSetDate(v) { agState.date = v || ''; agState.dateTouched = true; agState.subLimit = 40; agRenderSubs(); }
+function agClearDate() { agState.date = ''; agState.dateTouched = true; agState.subLimit = 40; agRenderSubs(); }
+
+function agRenderComm() {
+    const view = agEl('agComm'); if (!view || view.classList.contains('hidden')) return;
+    const sum = r => agState.logs.reduce((s, l) => s + (agIn(l.timestamp, r) ? (Number(l.amount) || 0) : 0), 0);
+    const chips = agEl('agCommChips');
+    if (chips) chips.innerHTML =
+        '<div class="ag-chip"><span>Today</span><b>' + agN(sum([agDayStartOffset(0), agDayStartOffset(1)])) + '</b></div>' +
+        '<div class="ag-chip"><span>Yesterday</span><b>' + agN(sum([agDayStartOffset(-1), agDayStartOffset(0)])) + '</b></div>' +
+        '<div class="ag-chip"><span>This week</span><b>' + agN(sum([agWeekStart(), Date.now() + 1])) + '</b></div>' +
+        '<div class="ag-chip"><span>Total</span><b>' + agN(sum(null)) + '</b></div>';
+    const dt = agEl('agCDate'); if (dt) { dt.value = agState.cDate; dt.max = agDayKey(Date.now()); }
+    const list = agEl('agCommList'); if (!list) return;
+    if (!agState.loadedAt) { list.innerHTML = '<div class="ag-empty">Loading commission...</div>'; return; }
+    const r = agDayRange(agState.cDate);
+    const rows = agState.logs.filter(l => agIn(l.timestamp, r));
+    if (!rows.length) { list.innerHTML = '<div class="ag-empty"><i>💸</i>Your commission will show up here when your team deposits.</div>'; return; }
+    const shown = rows.slice(0, agState.commLimit);
+    list.innerHTML = shown.map(l =>
+        '<div class="ag-item"><div class="ag-item-top"><b>UID:' + rfEsc(l.fromCustomUid) + '</b><button type="button" class="ag-copy" onclick="rfCopyText(\'' + rfEsc(l.fromCustomUid) + '\',this)">📋</button></div>' +
+        '<div class="ag-kv"><span>Level</span><b>' + (Number(l.level) || 1) + '</b></div>' +
+        '<div class="ag-kv"><span>Deposit amount</span><b class="o">' + agN(l.depositAmount) + '</b></div>' +
+        '<div class="ag-kv"><span>Commission rate</span><b>' + agN(l.rate) + '%</b></div>' +
+        '<div class="ag-kv"><span>Commission</span><b class="g">+' + agN(l.amount) + '</b></div>' +
+        '<div class="ag-kv"><span>Time</span><b class="m">' + agFmtDateTime(l.timestamp) + '</b></div></div>'
+    ).join('') + (rows.length > shown.length ? '<button type="button" class="ag-more" onclick="agState.commLimit+=40;agRenderComm()">Show more (' + (rows.length - shown.length) + ' left)</button>' : '');
+}
+function agSetCDate(v) { agState.cDate = v || ''; agState.commLimit = 40; agRenderComm(); }
+function agClearCDate() { agState.cDate = ''; agState.commLimit = 40; agRenderComm(); }
+
+/* ---------- invitation actions ---------- */
+function agCopyCode(row) {
+    if (rfNeedCode()) return;
+    const ic = agEl('agCodeCopy');
+    rfCopyText(userCustomUid, null);
+    if (ic) { ic.textContent = '✅'; setTimeout(() => { ic.textContent = '📋'; }, 1500); }
+}
+function agShareLink(btn) {
+    if (rfNeedCode()) return;
+    const link = rfShareLink();
+    if (!link) return alert('The invite link is not available here. Share your invitation code instead.');
+    if (navigator.share) { navigator.share({ title: 'Game Verse', text: rfShareMessage() }).catch(() => {}); return; }
+    rfCopyText(link, btn);
+    if (btn) { btn.textContent = '✅ LINK COPIED'; setTimeout(() => { btn.textContent = 'INVITATION LINK'; }, 1600); }
+}
+
+/* ---------- keep "How it works" + hero in sync with the commission plan ---------- */
+(function () {
+    const _steps = rfRenderSteps, _hero = rfRenderHero;
+    window.rfRenderSteps = rfRenderSteps = function () {
+        _steps();
+        const el = document.getElementById('rfSteps');
+        if (!el || !agCfg.enabled || !agCfg.levels) return;
+        const third = el.querySelectorAll('.rf-step')[2]; if (!third) return;
+        const small = third.querySelector('small');
+        if (small) small.textContent = (small.textContent ? small.textContent + ' + ' : '') + agCfg.rates[0] + '% of their deposits';
+    };
+    window.rfRenderHero = rfRenderHero = function () {
+        _hero();
+        const el = document.getElementById('rfHero');
+        if (!el || !agCfg.enabled || !agCfg.levels) return;
+        el.insertAdjacentHTML('beforeend', '<div class="rf-hero-sub" style="margin-top:6px;position:relative;z-index:1;">Plus team commission: ' +
+            rfEsc(agCfg.rates.slice(0, agCfg.levels).map((r, i) => 'L' + (i + 1) + ' ' + r + '%').join(' · ')) + ' of every deposit your team makes.</div>');
+    };
+})();
+if (typeof userCustomUid !== 'undefined' && userCustomUid) agLoad();
+</script>
 
 <style id="gv-referral-final-visibility-fix">
 #rfTabs{display:flex!important;gap:6px!important;visibility:visible!important;opacity:1!important;}
@@ -13021,7 +13369,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
     { id: 'income',      icon: '💰', label: 'Income',        run: function () { openFeature('Income'); } },
     { id: 'events',      icon: '🎉', label: 'Events',        run: function () { switchTab('events'); } },
     { id: 'missions',    icon: '🎯', label: 'Missions',      run: function () { switchTab('missions'); } },
-    { id: 'refer',       icon: '🤝', label: 'Refer & Earn',  run: function () { switchTab('refer'); } },
+    { id: 'refer',       icon: '🤝', label: 'Promotion',  run: function () { switchTab('refer'); } },
     { id: 'rewards',     icon: '🎁', label: 'Rewards',       run: function () { switchTab('daily'); } },
     { id: 'support',     icon: '🎧', label: 'Support',       run: function () { openFeature('Support'); } },
     { id: 'history',     icon: '🕐', label: 'History',       run: function () { openFeature('History'); } }
