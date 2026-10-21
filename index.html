@@ -2370,7 +2370,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         </div>
         <div class="input-icon-wrap">
             <span class="input-icon">🎫</span>
-            <input id="regReferUid" type="text" placeholder="Referrer's UID (Required)" style="border-color: rgba(16, 185, 129, 0.4);">
+            <input id="regReferUid" type="text" placeholder="Referrer's numeric UID (Required)" style="border-color: rgba(16, 185, 129, 0.4);">
         </div>
 
         <button onclick="registerUser()" class="btn-green" style="margin-top: 15px;">Complete Registration</button>
@@ -3545,13 +3545,21 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             if(amount>0){ box.classList.remove('hidden'); const tax=(amount*taxPct)/100, net=Math.max(0,amount-tax); document.getElementById('calcGrossAmt').innerText=sym(amount); document.getElementById('calcTaxPercent').innerText=taxPct+'%'; document.getElementById('calcTaxAmt').innerText='-'+sym(tax); document.getElementById('calcNetAmt').innerText=sym(net); } else box.classList.add('hidden');
         }
 
-        function generateUnique6CharId() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let res = '';
-            for(let i=0; i<6; i++) {
-                res += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return res;
+        // Numeric-only unique player UID (8 digits, never starts with 0).
+        // Each candidate is checked against existing users and reserved in uid_registry before it is used.
+        function generateUniqueNumericId() {
+            const make = () => String(Math.floor(10000000 + Math.random() * 90000000));
+            const attempt = (n) => {
+                if (n >= 30) return Promise.reject(new Error('Could not generate a unique numeric UID. Please try again.'));
+                const candidate = make();
+                return db.ref('users').orderByChild('customUid').equalTo(candidate).once('value').then(snap => {
+                    if (snap.exists()) return attempt(n + 1);
+                    return db.ref('uid_registry/' + candidate).transaction(cur => (cur === null ? true : undefined))
+                        .then(res => (res && res.committed === false) ? attempt(n + 1) : candidate)
+                        .catch(() => candidate); // registry is a best-effort extra guard
+                });
+            };
+            return attempt(0);
         }
 
         function gvReferralCodeFromLocation() {
@@ -3753,9 +3761,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
                     return firebase.auth().createUserWithEmailAndPassword(e, p).then(res => {
                         const newAuthUid = res.user.uid;
-                        const shortId = generateUnique6CharId();
 
-                        return db.ref('users/' + newAuthUid).set({
+                        return generateUniqueNumericId().then(shortId => db.ref('users/' + newAuthUid).set({
                             role: 'user',
                             balance: 0,
                             email: e,
@@ -3766,7 +3773,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                             status: 'active',
                             referredCount: 0,
                             joinedAt: Date.now()
-                        }).then(() => ({newAuthUid, shortId, referrerKey, referrerData}));
+                        }).then(() => ({newAuthUid, shortId, referrerKey, referrerData})));
                     });
                 })
                 .then(data => {
@@ -13673,3 +13680,108 @@ body.auth-mode #authRegister > div[style*="dashed"] {
   };
 })();
 </script>
+<style id="gv-royal-transactions">
+/* ===== ROYAL TRANSACTION RECORDS — Deposit history, Withdrawal history and Transaction History ===== */
+#userDepositList,#userWithdrawList,#userHistoryList{--rt-gold:#f7d778;--rt-gold2:#b9852d;--rt-gold-soft:#c9a85a;--rt-ink:#070a14;--rt-navy:#0a1022;--rt-navy2:#17213d;--rt-text:#f4ecd2;}
+
+/* The record card */
+#userDepositList .gv-fin-card,#userWithdrawList .gv-fin-card,#userHistoryList .gv-fin-card{
+  position:relative!important;overflow:hidden!important;margin:0 0 14px!important;padding:0!important;border-radius:20px!important;
+  border:1px solid rgba(247,215,120,.55)!important;
+  background:radial-gradient(circle at 100% 0%,rgba(247,215,120,.16),transparent 38%),linear-gradient(155deg,var(--rt-navy2) 0%,var(--rt-navy) 55%,var(--rt-ink) 100%)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.45),0 0 0 1px rgba(247,215,120,.08),inset 0 1px 0 rgba(255,238,170,.14)!important;
+}
+#userDepositList .gv-fin-card:before,#userWithdrawList .gv-fin-card:before,#userHistoryList .gv-fin-card:before{
+  background:linear-gradient(120deg,rgba(255,231,163,.08),transparent 34%,rgba(255,231,163,.025) 78%)!important;
+}
+/* Gold ribbon on the left edge: gold→emerald for deposits, gold→ruby for withdrawals */
+#userDepositList .gv-fin-card:after,#userWithdrawList .gv-fin-card:after,#userHistoryList .gv-fin-card:after{
+  width:5px!important;opacity:1!important;background:linear-gradient(180deg,#ffe7a3,#d6a640 55%,#8e5e18)!important;
+}
+#userDepositList .gv-fin-card.deposit-history-item:after,#userHistoryList .gv-fin-card.deposit-history-item:after{
+  background:linear-gradient(180deg,#ffe7a3,#d6a640 38%,#10b981)!important;
+}
+#userWithdrawList .gv-fin-card.withdraw-history-item:after,#userHistoryList .gv-fin-card.withdraw-history-item:after{
+  background:linear-gradient(180deg,#ffe7a3,#d6a640 38%,#e11d48)!important;
+}
+/* Crown watermark */
+#userDepositList .gv-fin-inner:before,#userWithdrawList .gv-fin-inner:before,#userHistoryList .gv-fin-inner:before{
+  content:"♛";position:absolute;right:12px;bottom:6px;font-size:44px;line-height:1;color:rgba(247,215,120,.07);pointer-events:none;
+}
+
+/* Icon medallion */
+#userDepositList .gv-fin-icon,#userWithdrawList .gv-fin-icon,#userHistoryList .gv-fin-icon{
+  width:38px!important;height:38px!important;flex:0 0 38px!important;border-radius:50%!important;
+  background:radial-gradient(circle at 30% 25%,rgba(255,231,163,.35),rgba(185,133,45,.18) 60%,rgba(7,10,20,.6))!important;
+  border:1px solid rgba(247,215,120,.7)!important;box-shadow:0 0 14px rgba(247,215,120,.22),inset 0 1px 0 rgba(255,255,255,.2)!important;
+}
+#userDepositList .gv-fin-type,#userWithdrawList .gv-fin-type,#userHistoryList .gv-fin-type{color:#ffe7a3!important;letter-spacing:.8px!important;text-transform:uppercase;font-size:12.5px!important;}
+#userDepositList .gv-fin-time,#userWithdrawList .gv-fin-time,#userHistoryList .gv-fin-time{color:#aeb6cc!important;}
+
+/* Amount in burnished gold */
+#userDepositList .gv-fin-amount-label,#userWithdrawList .gv-fin-amount-label,#userHistoryList .gv-fin-amount-label{color:var(--rt-gold-soft)!important;}
+#userDepositList .gv-fin-amount-value,#userWithdrawList .gv-fin-amount-value,#userHistoryList .gv-fin-amount-value{
+  font-size:18px!important;background:linear-gradient(180deg,#fff6cf 0%,#f7d778 50%,#b9852d 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 8px rgba(247,215,120,.28));
+}
+#userDepositList .gv-fin-bonus,#userWithdrawList .gv-fin-bonus,#userHistoryList .gv-fin-bonus{color:#7ee2b8!important;}
+
+/* Detail tiles */
+#userDepositList .gv-fin-detail,#userWithdrawList .gv-fin-detail,#userHistoryList .gv-fin-detail{
+  background:rgba(4,9,21,.72)!important;border:1px solid rgba(247,215,120,.22)!important;border-radius:12px!important;
+}
+#userDepositList .gv-fin-label,#userWithdrawList .gv-fin-label,#userHistoryList .gv-fin-label{color:var(--rt-gold-soft)!important;}
+#userDepositList .gv-fin-value,#userWithdrawList .gv-fin-value,#userHistoryList .gv-fin-value,
+#userDepositList .gv-fin-method,#userWithdrawList .gv-fin-method,#userHistoryList .gv-fin-method{color:var(--rt-text)!important;}
+
+/* Copy button */
+#userDepositList .gv-fin-copy,#userWithdrawList .gv-fin-copy,#userHistoryList .gv-fin-copy{
+  border:1px solid rgba(247,215,120,.55)!important;background:rgba(247,215,120,.10)!important;color:#ffe7a3!important;
+}
+#userDepositList .gv-fin-copy:hover,#userWithdrawList .gv-fin-copy:hover,#userHistoryList .gv-fin-copy:hover{
+  background:rgba(247,215,120,.24)!important;border-color:#ffe7a3!important;color:#fff3c4!important;
+}
+
+/* Status row + royal status seals */
+#userDepositList .gv-fin-status-row,#userWithdrawList .gv-fin-status-row,#userHistoryList .gv-fin-status-row{
+  border-top:1px dashed rgba(247,215,120,.35)!important;
+}
+#userDepositList .gv-fin-status,#userWithdrawList .gv-fin-status,#userHistoryList .gv-fin-status{
+  display:inline-flex;align-items:center;padding:4px 11px;border-radius:999px;border:1px solid rgba(247,215,120,.5);
+  background:rgba(247,215,120,.08);letter-spacing:.8px;
+}
+#userDepositList .gv-fin-status.completed,#userWithdrawList .gv-fin-status.completed,#userHistoryList .gv-fin-status.completed{color:#7ee2b8!important;border-color:rgba(126,226,184,.6);background:rgba(16,185,129,.12);}
+#userDepositList .gv-fin-status.pending,#userWithdrawList .gv-fin-status.pending,#userHistoryList .gv-fin-status.pending{color:#ffe08a!important;border-color:rgba(247,215,120,.7);background:rgba(247,215,120,.12);}
+#userDepositList .gv-fin-status.rejected,#userWithdrawList .gv-fin-status.rejected,#userHistoryList .gv-fin-status.rejected{color:#ff9aaa!important;border-color:rgba(255,125,145,.6);background:rgba(225,29,72,.12);}
+
+/* Empty / loading messages */
+#userDepositList>p,#userWithdrawList>p,#userHistoryList>p,#userDepositList .gv-history-loading,#userWithdrawList .gv-history-loading,#userHistoryList .gv-history-loading{
+  color:#ecdca6;text-align:center;padding:18px 14px;border:1px dashed rgba(247,215,120,.45);border-radius:16px;
+  background:rgba(247,215,120,.05);font-size:12.5px;
+}
+
+/* Section headings */
+#depositArea>h4,#withdrawArea>h4{color:#ffe7a3!important;font-size:14px!important;letter-spacing:.9px;text-shadow:0 0 14px rgba(247,215,120,.25);}
+#depositArea>h4:after,#withdrawArea>h4:after{content:"";display:block;height:1px;margin-top:7px;background:linear-gradient(90deg,rgba(247,215,120,.75),rgba(247,215,120,0));}
+
+/* Transaction History page */
+#historyArea{padding:14px;border:1px solid rgba(247,215,120,.5);border-radius:22px;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 100% 0%,rgba(247,215,120,.12),transparent 36%),linear-gradient(160deg,#101a34 0%,#080d1b 60%,#05070f 100%);
+  box-shadow:0 14px 34px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,238,170,.12);}
+#historyArea:before{content:"♛";position:absolute;right:14px;top:8px;font-size:30px;color:rgba(247,215,120,.16);pointer-events:none;}
+#historyArea>h3{color:#ffe7a3!important;letter-spacing:1.1px;text-shadow:0 0 16px rgba(247,215,120,.28);}
+#historyArea>h3:after{content:"";display:block;height:1px;margin-top:8px;background:linear-gradient(90deg,rgba(247,215,120,.8),rgba(247,215,120,0));}
+#historyArea>.btn-gray{background:linear-gradient(145deg,#101a32,#080d1b)!important;color:#f8e7b0!important;border:1px solid rgba(247,215,120,.5)!important;}
+
+/* "History" tile on the royal home menu + legacy blue history button */
+#tabHome .rh-tile[data-id="history"]{border-color:rgba(247,215,120,.85)!important;
+  background:linear-gradient(160deg,#1b2747,#0a1022)!important;
+  box-shadow:0 0 0 1px rgba(247,215,120,.22),0 8px 20px rgba(185,133,45,.28)!important;}
+#tabHome .rh-tile[data-id="history"] .rh-tile-name{color:#ffe7a3!important;}
+#tabHome .rh-tile[data-id="history"] .rh-tile-ico{filter:drop-shadow(0 0 8px rgba(247,215,120,.55));}
+body .home-history-link{background:linear-gradient(135deg,#ffe7a3,#e3b64f 54%,#98651e)!important;border:1px solid #fff0b5!important;color:#211603!important;-webkit-text-fill-color:#211603!important;box-shadow:0 8px 20px rgba(185,133,45,.3),inset 0 1px 0 rgba(255,255,255,.35)!important;text-shadow:none!important;}
+body .home-history-link:hover{background:linear-gradient(135deg,#fff0b5,#f0c862 54%,#a97124)!important;border-color:#fff8d6!important;color:#211603!important;}
+
+@media(max-width:430px){#userDepositList .gv-fin-amount-value,#userWithdrawList .gv-fin-amount-value,#userHistoryList .gv-fin-amount-value{font-size:16px!important;}}
+</style>
