@@ -2647,7 +2647,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 <section class="gvr-card">
                     <div class="gvr-card-head"><span class="gvr-ico">🎫</span><div><h4>Gift Code</h4><p>Enter a code to instantly claim its reward</p></div></div>
                     <div class="gvr-gift">
-                        <input id="giftCodeInput" type="text" placeholder="ENTER CODE" maxlength="12" autocomplete="off" autocapitalize="characters" oninput="this.value = this.value.toUpperCase();">
+                        <input id="giftCodeInput" type="text" placeholder="ENTER CODE" maxlength="30" autocomplete="off" autocapitalize="characters" oninput="this.value = this.value.toUpperCase();">
                         <button type="button" class="gvr-btn gvr-btn-gold" onclick="redeemGiftCode()">Redeem</button>
                     </div>
                 </section>
@@ -2749,31 +2749,71 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
         <!-- Income Section -->
         <div id="incomeArea" class="hidden">
-            <h3 style="color:var(--accent-cyan); margin-top:0;">💰 Your Income Records</h3>
-            <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">View all incomes, salaries, bonuses, and commissions assigned by the admin panel.</div>
+            <h3 id="incomePageTitle" style="color:var(--accent-cyan); margin-top:0;">💰 Your Income Records</h3>
+            <div id="incomePageSubtitle" style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">View all incomes, salaries, bonuses, and commissions assigned by the admin panel.</div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-                <div style="text-align: center; padding: 8px; background: rgba(52, 211, 153, 0.1); border-radius: 8px; border: 1px solid rgba(52, 211, 153, 0.3);">
-                    <p style="margin: 0; font-size: 11px; color: var(--text-muted);">Active Income Sources</p>
-                    <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold; color: #34d399;" id="incomeActiveCount">0</p>
+            <div id="incomeDisabledBox" class="hidden" style="padding:14px; text-align:center; border-radius:10px; border:1px solid rgba(248,113,113,0.4); background:rgba(248,113,113,0.08); color:var(--text-main); font-size:13px; margin-bottom:10px;"></div>
+
+            <div id="incomeMainWrap">
+                <div id="incomeSummaryWrap" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div style="text-align:center; padding:8px; border-radius:8px; border:1px solid rgba(52,211,153,0.3); background:rgba(52,211,153,0.1);">
+                        <p style="margin:0; font-size:11px; color:var(--text-muted);">Active Income Sources</p>
+                        <p style="margin:5px 0 0 0; font-size:16px; font-weight:bold; color:#34d399;" id="incomeActiveCount">0</p>
+                    </div>
+                    <div style="text-align:center; padding:8px; border-radius:8px; border:1px solid rgba(250,204,21,0.3); background:rgba(250,204,21,0.1);">
+                        <p style="margin:0; font-size:11px; color:var(--text-muted);">One-Time Credits Received</p>
+                        <p style="margin:5px 0 0 0; font-size:14px; font-weight:bold; color:#facc15;" id="incomeInstantTotal">₹0</p>
+                    </div>
+                    <div style="text-align:center; padding:8px; border-radius:8px; border:1px solid rgba(96,165,250,0.3); background:rgba(96,165,250,0.1);">
+                        <p style="margin:0; font-size:11px; color:var(--text-muted);">Total Income Received</p>
+                        <p style="margin:5px 0 0 0; font-size:14px; font-weight:bold; color:#60a5fa;" id="incomeTotalReceived">₹0</p>
+                    </div>
+                    <div style="text-align:center; padding:8px; border-radius:8px; border:1px solid rgba(167,139,250,0.3); background:rgba(167,139,250,0.1);">
+                        <p style="margin:0; font-size:11px; color:var(--text-muted);">Next Recurring Credit</p>
+                        <p style="margin:5px 0 0 0; font-size:13px; font-weight:bold; color:#a78bfa;" id="incomeNextCredit">—</p>
+                    </div>
                 </div>
-                <div style="text-align: center; padding: 8px; background: rgba(250, 204, 21, 0.1); border-radius: 8px; border: 1px solid rgba(250, 204, 21, 0.3);">
-                    <p style="margin: 0; font-size: 11px; color: var(--text-muted);">One-Time Credits Received</p>
-                    <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold; color: #facc15;" id="incomeInstantTotal">₹0</p>
+
+                <div id="incomeTabsWrap" style="display:flex; gap:8px; margin-bottom:10px;">
+                    <button type="button" id="incomeTabRecords" class="btn-gray" style="flex:1;" onclick="incomeSwitchTab('records')">📋 Records</button>
+                    <button type="button" id="incomeTabHistory" class="btn-gray" style="flex:1;" onclick="incomeSwitchTab('history')">🧾 Credit History</button>
                 </div>
+
+                <div id="incomeToolsWrap">
+                    <input id="incomeSearchInput" type="text" placeholder="🔍 Search description or type..." oninput="renderUserIncomeList()" style="margin-bottom:8px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+                        <select id="incomeTypeFilter" onchange="renderUserIncomeList()">
+                            <option value="all">All Types</option>
+                            <option value="salary">💼 Salary</option>
+                            <option value="bonus">🎁 Bonus</option>
+                            <option value="commission">🤝 Commission</option>
+                            <option value="reward">🏆 Reward</option>
+                            <option value="advance">💳 Advance</option>
+                            <option value="refund">↩️ Refund</option>
+                        </select>
+                        <select id="incomeStatusFilter" onchange="renderUserIncomeList()">
+                            <option value="all">All Status</option>
+                            <option value="active">▶️ Active</option>
+                            <option value="paused">⏸ Paused</option>
+                            <option value="completed">✅ Completed</option>
+                        </select>
+                        <select id="incomeCurrencyFilter" onchange="renderUserIncomeList()">
+                            <option value="all">All Currencies</option>
+                            <option value="INR">₹ INR</option>
+                            <option value="USDT">USDT</option>
+                        </select>
+                        <select id="incomeSortSelect" onchange="renderUserIncomeList()">
+                            <option value="new">Newest first</option>
+                            <option value="old">Oldest first</option>
+                            <option value="high">Highest amount</option>
+                            <option value="low">Lowest amount</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="userIncomeList" style="max-height:340px; overflow-y:auto;">Loading income records...</div>
+                <div id="userIncomeHistoryList" class="hidden" style="max-height:340px; overflow-y:auto;">Loading credit history...</div>
             </div>
-
-            <select id="incomeTypeFilter" onchange="renderUserIncomeList()" style="margin-bottom:10px;">
-                <option value="all">All Types</option>
-                <option value="salary">💼 Salary</option>
-                <option value="bonus">🎁 Bonus</option>
-                <option value="commission">🤝 Commission</option>
-                <option value="reward">🏆 Reward</option>
-                <option value="advance">💳 Advance</option>
-                <option value="refund">↩️ Refund</option>
-            </select>
-
-            <div id="userIncomeList" style="max-height: 280px; overflow-y: auto;">Loading income records...</div>
             <button onclick="closeFeature('incomeArea')" class="btn-gray" style="margin-top: 10px;">⬅ Back to Menu</button>
         </div>
 
@@ -3303,7 +3343,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         let selectedInvestPlan = null;
 
 
-        let minesConfig = { enabled: true, minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000, minMines: 1, maxMines: 10, rtpPercent: 95 };
+        let minesConfig = { enabled: true, minBet: 10, maxBet: 5000, minBetUsdt: 0.1, maxBetUsdt: 5000, minMines: 1, maxMines: 10, rtpPercent: 95, defaultMines: 3, maxMultiplier: 0, maxPayout: 0, maxPayoutUsdt: 0, cooldownSeconds: 0, dailyRoundLimit: 0, offMessage: '' };
         let minesState = null;
 
         // Broadcast messages are shown via the bell icon (notifications panel), with an unread
@@ -3454,6 +3494,18 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             if(cfg.achievementsEnabled) parts.push(`<div class="gv-achievements"><div class="gv-exp-head">🏆 Achievement Showcase <span style="font-size:9px;color:var(--text-muted);">Profile milestones</span></div><div class="gv-badge-row"><div class="gv-mini-badge"><b>🎮</b>Explorer</div><div class="gv-mini-badge"><b>🎯</b>Missioner</div><div class="gv-mini-badge"><b>🏆</b>Competitor</div><div class="gv-mini-badge"><b>⭐</b>Game Verse</div></div></div>`);
             host.innerHTML=parts.join(''); host.classList.toggle('hidden',parts.length===0);
         }
+        // Admin Dashboard 2.0 service gates: manual OFF switch OR a timed pause that auto-expires.
+        function d20Svc(name){
+            const c = dashboard20Config || {};
+            const until = Number(c[name + 'PausedUntil']) || 0;
+            const timed = until > Date.now();
+            return { blocked: c[name + 'Enabled'] === false || timed, until: timed ? until : 0, msg: String(c[name + 'Message'] || '') };
+        }
+        function d20Msg(name, fallback){
+            const s = d20Svc(name);
+            if (s.msg) return s.msg;
+            return s.until ? fallback + ' Expected back around ' + new Date(s.until).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + '.' : fallback;
+        }
         function escapeHtmlUser(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[m]));}
 
         db.ref('control/dashboard20').on('value',snap=>{
@@ -3462,6 +3514,14 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 depositsEnabled:d.depositsEnabled!==false,
                 withdrawalsEnabled:d.withdrawalsEnabled!==false,
                 registrationEnabled:d.registrationEnabled!==false,
+                depositsPausedUntil:Number(d.depositsPausedUntil)||0,
+                withdrawalsPausedUntil:Number(d.withdrawalsPausedUntil)||0,
+                registrationPausedUntil:Number(d.registrationPausedUntil)||0,
+                depositsMessage:String(d.depositsMessage||''),
+                withdrawalsMessage:String(d.withdrawalsMessage||''),
+                registrationMessage:String(d.registrationMessage||''),
+                supportEnabled:d.supportEnabled!==false,
+                rewardsEnabled:d.rewardsEnabled!==false,
                 achievementsEnabled:d.achievementsEnabled!==false,
                 welcomeEnabled:d.welcomeEnabled===true,
                 welcomeMessage:d.welcomeMessage||''
@@ -3479,6 +3539,13 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             minesConfig.minMines = Number(data.minMines) || 1;
             minesConfig.maxMines = Number(data.maxMines) || 10;
             minesConfig.rtpPercent = Number(data.rtpPercent) || 95;
+            minesConfig.defaultMines = Number(data.defaultMines) || 3;
+            minesConfig.maxMultiplier = Math.max(0, Number(data.maxMultiplier) || 0);
+            minesConfig.maxPayout = Math.max(0, Number(data.maxPayout) || 0);
+            minesConfig.maxPayoutUsdt = Math.max(0, Number(data.maxPayoutUsdt) || 0);
+            minesConfig.cooldownSeconds = Math.max(0, Number(data.cooldownSeconds) || 0);
+            minesConfig.dailyRoundLimit = Math.max(0, Math.floor(Number(data.dailyRoundLimit) || 0));
+            minesConfig.offMessage = String(data.offMessage || '');
         });
 
         db.ref('control/depositConfig').on('value', snap => {
@@ -3734,7 +3801,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         function registerUser() {
-            if(!dashboard20Config.registrationEnabled) return alert('New registrations are temporarily disabled by the administrator. Please try again later.');
+            if(d20Svc('registration').blocked) return alert(d20Msg('registration','New registrations are temporarily disabled by the administrator. Please try again later.'));
             const e = document.getElementById('regEmail').value.trim();
             const p = document.getElementById('regPassword').value;
             const referUidInput = document.getElementById('regReferUid').value.trim();
@@ -4397,81 +4464,231 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         let userIncomeCache = [];
+        let userIncomeLog = [];
+        let userIncomeSettings = {};
+        let incomeActiveTab = 'records';
+        let incomeShowAll = false;
+        let _incTxRef = null, _incTxFn = null, _incLogRef = null, _incLogFn = null, _incSetRef = null, _incSetFn = null, _incBoundUid = null;
 
+        // Called on every profile snapshot, so bind once per UID and always detach the old listeners.
         function loadUserIncomes(myCustomUid) {
-            const container = document.getElementById('userIncomeList');
-            if(!container || !myCustomUid) return;
+            if (!myCustomUid || myCustomUid === '---') return;
+            if (_incBoundUid === myCustomUid) return;
+            if (_incTxRef) _incTxRef.off('value', _incTxFn);
+            if (_incLogRef) _incLogRef.off('value', _incLogFn);
+            if (_incSetRef) _incSetRef.off('value', _incSetFn);
+            _incBoundUid = myCustomUid;
 
-            db.ref('admin_transactions').on('value', snap => {
+            _incTxRef = db.ref('admin_transactions');
+            _incTxFn = snap => {
                 userIncomeCache = [];
-                if(snap.exists()) {
+                if (snap.exists()) {
                     snap.forEach(child => {
                         const tx = child.val();
-                        if(tx.userUid === myCustomUid && tx.status !== 'stopped') {
-                            userIncomeCache.push(tx);
+                        if (tx && tx.userUid === myCustomUid && tx.status !== 'stopped') {
+                            userIncomeCache.push(Object.assign({ key: child.key }, tx));
                         }
                     });
                 }
                 renderUserIncomeList();
-            });
+            };
+            _incTxRef.on('value', _incTxFn);
+
+            _incLogRef = db.ref('admin_transaction_credit_log').orderByChild('userUid').equalTo(myCustomUid);
+            _incLogFn = snap => {
+                userIncomeLog = [];
+                if (snap.exists()) snap.forEach(child => { const v = child.val(); if (v) userIncomeLog.push(Object.assign({ key: child.key }, v)); });
+                renderUserIncomeList();
+            };
+            _incLogRef.on('value', _incLogFn, () => { userIncomeLog = []; renderUserIncomeList(); });
+
+            _incSetRef = db.ref('control/incomeSettings');
+            _incSetFn = snap => { userIncomeSettings = snap.val() || {}; renderUserIncomeList(); };
+            _incSetRef.on('value', _incSetFn, () => {});
+        }
+
+        function incomeSwitchTab(tab) {
+            incomeActiveTab = (tab === 'history') ? 'history' : 'records';
+            renderUserIncomeList();
+        }
+
+        function gvIncomeMoney(v, cur) {
+            return String(cur || 'INR').toUpperCase() === 'USDT'
+                ? 'USDT ' + Number(v || 0).toFixed(4)
+                : '₹' + Number(v || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Best estimate of when a recurring record is next credited (mirrors the admin scheduler's rules).
+        function gvIncomeNextCredit(tx) {
+            if (tx.mode !== 'automatic' || tx.status === 'paused' || tx.status === 'completed') return 0;
+            const period = tx.frequency === 'weekly' ? 7 * 86400000 : tx.frequency === 'monthly' ? 30 * 86400000 : 86400000;
+            let t = (Number(tx.lastCreditedAt) || Number(tx.timestamp) || Date.now()) + period;
+            if (Number(tx.startAt) > t) t = Number(tx.startAt);
+            const parts = String(tx.time || '00:00').split(':');
+            const hh = Number(parts[0]) || 0, mm = Number(parts[1]) || 0;
+            let d = new Date(t);
+            if (d.getHours() * 60 + d.getMinutes() < hh * 60 + mm) d.setHours(hh, mm, 0, 0);
+            for (let i = 0; i < 8; i++) {
+                const wk = (d.getDay() === 0 || d.getDay() === 6);
+                if ((tx.weekendDay === 'skip_weekends' && wk) || (tx.weekendDay === 'weekends_only' && !wk)) {
+                    d = new Date(d.getTime() + 86400000); d.setHours(hh, mm, 0, 0);
+                } else break;
+            }
+            const out = d.getTime();
+            if (Number(tx.endAt) > 0 && out > Number(tx.endAt)) return 0;
+            if (Number(tx.maxPayouts) > 0 && (Number(tx.payoutCount) || 0) >= Number(tx.maxPayouts)) return 0;
+            return out;
+        }
+
+        function gvIncomeNextLabel(ts) {
+            if (!ts) return '—';
+            if (ts <= Date.now()) return 'Due now';
+            return new Date(ts).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
         }
 
         function renderUserIncomeList() {
             const container = document.getElementById('userIncomeList');
-            if(!container) return;
-            const typeFilter = document.getElementById('incomeTypeFilter')?.value || 'all';
+            if (!container) return;
+            const cfg = userIncomeSettings || {};
+            const $ = id => document.getElementById(id);
+            const show = (id, on) => { const el = $(id); if (el) el.classList.toggle('hidden', !on); };
 
-            let rows = userIncomeCache.slice();
-            if (typeFilter !== 'all') rows = rows.filter(tx => tx.incomeType === typeFilter);
-            rows.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-            // Stats — computed from the full (unfiltered) set, not the type-filtered result.
-            let activeCount = 0, instantTotal = 0;
-            userIncomeCache.forEach(tx => {
-                if (tx.status !== 'paused') activeCount++;
-                if (tx.mode === 'instant') instantTotal += Number(tx.amount) || 0;
-            });
-            const activeEl = document.getElementById('incomeActiveCount');
-            const instantEl = document.getElementById('incomeInstantTotal');
-            if (activeEl) activeEl.innerText = activeCount;
-            if (instantEl) {
-                let instantInr = 0, instantUsdt = 0;
-                userIncomeCache.forEach(tx => {
-                    if (tx.mode === 'instant') {
-                        if (String(tx.currency || 'INR').toUpperCase() === 'USDT') instantUsdt += Number(tx.amount) || 0;
-                        else instantInr += Number(tx.amount) || 0;
-                    }
-                });
-                instantEl.innerText = `₹${instantInr.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2})} • USDT ${instantUsdt.toFixed(4)}`;
+            // ---- Admin-controlled page chrome ----
+            if ($('incomePageTitle')) $('incomePageTitle').innerText = cfg.pageTitle || '💰 Your Income Records';
+            if ($('incomePageSubtitle')) $('incomePageSubtitle').innerText = cfg.pageSubtitle || 'View all incomes, salaries, bonuses, and commissions assigned by the admin panel.';
+            const pageOn = cfg.pageEnabled !== false;
+            show('incomeMainWrap', pageOn);
+            show('incomeDisabledBox', !pageOn);
+            if (!pageOn) {
+                if ($('incomeDisabledBox')) $('incomeDisabledBox').innerText = cfg.disabledMessage || 'The Income page is temporarily unavailable.';
+                return;
+            }
+            const histOn = cfg.showCreditHistory !== false;
+            if (!histOn) incomeActiveTab = 'records';
+            show('incomeSummaryWrap', cfg.showSummary !== false);
+            show('incomeTabsWrap', histOn);
+            show('incomeToolsWrap', cfg.showFilters !== false && incomeActiveTab === 'records');
+            show('userIncomeList', incomeActiveTab === 'records');
+            show('userIncomeHistoryList', incomeActiveTab === 'history');
+            const tR = $('incomeTabRecords'), tH = $('incomeTabHistory');
+            if (tR && tH) {
+                tR.style.outline = incomeActiveTab === 'records' ? '2px solid var(--accent-cyan)' : 'none';
+                tH.style.outline = incomeActiveTab === 'history' ? '2px solid var(--accent-cyan)' : 'none';
             }
 
-            if (userIncomeCache.length === 0) {
+            // ---- Records visible to the user (respect hide-paused / hide-completed) ----
+            const visible = userIncomeCache.filter(tx => !(cfg.hidePaused && tx.status === 'paused') && !(cfg.hideCompleted && tx.status === 'completed'));
+
+            // ---- Summary cards (computed from the full visible set, not the filtered result) ----
+            let activeCount = 0, nextTs = 0;
+            let instINR = 0, instUSDT = 0, recINR = 0, recUSDT = 0;
+            visible.forEach(tx => {
+                if (tx.status !== 'paused' && tx.status !== 'completed') activeCount++;
+                if (tx.mode === 'instant') {
+                    if (String(tx.currency || 'INR').toUpperCase() === 'USDT') instUSDT += Number(tx.amount) || 0; else instINR += Number(tx.amount) || 0;
+                }
+                const nt = gvIncomeNextCredit(tx);
+                if (nt && (!nextTs || nt < nextTs)) nextTs = nt;
+            });
+            userIncomeLog.forEach(l => {
+                if (l.mode === 'instant') return;
+                if (String(l.currency || 'INR').toUpperCase() === 'USDT') recUSDT += Number(l.amount) || 0; else recINR += Number(l.amount) || 0;
+            });
+            if ($('incomeActiveCount')) $('incomeActiveCount').innerText = activeCount;
+            if ($('incomeInstantTotal')) $('incomeInstantTotal').innerText = `₹${instINR.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} • USDT ${instUSDT.toFixed(4)}`;
+            if ($('incomeTotalReceived')) $('incomeTotalReceived').innerText = `₹${(instINR + recINR).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} • USDT ${(instUSDT + recUSDT).toFixed(4)}`;
+            if ($('incomeNextCredit')) $('incomeNextCredit').innerText = cfg.showNextCredit === false ? 'Hidden' : gvIncomeNextLabel(nextTs);
+
+            const typeIcons = { salary: '💼', bonus: '🎁', commission: '🤝', reward: '🏆', advance: '💳', refund: '↩️' };
+
+            // ---- Credit history tab ----
+            const hist = $('userIncomeHistoryList');
+            if (hist) {
+                const byKey = {}; userIncomeCache.forEach(t => { byKey[t.key] = t; });
+                const logs = userIncomeLog.filter(l => l.mode !== 'instant').sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                if (logs.length === 0) {
+                    hist.innerHTML = '<p>No recurring income has been credited to you yet.</p>';
+                } else {
+                    hist.innerHTML = logs.map(l => {
+                        const src = byKey[l.txKey] || {};
+                        return `
+                        <div class="income-history-item">
+                            <b style="color:var(--accent-cyan); font-size:14px;">${typeIcons[l.incomeType] || '💰'} ${String(l.incomeType || '').toUpperCase()}</b>
+                            <p style="margin:5px 0; font-size:15px; color:#34d399; font-weight:bold;">+ ${gvIncomeMoney(l.amount, l.currency)}</p>
+                            ${src.description ? `<p style="margin:3px 0; font-size:12px; color:var(--text-main);">${escRestriction(src.description)}</p>` : ''}
+                            <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Credited on: ${l.timestamp ? new Date(l.timestamp).toLocaleString() : 'N/A'}</p>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            // ---- Records tab ----
+            const search = (($('incomeSearchInput') || {}).value || '').trim().toLowerCase();
+            const typeFilter = ($('incomeTypeFilter') || {}).value || 'all';
+            const statusFilter = ($('incomeStatusFilter') || {}).value || 'all';
+            const curFilter = ($('incomeCurrencyFilter') || {}).value || 'all';
+            const sortBy = ($('incomeSortSelect') || {}).value || 'new';
+            const filtersOn = cfg.showFilters !== false;
+
+            let rows = visible.slice();
+            if (filtersOn) {
+                if (typeFilter !== 'all') rows = rows.filter(tx => tx.incomeType === typeFilter);
+                if (statusFilter === 'active') rows = rows.filter(tx => tx.status !== 'paused' && tx.status !== 'completed');
+                else if (statusFilter === 'paused') rows = rows.filter(tx => tx.status === 'paused');
+                else if (statusFilter === 'completed') rows = rows.filter(tx => tx.status === 'completed');
+                if (curFilter !== 'all') rows = rows.filter(tx => String(tx.currency || 'INR').toUpperCase() === curFilter);
+                if (search) rows = rows.filter(tx => (String(tx.description || '') + ' ' + String(tx.incomeType || '')).toLowerCase().includes(search));
+            }
+            const ts = tx => Number(tx.timestamp) || 0, amt = tx => Number(tx.amount) || 0;
+            if (sortBy === 'old' && filtersOn) rows.sort((x, y) => ts(x) - ts(y));
+            else if (sortBy === 'high' && filtersOn) rows.sort((x, y) => amt(y) - amt(x));
+            else if (sortBy === 'low' && filtersOn) rows.sort((x, y) => amt(x) - amt(y));
+            else rows.sort((x, y) => ts(y) - ts(x));
+
+            if (visible.length === 0) {
                 container.innerHTML = '<p>No income records assigned to your UID yet.</p>';
                 return;
             }
             if (rows.length === 0) {
-                container.innerHTML = '<p>No records match this filter.</p>';
+                container.innerHTML = '<p>No records match your search or filters.</p>';
                 return;
             }
 
-            const typeIcons = { salary: '💼', bonus: '🎁', commission: '🤝', reward: '🏆', advance: '💳', refund: '↩️' };
+            const limit = Number(cfg.maxRecordsShown) || 0;
+            const total = rows.length;
+            if (limit > 0 && !incomeShowAll && total > limit) rows = rows.slice(0, limit);
+            const showNext = cfg.showNextCredit !== false;
 
             container.innerHTML = rows.map(tx => {
-                const isPaused = tx.status === 'paused';
-                const modeColor = tx.mode === 'automatic' ? (isPaused ? '#94a3b8' : '#34d399') : '#facc15';
+                const isPaused = tx.status === 'paused', isDone = tx.status === 'completed';
+                const modeColor = tx.mode === 'automatic' ? ((isPaused || isDone) ? '#94a3b8' : '#34d399') : '#facc15';
                 const freqDetails = tx.mode === 'automatic' ? ` | Freq: ${tx.frequency || 'every_day'} (${tx.weekendDay || 'all'}), Time: ${tx.time || '00:00'}` : '';
                 const icon = typeIcons[tx.incomeType] || '💰';
+                let autoLines = '';
+                if (tx.mode === 'automatic') {
+                    const paid = Number(tx.payoutCount) || 0, cap = Number(tx.maxPayouts) || 0;
+                    const nt = gvIncomeNextCredit(tx);
+                    autoLines += `<p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Last credited: ${tx.lastCreditedAt ? new Date(tx.lastCreditedAt).toLocaleString() : 'Not yet'}</p>`;
+                    if (showNext) {
+                        if (nt) autoLines += `<p style="margin:3px 0; font-size:11px; color:#a78bfa;">Next credit: ${gvIncomeNextLabel(nt)}</p>`;
+                        autoLines += `<p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Payouts: ${paid}${cap > 0 ? ' / ' + cap : ''}${Number(tx.endAt) > 0 ? ' • Ends: ' + new Date(Number(tx.endAt)).toLocaleDateString() : ''}</p>`;
+                        if (cap > 0) autoLines += `<div style="height:5px; border-radius:4px; background:rgba(255,255,255,0.1); margin:4px 0 2px;"><div style="height:100%; width:${Math.min(100, Math.round(paid / cap * 100))}%; border-radius:4px; background:#34d399;"></div></div>`;
+                    }
+                }
                 return `
                     <div class="income-history-item">
                         <b style="color:var(--accent-cyan); font-size:14px;">${icon} Type: ${(tx.incomeType || '').toUpperCase()}</b>
-                        ${isPaused ? '<span style="color:#94a3b8; font-weight:800; font-size:10.5px; margin-left:6px;">⏸ PAUSED</span>' : ''}<br>
-                        <p style="margin:5px 0; font-size:15px; color:#facc15; font-weight:bold;">Amount: ${String(tx.currency || 'INR').toUpperCase() === 'USDT' ? `USDT ${Number(tx.amount || 0).toFixed(4)}` : `₹${Number(tx.amount || 0).toFixed(2)}`}</p>
-                        <p style="margin:5px 0; font-size:13px; color:var(--text-main);"><b>Description:</b> ${tx.description || 'N/A'}</p>
+                        ${isPaused ? '<span style="color:#94a3b8; font-weight:800; font-size:10.5px; margin-left:6px;">⏸ PAUSED</span>' : ''}${isDone ? '<span style="color:#34d399; font-weight:800; font-size:10.5px; margin-left:6px;">✅ COMPLETED</span>' : ''}<br>
+                        <p style="margin:5px 0; font-size:15px; color:#facc15; font-weight:bold;">Amount: ${gvIncomeMoney(tx.amount, tx.currency)}</p>
+                        <p style="margin:5px 0; font-size:13px; color:var(--text-main);"><b>Description:</b> ${tx.description ? escRestriction(tx.description) : 'N/A'}</p>
                         <p style="margin:3px 0; font-size:12px; color:${modeColor};"><b>Mode:</b> ${(tx.mode || '').toUpperCase()}${freqDetails}</p>
+                        ${autoLines}
                         <p style="margin:3px 0; font-size:11px; color:var(--text-muted);">Assigned on: ${tx.timestamp ? new Date(tx.timestamp).toLocaleString() : 'N/A'}</p>
                     </div>
                 `;
-            }).join('');
+            }).join('') + ((limit > 0 && total > limit)
+                ? `<button type="button" class="btn-gray" style="margin-top:8px; width:100%;" onclick="incomeShowAll=!incomeShowAll; renderUserIncomeList();">${incomeShowAll ? 'Show fewer' : 'Show all (' + total + ')'}</button>`
+                : '');
         }
 
         let allMembershipsData = {}; // Cache for membership comparison
@@ -5412,6 +5629,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 .then(() => gvrLog(source, amount, label));
         }
         function claimDailyCheckin() {
+            if (dashboard20Config.rewardsEnabled === false) return alert('Daily rewards are temporarily unavailable. Please try again later.');
             const cfg = gvr.cfg && gvr.cfg.checkin;
             if (!cfg || !cfg.enabled || gvr.busy || !currentUid) return;
             if (gvrBlocked()) return;
@@ -5532,6 +5750,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         function claimDailyReward(rKey, amount, maxClaims) {
+            if (dashboard20Config.rewardsEnabled === false) return alert('Daily rewards are temporarily unavailable. Please try again later.');
             if (gvr.busy) return;
             gvr.busy = true;
             const done = () => { gvr.busy = false; if (gvr.rewardsRefresh) gvr.rewardsRefresh(); };
@@ -5558,8 +5777,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             const inputEl = document.getElementById('giftCodeInput');
             const rawCode = (inputEl.value || '').trim().toUpperCase();
 
-            if (!/^[A-Z0-9]{4,12}$/.test(rawCode)) {
-                return alert('Please enter a valid gift code (4-12 letters and/or numbers).');
+            if (!/^[A-Z0-9]{4,30}$/.test(rawCode)) {
+                return alert('Please enter a valid gift code (4-30 letters and/or numbers).');
             }
 
             db.ref('gift_codes/' + rawCode).once('value').then(codeSnap => {
@@ -5778,7 +5997,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         function submitDepositRequest() {
-            if(!dashboard20Config.depositsEnabled) return alert('Deposits are temporarily disabled by the administrator. Please try again later.');
+            if(d20Svc('deposits').blocked) return alert(d20Msg('deposits','Deposits are temporarily disabled by the administrator. Please try again later.'));
             const currency = selectedWalletCurrency;
             const phone = document.getElementById('depPhone').value.trim();
             const amount = Number(document.getElementById('depAmount').value);
@@ -5965,7 +6184,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         function submitWithdrawal() {
-            if(!dashboard20Config.withdrawalsEnabled) return showRestrictionPopup('Withdrawals temporarily disabled','The administrator has temporarily disabled new withdrawal requests. Please try again later.');
+            if(d20Svc('withdrawals').blocked) return showRestrictionPopup('Withdrawals temporarily disabled', d20Msg('withdrawals','The administrator has temporarily disabled new withdrawal requests. Please try again later.'));
             const currency = selectedWalletCurrency;
             const amount = Number(document.getElementById('withdrawAmount').value);
             const tgUsername = document.getElementById('withdrawTg').value.trim();
@@ -6078,6 +6297,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         }
 
         function submitSupportRequest() {
+            if (dashboard20Config.supportEnabled === false) return alert('Support requests are temporarily unavailable. Please try again later.');
             const tgUsername = document.getElementById('supportTgUsername').value.trim();
             const subject = document.getElementById('supportSubject').value.trim();
             const description = document.getElementById('supportDesc').value.trim();
@@ -8095,11 +8315,14 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             info.dataset.baseInfo = info.innerText;
 
             if (!minesConfig.enabled) {
-                contentBox.innerHTML = `<div class="mx"><div class="mx-off">💣 Mines is currently unavailable.<br><span style="font-size:12px;font-weight:700;opacity:.8;">Please check back later.</span></div></div>`;
+                contentBox.innerHTML = `<div class="mx"><div class="mx-off">💣 Mines is currently unavailable.<br><span style="font-size:12px;font-weight:700;opacity:.8;">${minesConfig.offMessage ? escapeHtmlUser(minesConfig.offMessage) : 'Please check back later.'}</span></div></div>`;
                 return;
             }
 
-            const defMines = Math.min(3, minesConfig.maxMines);
+            const defMines = Math.min(Math.max(Number(minesConfig.defaultMines) || 3, minesConfig.minMines), minesConfig.maxMines);
+            const _mm = Number(minesConfig.maxMultiplier) || 0;
+            const _mp = setupCurrency === 'USDT' ? (Number(minesConfig.maxPayoutUsdt) || 0) : (Number(minesConfig.maxPayout) || 0);
+            const limitsHint = (_mm > 0 || _mp > 0) ? ' Max win per round: ' + [_mm > 0 ? _mm + 'x' : '', _mp > 0 ? gameMoney(_mp, setupCurrency) : ''].filter(Boolean).join(' / ') + '.' : '';
             let mineOptions = '', mineChips = '';
             for (let i = minesConfig.minMines; i <= minesConfig.maxMines; i++) {
                 mineOptions += `<option value="${i}" ${i === defMines ? 'selected' : ''}>${i} Mine${i > 1 ? 's' : ''}</option>`;
@@ -8142,14 +8365,57 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     </div>
                     <button id="minesStartBtn" onclick="startMinesGame()" class="mx-act start"><span class="t">START GAME</span></button>
                     <button id="minesCashoutBtn" onclick="cashoutMines()" class="mx-act cash hidden"><span class="t">CASH OUT</span></button>
-                    <div class="mx-hint">Every safe tile raises the multiplier. Hitting a mine ends the round.</div>
+                    <div class="mx-hint">Every safe tile raises the multiplier. Hitting a mine ends the round.${limitsHint}</div>
                 </div>
             `;
             renderMinesGrid(true);
             minesIdleStats();
         }
 
+        let minesLastEnd = 0;
+        function minesDayKey() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+        function minesBumpDaily() {
+            if (!(Number(minesConfig.dailyRoundLimit) > 0)) return;
+            try {
+                const day = minesDayKey();
+                db.ref('users/' + currentUid + '/minesDaily').transaction(v => {
+                    v = (v && v.day === day) ? v : { day: day, count: 0 };
+                    return { day: day, count: (Number(v.count) || 0) + 1 };
+                });
+            } catch (e) {}
+        }
+        // Pre-flight checks driven by admin Mines settings (availability, cool-down, payout cap, daily limit).
         function startMinesGame() {
+            if (minesState && minesState.active) return;
+            if (!minesConfig.enabled) {
+                return alert(minesConfig.offMessage ? minesConfig.offMessage : 'Mines is currently unavailable. Please check back later.');
+            }
+            const cd = Number(minesConfig.cooldownSeconds) || 0;
+            if (cd > 0 && minesLastEnd) {
+                const wait = Math.ceil((minesLastEnd + cd * 1000 - Date.now()) / 1000);
+                if (wait > 0) return alert(`Please wait ${wait}s before starting the next round.`);
+            }
+            const _inp = document.getElementById('minesBetInput');
+            const _cur = activeGameCurrency;
+            const _bet = _inp ? minesRound(Number(_inp.value), _cur) : 0;
+            const _cap = gameCurrencyLabel(_cur) === 'USDT' ? (Number(minesConfig.maxPayoutUsdt) || 0) : (Number(minesConfig.maxPayout) || 0);
+            if (_cap > 0 && _bet >= _cap) {
+                return alert(`The maximum payout per round is ${gameMoney(_cap, _cur)}. Please choose a smaller bet.`);
+            }
+            const limit = Number(minesConfig.dailyRoundLimit) || 0;
+            if (limit > 0) {
+                db.ref('users/' + currentUid + '/minesDaily').once('value').then(snap => {
+                    const v = snap.val();
+                    const used = (v && v.day === minesDayKey()) ? (Number(v.count) || 0) : 0;
+                    if (used >= limit) return alert(`Daily Mines limit reached (${limit} rounds). Please come back tomorrow.`);
+                    _startMinesGameCore();
+                }).catch(() => _startMinesGameCore());
+                return;
+            }
+            _startMinesGameCore();
+        }
+
+        function _startMinesGameCore() {
             if (minesState && minesState.active) return;
             const betInput = document.getElementById('minesBetInput');
             const minesCountSelect = document.getElementById('minesCountSelect');
@@ -8187,6 +8453,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
             const roundRef = db.ref('mines_rounds').push();
             minesState.roundKey = roundRef.key;
+            minesBumpDaily();
             roundRef.set({
                 userId: currentUid,
                 customUid: userCustomUid,
@@ -8246,7 +8513,16 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
             if (!minesState) return;
             const rtp = minesConfig.rtpPercent / 100;
             const fair = fairMinesMultiplier(minesState.minesCount, minesState.revealedCount);
-            const actual = fair * rtp;
+            let actual = fair * rtp;
+            // Admin risk limits: cap the multiplier and/or the payout of a single round.
+            let capHit = false;
+            const capMult = Number(minesConfig.maxMultiplier) || 0;
+            if (capMult > 0 && actual >= capMult) { actual = capMult; capHit = true; }
+            const capPay = minesState.currency === 'USDT' ? (Number(minesConfig.maxPayoutUsdt) || 0) : (Number(minesConfig.maxPayout) || 0);
+            if (capPay > 0 && minesState.bet > 0 && minesPayout(minesState.bet, actual, minesState.currency) >= capPay) {
+                actual = Math.max(1, capPay / minesState.bet); capHit = true;
+            }
+            minesState.capHit = capHit;
             minesState.currentMultiplier = actual;
             const potentialWin = minesPayout(minesState.bet, actual, minesState.currency);
             const totalSafe = 25 - minesState.minesCount;
@@ -8302,6 +8578,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                 btnEl.innerText = '💎';
                 updateMinesMultiplierDisplay();
 
+                if (minesState.capHit) { cashoutMines(); return; }
                 const totalSafe = 25 - minesState.minesCount;
                 if (minesState.revealedCount >= totalSafe) {
                     cashoutMines();
@@ -8353,12 +8630,15 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
                 logGameRound('mines', 'Mines', minesState.bet, winAmount, 'win');
                 const mult = minesState.currentMultiplier;
+                const wonCur = minesState.currency;
+                const capNote = minesState.capHit ? '\n(Maximum win limit reached — auto cashed out.)' : '';
                 resetMinesAfterRound();
-                setTimeout(() => alert(`🎉 Cashed out at ${mult.toFixed(2)}x! Won ${gameMoney(winAmount, activeGameCurrency)}.`), 450);
+                setTimeout(() => alert(`🎉 Cashed out at ${mult.toFixed(2)}x! Won ${gameMoney(winAmount, wonCur)}.${capNote}`), 450);
             });
         }
 
         function resetMinesAfterRound() {
+            minesLastEnd = Date.now();
             lockBackToMenu();
             const betInput = document.getElementById('minesBetInput');
             const minesCountSelect = document.getElementById('minesCountSelect');
@@ -9010,18 +9290,30 @@ function refreshBonusRestrictionStatus(){
   }).catch(()=>{});
 }
 function recordBonusCreditForUser(uid,source,amount,currency,extra){
-  amount=Number(amount)||0;if(!uid||amount<=0)return Promise.resolve();const c=bonusRestrictionConfig||{},m=source==='gift_code'?(Number(c.giftTurnoverMultiplier)||0):(Number(c.bonusTurnoverMultiplier)||0),days=source==='gift_code'?(Number(c.giftBonusExpiryDays)||0):(Number(c.bonusExpiryDays)||0),t=Date.now();
-  return db.ref('bonus_credits/'+uid).push(Object.assign({source,amount,currency:String(currency||'INR').toUpperCase(),timestamp:t,turnoverMultiplier:m,requiredTurnover:Number((amount*m).toFixed(2)),expiresAt:days>0?t+days*86400000:0,status:'active'},extra||{}));
+  amount=Number(amount)||0;if(!uid||amount<=0)return Promise.resolve();extra=Object.assign({},extra||{});
+  const c=bonusRestrictionConfig||{},ov=(extra.turnoverOverride===null||extra.turnoverOverride===undefined||extra.turnoverOverride==='')?null:Number(extra.turnoverOverride);delete extra.turnoverOverride;
+  const base=source==='gift_code'?(Number(c.giftTurnoverMultiplier)||0):(Number(c.bonusTurnoverMultiplier)||0),m=(ov!==null&&!isNaN(ov)&&ov>=0)?ov:base,days=source==='gift_code'?(Number(c.giftBonusExpiryDays)||0):(Number(c.bonusExpiryDays)||0),t=Date.now();
+  return db.ref('bonus_credits/'+uid).push(Object.assign({source,amount,currency:String(currency||'INR').toUpperCase(),timestamp:t,turnoverMultiplier:m,requiredTurnover:Number((amount*m).toFixed(2)),expiresAt:days>0?t+days*86400000:0,status:'active'},extra));
 }
 function recordBonusCredit(source,amount,currency,extra){return recordBonusCreditForUser(currentUid,source,amount,currency,extra);}
 const _originalRedeemGiftCode=window.redeemGiftCode;
 window.redeemGiftCode=async function(){
   const input=document.getElementById('giftCodeInput'),code=(input.value||'').trim().toUpperCase();
-  if(!/^[A-Z0-9]{4,12}$/.test(code))return showRestrictionPopup('Gift Code Restricted','Enter a valid 4–12 character gift code.');
+  if(!/^[A-Z0-9]{4,30}$/.test(code))return showRestrictionPopup('Gift Code Restricted','Enter a valid 4–30 character gift code.');
   try{
     const snap=await db.ref('gift_codes/'+code).once('value');if(!snap.exists())return showRestrictionPopup('Gift Code Restricted','This gift code is invalid, deleted, expired, or unavailable.');
-    const d=snap.val()||{},amount=Number(d.amount)||0,s=await getBonusRestrictionSnapshot(),c=s.cfg||{};
+    const d=snap.val()||{},s=await getBonusRestrictionSnapshot(),c=s.cfg||{},nowMs=Date.now();
     if(c.giftCodesBlocked)return showRestrictionPopup('Gift Code Restricted',escRestriction(c.giftCodeBlockMessage||'Gift code claims are temporarily disabled.'));
+    /* Per-code settings set by the admin */
+    if(d.active===false)return showRestrictionPopup('Gift Code Restricted','This gift code is currently disabled.');
+    if(Number(d.startsAt)>nowMs)return showRestrictionPopup('Gift Code Not Active Yet','This gift code becomes active on <b>'+new Date(Number(d.startsAt)).toLocaleString()+'</b>.');
+    if(Number(d.expiresAt)>0&&Number(d.expiresAt)<=nowMs)return showRestrictionPopup('Gift Code Expired','This gift code has expired.');
+    if(d.allowedUid&&String(d.allowedUid).trim().toUpperCase()!==String((currentUserProfile&&currentUserProfile.customUid)||userCustomUid||'').trim().toUpperCase())return showRestrictionPopup('Gift Code Restricted','This gift code is not available for your account.');
+    const cur=(d.currency==='INR'||d.currency==='USDT')?d.currency:String(selectedWalletCurrency||'INR').toUpperCase();
+    let amount=Number(d.amount)||0;const amountMax=Number(d.amountMax)||0;
+    if(amountMax>amount)amount=Number((amount+Math.random()*(amountMax-amount)).toFixed(2));
+    if(Number(d.minDeposit)>0&&s.approvedDepositTotal<Number(d.minDeposit))return showRestrictionPopup('Deposit Required','This gift code needs at least <b>₹'+Number(d.minDeposit)+'</b> in approved deposits.');
+    /* Global bonus / gift rules */
     if(Number(c.maxGiftAmountPerClaim)>0&&amount>Number(c.maxGiftAmountPerClaim))return showRestrictionPopup('Gift Code Restricted','This reward exceeds the maximum reward allowed per claim.');
     if(Number(c.maxGiftClaimsPerDay)>0&&s.dailyClaims.length>=Number(c.maxGiftClaimsPerDay))return showRestrictionPopup('Gift Code Restricted','You reached today\'s gift-code claim limit.');
     if(Number(c.maxGiftAmountPerDay)>0&&s.dailyAmount+amount>Number(c.maxGiftAmountPerDay))return showRestrictionPopup('Gift Code Restricted','This claim would exceed today\'s total gift-reward limit.');
@@ -9031,7 +9323,7 @@ window.redeemGiftCode=async function(){
     if(maxClaims>0&&claims.numChildren()>=maxClaims)return showRestrictionPopup('Gift Code Restricted','The claim limit for this gift code has been reached.');
     if(claims.hasChild(currentUid))return showRestrictionPopup('Gift Code Already Used','You have already redeemed this gift code.');
     const mark=db.ref('gift_code_claims/'+code+'/'+currentUid),tx=await mark.transaction(v=>v||{timestamp:Date.now(),amount});if(!tx.committed)return showRestrictionPopup('Gift Code Restricted','The claim could not be completed. Please try again.');
-    try{await db.ref('users/'+currentUid+'/'+walletField()).transaction(b=>(Number(b)||0)+amount);await db.ref('user_gift_claims/'+currentUid).push({code,amount,currency:String(selectedWalletCurrency||'INR').toUpperCase(),timestamp:Date.now()});await recordBonusCredit('gift_code',amount,selectedWalletCurrency,{giftCode:code});alert('Successfully redeemed gift code! '+formatWalletAmount(amount,selectedWalletCurrency)+' added to your wallet.');input.value='';refreshBonusRestrictionStatus();refreshWithdrawalRestrictionStatus();}catch(e){await mark.remove().catch(()=>{});throw e;}
+    try{await db.ref('users/'+currentUid+'/'+walletField(cur)).transaction(b=>(Number(b)||0)+amount);await db.ref('user_gift_claims/'+currentUid).push({code,amount,currency:cur,timestamp:Date.now()});await recordBonusCredit('gift_code',amount,cur,{giftCode:code,turnoverOverride:(d.turnoverOverride===0||Number(d.turnoverOverride)>0)?Number(d.turnoverOverride):null});alert('Successfully redeemed gift code! '+formatWalletAmount(amount,cur)+' added to your wallet.'+(d.note?'\n\n'+String(d.note):''));input.value='';refreshBonusRestrictionStatus();refreshWithdrawalRestrictionStatus();}catch(e){await mark.remove().catch(()=>{});throw e;}
   }catch(e){showRestrictionPopup('Gift Code Error',e.message||'Unable to redeem gift code.');}
 };
 /* Bonus-money withdrawal lock: calculate outstanding turnover from recorded bonus credits. */
@@ -9160,7 +9452,7 @@ const _gvOriginalRedeemWithLifetime=window.redeemGiftCode;
 window.redeemGiftCode=async function(){
   const codeEl=document.getElementById('giftCodeInput'),code=(codeEl?.value||'').trim().toUpperCase();
   const snap=await db.ref('gift_codes/'+code).once('value').catch(()=>null);
-  const amount=snap&&snap.exists()?Number((snap.val()||{}).amount)||0:0;
+  const _gd=snap&&snap.exists()?(snap.val()||{}):{},amount=Math.max(Number(_gd.amount)||0,Number(_gd.amountMax)||0);
   const maxLife=Number(safetyRestrictionConfig.maxLifetimeGiftMoney)||0;
   if(maxLife>0){
     const st=await loadSafetyUserStats();
