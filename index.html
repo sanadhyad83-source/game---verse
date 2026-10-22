@@ -2541,6 +2541,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <div class="ag-big" id="agYesterday">0</div>
                     <div class="ag-pill">Yesterday's total commission</div>
                     <div class="ag-hint" id="agHint"></div>
+                    <div class="ag-hint" id="agTodayLine" style="margin-top:4px;opacity:.85;"></div>
                 </div>
                 <div class="ag-panel">
                     <div class="ag-panel-head"><div>Direct subordinates</div><div>Team subordinates</div></div>
@@ -2589,9 +2590,17 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
               <div id="agComm" class="hidden">
                 <div class="ag-page-head"><button type="button" class="ag-back" onclick="agOpen('main')">‹</button><b>Commission detail</b><span></span></div>
                 <div class="ag-chips" id="agCommChips"></div>
+                <div class="ag-search">
+                    <input id="agCSearch" type="text" inputmode="numeric" placeholder="Search depositor UID" oninput="agSetCQ(this.value)">
+                    <button type="button" onclick="agRenderComm()">🔍</button>
+                </div>
+                <div class="ag-filters">
+                    <select id="agCLevelSel" onchange="agSetCLevel(this.value)"></select>
+                </div>
                 <div class="ag-filters">
                     <div class="ag-date" style="flex:1;"><input id="agCDate" type="date" onchange="agSetCDate(this.value)"><button type="button" onclick="agClearCDate()">All dates</button></div>
                 </div>
+                <div class="ag-summary" id="agCSummary" style="grid-template-columns:1fr 1fr;"></div>
                 <div id="agCommList"></div>
               </div>
             </div>
@@ -10272,6 +10281,11 @@ function gvRecordReferralBonus(uid, amount, extra) { return recordBonusCreditFor
 .ag-chip b{display:block;margin-top:3px;font-size:14px;color:#ffe4a0}
 .ag-more{width:100%;margin:2px 0 10px;padding:11px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;color:#ffe4a0;background:transparent;border:1px solid rgba(213,176,91,.4)}
 .ag-empty{text-align:center;padding:26px 10px;font-size:13px;color:var(--text-muted)}
+.ag-lv-head,.ag-lv-row{display:grid;grid-template-columns:.8fr 1fr 1fr 1.3fr;gap:4px;align-items:center;text-align:center;padding:8px 2px;font-size:13px}
+.ag-lv-head{font-size:10.5px;font-weight:800;text-transform:uppercase;color:var(--text-muted)}
+.ag-lv-row{border-top:1px solid rgba(255,255,255,.08);color:#fff}
+.ag-lv-row b.g{color:#34d399}.ag-lv-row.off{opacity:.45}
+.ag-note{margin-top:8px;font-size:11.5px;line-height:1.45;color:var(--text-muted)}
 .ag-empty i{display:block;font-style:normal;font-size:30px;margin-bottom:6px}
 #agencyWrap button.ag-refresh{position:absolute!important;right:10px!important;top:10px!important;width:auto!important;margin:0!important;padding:7px 14px!important;font-size:12px!important;font-weight:800!important;border-radius:99px!important;
   color:#ffe9a8!important;-webkit-text-fill-color:#ffe9a8!important;background:linear-gradient(145deg,#2a1c06,#0d0904)!important;border:1px solid rgba(255,233,168,.75)!important;box-shadow:0 3px 10px rgba(0,0,0,.35)!important;text-shadow:none!important;opacity:1!important}
@@ -10291,7 +10305,7 @@ function gvRecordReferralBonus(uid, amount, extra) { return recordBonusCreditFor
    Commission is paid by the admin app when a subordinate's deposit is approved and is stored in
    commission_logs/{depositId}_{level}. This page reads: (1) my downline tree, (2) my own commission logs. */
 let agCfg = { enabled: false, rates: [0, 0, 0, 0, 0, 0], levels: 0, firstDepositOnly: false, minDeposit: 0 };
-const agState = { subs: [], logs: [], loadedAt: 0, loading: false, forUid: '', depth: 6, level: 'all', q: '', date: '', cDate: '', subLimit: 40, commLimit: 40 };
+const agState = { lifetime: 0, cLevel: 'all', cq: '', subs: [], logs: [], loadedAt: 0, loading: false, forUid: '', depth: 6, level: 'all', q: '', date: '', cDate: '', subLimit: 40, commLimit: 40 };
 
 function agNormCfg(raw) {
     raw = raw || {};
@@ -10326,6 +10340,10 @@ function agLevelOk(lv, f) { return f === 'all' || Number(lv) === Number(f); }
 function agFmtDate(ts) { return ts ? agDayKey(ts) : '—'; }
 function agFmtDateTime(ts) { if (!ts) return '—'; const d = new Date(ts); return agDayKey(ts) + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
 function agEl(id) { return document.getElementById(id); }
+
+/* Lifetime commission: the credited total kept on the user record (stays correct even if the admin later deletes old records), never lower than the records shown. */
+function agTotal() { return Math.max(agState.lifetime || 0, agState.logs.reduce((s, l) => s + (Number(l.amount) || 0), 0)); }
+function agFmtTime(ts) { const d = new Date(ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
 
 /* ---------- aggregation ---------- */
 function agBucket() { return { reg: 0, depN: 0, dep: 0, firstN: 0, first: 0, comm: 0 }; }
@@ -10377,6 +10395,7 @@ async function agLoad() {
         ls.forEach(ch => { logs.push(Object.assign({ id: ch.key }, ch.val() || {})); });
         logs.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
         subs.sort((a, b) => b.joinedAt - a.joinedAt);
+        try { const lt = await db.ref('users/' + currentUid + '/agencyCommissionTotal').once('value'); agState.lifetime = Number(lt.val()) || 0; } catch (e) {}
         agState.subs = subs; agState.logs = logs; agState.loadedAt = Date.now();
         if (typeof rfState !== 'undefined') rfState.loadedAt = agState.loadedAt;
     } catch (e) {
@@ -10395,6 +10414,7 @@ function agOpen(v) {
     Object.keys(ids).forEach(k => { const el = agEl(ids[k]); if (el) el.classList.toggle('hidden', k !== v); });
     const tab = agEl('tabRefer'); if (tab) tab.classList.toggle('ag-sub-open', v !== 'main');
     if (v === 'subs') { const dt = agEl('agDate'); if (dt && !dt.value && agState.date === '' && !agState.dateTouched) { agState.date = agDayKey(Date.now()); } }
+    if (v !== 'main' && agState.loadedAt && Date.now() - agState.loadedAt > 45000) agLoad();
     agRenderAll();
     if (tab) { try { tab.scrollIntoView({ block: 'start' }); } catch (e) { window.scrollTo(0, 0); } }
 }
@@ -10414,8 +10434,17 @@ function agRenderMain() {
     const hint = agEl('agHint');
     if (hint) {
         if (!agCfg.enabled || !agCfg.levels) hint.textContent = 'Agency commission is not active right now.';
-        else hint.textContent = 'Earn ' + agCfg.rates.slice(0, agCfg.levels).map((r, i) => r + '% from level ' + (i + 1)).join(' · ') + ' of your team\'s deposits' + (agCfg.firstDepositOnly ? ' (first deposit only)' : '') + '.';
+        else hint.textContent = '';
     }
+    const tl = agEl('agTodayLine');
+    if (tl) {
+        if (!ready) tl.textContent = '';
+        else {
+            const td = agStats([agDayStartOffset(0), agDayStartOffset(1)], 'all'), wk = agStats([agWeekStart(), Date.now() + 1], 'all');
+            tl.textContent = 'Today ' + agN(td.direct.comm + td.team.comm) + ' · This week ' + agN(wk.direct.comm + wk.team.comm) + ' · Updated ' + agFmtTime(agState.loadedAt);
+        }
+    }
+    agRenderLevels(ready);
     const panel = agEl('agPanel');
     if (panel) {
         const col = b => agM(b.reg, 'Number of register') + agM(b.depN, 'Deposit number', 'g') + agM(agN(b.dep), 'Deposit amount', 'o') + agM(b.firstN, 'Number of people making first deposit');
@@ -10424,10 +10453,36 @@ function agRenderMain() {
     const promo = agEl('agPromo');
     if (promo) {
         const week = agStats([agWeekStart(), Date.now() + 1], 'all');
-        const total = agState.logs.reduce((s, l) => s + (Number(l.amount) || 0), 0);
+        const total = agTotal();
         const direct = agState.subs.filter(s => s.level === 1).length, team = agState.subs.filter(s => s.level > 1).length;
+        const dep = {}; agState.logs.forEach(l => { if (l.fromCustomUid) dep[l.fromCustomUid] = 1; });
         promo.innerHTML = agM(agN(week.direct.comm + week.team.comm), 'This Week') + agM(agN(total), 'Total commission') +
-            agM(direct, 'Direct Subordinate') + agM(team, 'Total number of subordinates in the team');
+            agM(direct, 'Direct Subordinate') + agM(team, 'Total number of subordinates in the team') +
+            agM(Object.keys(dep).length, 'Subordinates who deposited') + agM(agN(agState.logs.reduce((s, l) => s + (Number(l.depositAmount) || 0), 0)), 'Team deposit amount', 'o');
+    }
+}
+
+function agRenderLevels(ready) {
+    const el = agEl('agLevels'); if (!el) return;
+    if (!ready) { el.innerHTML = '<div class="ag-empty">Loading...</div>'; return; }
+    let html = '<div class="ag-lv-head"><span>Level</span><span>Rate</span><span>Members</span><span>Commission</span></div>';
+    for (let i = 1; i <= 6; i++) {
+        const rate = agCfg.enabled ? (agCfg.rates[i - 1] || 0) : 0;
+        const m = agState.subs.filter(s => s.level === i).length;
+        const c = agState.logs.reduce((a, l) => a + (Number(l.level) === i ? (Number(l.amount) || 0) : 0), 0);
+        html += '<div class="ag-lv-row' + (!rate && !c ? ' off' : '') + '"><b>L' + i + '</b><span>' + (rate ? agN(rate) + '%' : '—') + '</span><span>' + m + '</span><b class="g">' + agN(c) + '</b></div>';
+    }
+    el.innerHTML = html;
+    const note = agEl('agPlanNote');
+    if (note) {
+        const bits = [];
+        if (!agCfg.enabled || !agCfg.levels) bits.push('Commission is not active right now.');
+        else {
+            bits.push(agCfg.firstDepositOnly ? 'Commission is paid on each team member\'s first deposit only.' : 'Commission is paid on every approved deposit.');
+            if (agCfg.minDeposit > 0) bits.push('Minimum deposit: ' + agN(agCfg.minDeposit) + '.');
+            bits.push('USDT deposits do not earn commission.');
+        }
+        note.textContent = bits.join(' ');
     }
 }
 
@@ -10484,23 +10539,36 @@ function agRenderComm() {
         '<div class="ag-chip"><span>Today</span><b>' + agN(sum([agDayStartOffset(0), agDayStartOffset(1)])) + '</b></div>' +
         '<div class="ag-chip"><span>Yesterday</span><b>' + agN(sum([agDayStartOffset(-1), agDayStartOffset(0)])) + '</b></div>' +
         '<div class="ag-chip"><span>This week</span><b>' + agN(sum([agWeekStart(), Date.now() + 1])) + '</b></div>' +
-        '<div class="ag-chip"><span>Total</span><b>' + agN(sum(null)) + '</b></div>';
+        '<div class="ag-chip"><span>Total</span><b>' + agN(agTotal()) + '</b></div>';
+    const sel = agEl('agCLevelSel');
+    if (sel) {
+        if (sel.options.length !== 7) sel.innerHTML = '<option value="all">All levels</option>' + [1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">Level ' + i + '</option>').join('');
+        sel.value = agState.cLevel;
+    }
     const dt = agEl('agCDate'); if (dt) { dt.value = agState.cDate; dt.max = agDayKey(Date.now()); }
     const list = agEl('agCommList'); if (!list) return;
-    if (!agState.loadedAt) { list.innerHTML = '<div class="ag-empty">Loading commission...</div>'; return; }
-    const r = agDayRange(agState.cDate);
-    const rows = agState.logs.filter(l => agIn(l.timestamp, r));
-    if (!rows.length) { list.innerHTML = '<div class="ag-empty"><i>💸</i>Your commission will show up here when your team deposits.</div>'; return; }
+    const sm = agEl('agCSummary');
+    if (!agState.loadedAt) { if (sm) sm.innerHTML = ''; list.innerHTML = '<div class="ag-empty">Loading commission...</div>'; return; }
+    const r = agDayRange(agState.cDate), q = agState.cq.trim();
+    const rows = agState.logs.filter(l => agIn(l.timestamp, r) && agLevelOk(l.level, agState.cLevel) && (!q || String(l.fromCustomUid || '').indexOf(q) >= 0));
+    if (sm) sm.innerHTML = agM(rows.length, 'Records') + agM(agN(rows.reduce((a, l) => a + (Number(l.amount) || 0), 0)), 'Commission', 'g');
+    if (!rows.length) {
+        const filtered = !!(r || q || agState.cLevel !== 'all');
+        list.innerHTML = '<div class="ag-empty"><i>💸</i>' + (filtered ? 'No commission found for this filter.' : 'Your commission will show up here when your team deposits.') + '</div>'; return;
+    }
     const shown = rows.slice(0, agState.commLimit);
     list.innerHTML = shown.map(l =>
         '<div class="ag-item"><div class="ag-item-top"><b>UID:' + rfEsc(l.fromCustomUid) + '</b><button type="button" class="ag-copy" onclick="rfCopyText(\'' + rfEsc(l.fromCustomUid) + '\',this)">📋</button></div>' +
         '<div class="ag-kv"><span>Level</span><b>' + (Number(l.level) || 1) + '</b></div>' +
         '<div class="ag-kv"><span>Deposit amount</span><b class="o">' + agN(l.depositAmount) + '</b></div>' +
         '<div class="ag-kv"><span>Commission rate</span><b>' + agN(l.rate) + '%</b></div>' +
+        (l.isFirst ? '<div class="ag-kv"><span>Deposit type</span><b>First deposit</b></div>' : '') +
         '<div class="ag-kv"><span>Commission</span><b class="g">+' + agN(l.amount) + '</b></div>' +
         '<div class="ag-kv"><span>Time</span><b class="m">' + agFmtDateTime(l.timestamp) + '</b></div></div>'
     ).join('') + (rows.length > shown.length ? '<button type="button" class="ag-more" onclick="agState.commLimit+=40;agRenderComm()">Show more (' + (rows.length - shown.length) + ' left)</button>' : '');
 }
+function agSetCQ(v) { agState.cq = String(v || ''); agState.commLimit = 40; agRenderComm(); }
+function agSetCLevel(v) { agState.cLevel = v; agState.commLimit = 40; agRenderComm(); }
 function agSetCDate(v) { agState.cDate = v || ''; agState.commLimit = 40; agRenderComm(); }
 function agClearCDate() { agState.cDate = ''; agState.commLimit = 40; agRenderComm(); }
 
