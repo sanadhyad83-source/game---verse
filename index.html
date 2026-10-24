@@ -1275,6 +1275,70 @@
         .game-thumb.number { background: linear-gradient(145deg, #4c1d95, #a855f7); }
         .game-thumb.mines { background: linear-gradient(145deg, #7f1d1d, #ef4444); }
         .game-thumb.colour { background: linear-gradient(145deg, #14532d, #22c55e 40%, #3b82f6 70%, #ef4444); }
+        .game-thumb.roulette { background: linear-gradient(145deg, #14532d, #16a34a 45%, #b91c1c); }
+        /* ===== Mini Roulette ===== */
+        .gv-mr{margin-top:10px;background:linear-gradient(180deg,#0c7a3c,#075a2b);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px 10px 10px;color:#fff;text-align:left;position:relative;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.28)}
+        .gv-mr-title{text-align:center;font-weight:900;letter-spacing:.8px;font-size:14px;color:#fff}
+        .gv-mr-encrow{display:flex;align-items:center;gap:6px;margin:10px 0 6px;font-size:11px;font-weight:700}
+        .gv-mr-encrow code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:#eaffea;background:none}
+        .gv-mr-ico{width:30px;height:26px;padding:0;margin:0;border-radius:8px;background:#0a8a3f;border:1px solid rgba(255,255,255,.35);color:#fff;font-size:14px;line-height:1;cursor:pointer;flex:none}
+        .gv-mr-wheelwrap{width:min(78vw,300px);margin:6px auto 4px}
+        .gv-mr-svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 8px 14px rgba(0,0,0,.4))}
+        .gv-mr-wheelg{transform-origin:150px 150px;will-change:transform}
+        .gv-mr-hist{display:flex;gap:5px;justify-content:center;align-items:center;min-height:22px;margin:6px 0;flex-wrap:wrap}
+        .gv-mr-hist small{color:rgba(255,255,255,.65);font-size:10.5px}
+        .gv-mr-dot{font-style:normal;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;border:1px solid rgba(255,255,255,.55)}
+        .gv-mr-dot.red{background:#d3202f}.gv-mr-dot.black{background:#0b0b0d}
+        .gv-mr-betrow{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;margin:8px 2px 6px}
+        .gv-mr-betrow a{color:#fff;text-decoration:underline;font-weight:800}
+        .gv-mr-pay{display:none;margin:0 0 8px;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.16);font-size:11.5px}
+        .gv-mr-pay.open{display:block}
+        .gv-mr-payrow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.14)}
+        .gv-mr-payrow b{color:#fde68a}
+        .gv-mr-payfoot{margin-top:6px;font-size:10px;color:rgba(255,255,255,.72);line-height:1.4}
+        .gv-mr-table{border:1px solid rgba(255,255,255,.75);border-radius:6px;background:rgba(0,0,0,.08)}
+        .gv-mr-grid{display:grid;grid-template-columns:repeat(6,1fr)}
+        .gv-mr-cell{position:relative;margin:0;padding:0;min-height:50px;border:1px solid rgba(255,255,255,.7);border-width:0 1px 1px 0;background:transparent;color:#fff;font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:0;box-shadow:none;width:auto}
+        .gv-mr-cell:nth-child(6n){border-right-width:0}
+        .gv-mr-cell:nth-last-child(-n+6){border-bottom-width:0}
+        .gv-mr-cell.num{font-size:17px;line-height:1;isolation:isolate}
+        .gv-mr-cell.num::before{content:'';position:absolute;inset:0;margin:auto;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.9);z-index:-1}
+        .gv-mr-cell.num.red::before{background:#d3202f}.gv-mr-cell.num.black::before{background:#0b0b0d}
+        .gv-mr-cell:active{filter:brightness(1.25)}
+        .gv-mr-cell.win{background:rgba(250,204,21,.38);animation:gvMrWin .7s ease-in-out 4 alternate}
+        @keyframes gvMrWin{from{box-shadow:inset 0 0 0 2px #facc15}to{box-shadow:inset 0 0 14px 4px #facc15}}
+        .gv-mr-bubble{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.9);display:block}
+        .gv-mr-bubble.red{background:#d3202f}.gv-mr-bubble.black{background:#0b0b0d}
+        .gv-mr-stack{display:none;position:absolute;right:1px;top:0;min-width:22px;height:22px;padding:0 2px;border-radius:50%;background:radial-gradient(circle,var(--face,#4d7c0f) 0 58%,transparent 59%),repeating-conic-gradient(#fff 0 14deg,var(--edge,#84cc16) 14deg 30deg);color:#fff;font-style:normal;font-size:8.5px;font-weight:900;line-height:22px;text-align:center;border:1px solid rgba(0,0,0,.45);z-index:3;box-sizing:border-box;text-shadow:0 1px 2px rgba(0,0,0,.75);box-shadow:0 2px 4px rgba(0,0,0,.5);pointer-events:none}
+        .gv-mr-stack.drop{animation:gvMrDrop .32s cubic-bezier(.3,1.4,.5,1)}
+        @keyframes gvMrDrop{from{transform:translateY(-16px) scale(1.7);opacity:.2}to{transform:none;opacity:1}}
+        .gv-mr-stack.on{display:block}
+        .gv-mr-actions{display:flex;gap:8px;margin:10px 0 6px}
+        .gv-mr-act{flex:1;margin:0;padding:8px 6px;font-size:12px;font-weight:800;border-radius:18px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.88);cursor:pointer;width:auto}
+        .gv-mr-act:disabled{opacity:.45;cursor:not-allowed}
+        .gv-mr-msg{min-height:34px;margin:4px 0;padding:6px 8px;border-radius:10px;background:rgba(0,0,0,.2);font-size:11.5px;line-height:1.45;text-align:center;color:#eaffea}
+        .gv-mr-msg.warn{background:rgba(127,29,29,.55);color:#fecaca}
+        .gv-mr-msg.good{background:rgba(250,204,21,.2);color:#fef3c7}
+        .gv-mr-msg.bad{background:rgba(0,0,0,.32);color:#fecaca}
+        .gv-mr-proof{display:block;margin-top:3px;font-size:9.5px;opacity:.75;word-break:break-all}
+        .gv-mr-bottom{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;border-radius:14px;background:rgba(0,0,0,.28)}
+        .gv-mr-chips{flex:1;display:flex;gap:6px;justify-content:space-between;min-width:0}
+        .c1{--face:#4d7c0f;--edge:#a3e635}.c2{--face:#0f766e;--edge:#2dd4bf}.c3{--face:#6d28d9;--edge:#c4b5fd}.c4{--face:#c2410c;--edge:#fdba74}.c5{--face:#a21caf;--edge:#f0abfc}.c6{--face:#b91c1c;--edge:#fca5a5}
+        .gv-mr-chip{flex:1;max-width:46px;aspect-ratio:1/1;margin:0;padding:0;border-radius:50%;border:2px solid rgba(0,0,0,.4);background:radial-gradient(circle,var(--face) 0 57%,transparent 58%),repeating-conic-gradient(#fff 0 14deg,var(--edge) 14deg 30deg);font-size:11px;font-weight:900;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 7px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.18);width:auto;min-width:0;transition:transform .14s,box-shadow .14s}
+        .gv-mr-chip span{width:68%;height:68%;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.6),rgba(255,255,255,0) 55%),var(--face);border:1.5px solid rgba(255,255,255,.75);text-shadow:0 1px 2px rgba(0,0,0,.7)}
+        .gv-mr-chip:active{transform:scale(.92)}
+        .gv-mr-chip.sel{transform:translateY(-6px) scale(1.1);box-shadow:0 0 0 2px #facc15,0 0 14px 2px rgba(250,204,21,.75),0 8px 12px rgba(0,0,0,.5)}
+        .gv-mr-spin{flex:none;width:58px;height:58px;margin:0;padding:0;border-radius:50%;border:3px solid #86efac;background:radial-gradient(circle at 35% 30%,#22c55e,#0f7a35);color:#fff;font-size:30px;line-height:1;cursor:pointer;box-shadow:0 0 14px rgba(74,222,128,.55);display:flex;align-items:center;justify-content:center}
+        .gv-mr-spin.busy{animation:gvMrSpinBtn .9s linear infinite;opacity:.8}
+        @keyframes gvMrSpinBtn{to{transform:rotate(360deg)}}
+        .gv-mr-foot{text-align:right;font-size:11.5px;font-weight:800;margin-top:6px;padding-right:4px}
+        @media (max-width:360px){.gv-mr-cell{min-height:44px}.gv-mr-cell.num::before{width:32px;height:32px}.gv-mr-chip{font-size:10px}.gv-mr-spin{width:50px;height:50px}}
+        .gv-mr-ball{filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.75))}
+        .gv-mr-ptr{transform-origin:150px 22px;transition:transform .06s ease-out}
+        .gv-mr-hubicon{transform-origin:150px 150px}
+        .gv-mr.spinning .gv-mr-svg{filter:drop-shadow(0 0 14px rgba(250,204,21,.45)) drop-shadow(0 8px 14px rgba(0,0,0,.4))}
+        .gv-mr-winseg{fill:rgba(250,204,21,.28);stroke:#facc15;stroke-width:2.5;animation:gvMrSeg .8s ease-in-out infinite alternate}
+        @keyframes gvMrSeg{from{fill:rgba(250,204,21,.12)}to{fill:rgba(250,204,21,.45)}}
         .game-hub-card .gh-row { display: flex; align-items: center; gap: 12px; }
         .game-hub-card .gh-body { flex: 1; min-width: 0; }
 
@@ -2978,44 +3042,60 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                     <div class="gv-games-live-badge"><span></span> LIVE</div>
                 </div>
                 <div class="gv-games-stats">
-                    <div><b>⚡</b><span>Fast Play</span></div>
+                    <div><b>⚡</b><span id="gvhOpenCount">Fast Play</span></div>
                     <div><b>🎯</b><span>Skill & Luck</span></div>
                     <div><b>💰</b><span>Real Rewards</span></div>
                 </div>
             </div>
-            <div class="gv-games-section-head"><span>🎫 Lottery</span><small>Period games</small></div>
-            <div class="gv-sq-grid" id="gvLotteryGrid">
-                <div id="colourClashTopCard" class="game-hub-card gv-sq-card">
-                    <div class="gh-row">
-                        <div class="game-thumb colour">🎨</div>
-                        <div class="gh-body">
-                            <div class="gh-top">
-                                <span class="gh-title">WINGO</span>
-                                <span class="status-pill active">LIVE</span>
-                            </div>
-                            <div id="colourClashTopStatus" class="gh-meta">Loading round...</div>
+
+            <div class="gvh-search"><span>🔍</span><input id="gvhSearch" type="search" placeholder="Search games…" oninput="gvhApplyView()" autocomplete="off"></div>
+            <div class="gvh-tabs" id="gvhTabs">
+                <button type="button" class="active" data-cat="all" onclick="gvhSetFilter('all')">All</button>
+                <button type="button" data-cat="lottery" onclick="gvhSetFilter('lottery')">🎫 Lottery</button>
+                <button type="button" data-cat="casino" onclick="gvhSetFilter('casino')">🎰 Casino</button>
+                <button type="button" data-cat="skill" onclick="gvhSetFilter('skill')">🚀 Crash &amp; Skill</button>
+            </div>
+
+            <div class="gvh-sec" data-cat="lottery">
+                <div class="gvh-head"><span>🎫 Lottery</span><small>Live period games</small></div>
+                <div class="gvh-grid one" id="gvLotteryGrid">
+                    <div id="colourClashTopCard" class="gvh-card wide" data-name="wingo colour lottery">
+                        <div class="gvh-art" style="background:linear-gradient(150deg,#0e7a86,#06222b)"><span class="gvh-emoji">🎨</span></div>
+                        <div class="gvh-info">
+                            <div class="gvh-nameRow"><span class="gvh-name">WINGO</span><span class="status-pill active">LIVE</span></div>
+                            <div id="colourClashTopStatus" class="gvh-tag">Loading round...</div>
+                            <div class="gvh-chips"><span>🎨 Colour &amp; number</span><span>⏱ Fast rounds</span></div>
+                            <button type="button" onclick="tryPlayColourClash()" class="gvh-play">▶ Play Now</button>
                         </div>
                     </div>
-                    <button onclick="tryPlayColourClash()" class="btn-green">▶ Play Now</button>
-                </div>
-                <div id="k3TopCard" class="game-hub-card gv-sq-card">
-                    <div class="gh-row">
-                        <div class="game-thumb colour">🎲</div>
-                        <div class="gh-body">
-                            <div class="gh-top">
-                                <span class="gh-title">K3</span>
-                                <span class="status-pill active" id="k3TopPill">LIVE</span>
-                            </div>
-                            <div id="k3TopStatus" class="gh-meta">Loading round...</div>
+                    <div id="k3TopCard" class="gvh-card wide" data-name="k3 dice lottery">
+                        <div class="gvh-art" style="background:linear-gradient(150deg,#6a3bc0,#1a0d3a)"><span class="gvh-emoji">🎲</span></div>
+                        <div class="gvh-info">
+                            <div class="gvh-nameRow"><span class="gvh-name">K3</span><span class="status-pill active" id="k3TopPill">LIVE</span></div>
+                            <div id="k3TopStatus" class="gvh-tag">Loading round...</div>
+                            <div class="gvh-chips"><span>🎲 Dice lottery</span><span>⏱ Fast rounds</span></div>
+                            <button type="button" onclick="tryPlayK3()" class="gvh-play">▶ Play Now</button>
                         </div>
                     </div>
-                    <button onclick="tryPlayK3()" class="btn-green">▶ Play Now</button>
                 </div>
             </div>
-            <div class="gv-games-section-head" style="margin-top:14px;"><span>🎮 Arcade Games</span><small>Live now</small></div>
-            <div class="gv-sq-grid" id="gvGamesGrid">
-                <div id="gameList" class="gv-sq-list"></div>
+
+            <div class="gvh-sec" data-cat="casino">
+                <div class="gvh-head"><span>🎰 Casino Classics</span><small>Spin · duel · flip</small></div>
+                <div class="gvh-grid" id="gvCasinoGrid"></div>
             </div>
+
+            <div class="gvh-sec" data-cat="skill">
+                <div class="gvh-head"><span>🚀 Crash &amp; Skill</span><small>Cash out · pick · guess</small></div>
+                <div class="gvh-grid" id="gvSkillGrid"></div>
+            </div>
+
+            <div class="gvh-sec hidden" data-cat="more" id="gvhMoreSec">
+                <div class="gvh-head"><span>✨ More Games</span><small>New</small></div>
+                <div class="gvh-grid" id="gvMoreGrid"></div>
+            </div>
+
+            <div id="gvhEmpty" class="gvh-empty hidden">No games match your search.</div>
             <button onclick="backToDashboard()" class="btn-gray" style="margin-top: 12px;">⬅ Back to Menu</button>
         </div>
 
@@ -4114,6 +4194,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
 
         db.ref('games/colour_clash').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/colour_clash').set({name:'WINGO',entryFee:10,status:'active',allowUserAmount:true}); });
         db.ref('games/high_card').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/high_card').set({name:'Dragon vs Tiger',entryFee:10,usdtEntryFee:0.1,status:'active',allowUserAmount:true,winChancePercent:50,betScalingPercent:0}); else if(snap.val() && (snap.val().name==='High Card' || !snap.val().name)) db.ref('games/high_card/name').set('Dragon vs Tiger'); });
+        db.ref('games/mini_roulette').once('value').then(snap=>{ if(!snap.exists()) db.ref('games/mini_roulette').set({name:'Mini Roulette',entryFee:10,usdtEntryFee:0.1,status:'active',allowUserAmount:true,numberMultiplier:10,groupMultiplier:1.8,zeroMultiplier:10,zeroPockets:2,maxStraightBets:4,maxPayoutINR:0,maxPayoutUSDT:0,spinMs:4200,minBetINR:1,maxBetINR:0,minBetUSDT:0,maxBetUSDT:0}); }).catch(()=>{});
         db.ref('control/colourClashConfig').once('value').then(snap=>{ if(!snap.exists()) db.ref('control/colourClashConfig').set({enabled:true,entrySeconds:30,cooldownSeconds:5,minBet:10,maxBet:5000,multiplier:2,numberMultiplier:9,autoResult:true}); });
 
         function investLocalDateStr(d) {
@@ -5283,6 +5364,7 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         function closeActiveGame() {
             if (typeof leaveRocketLive === 'function') leaveRocketLive();
             if (typeof leaveK3 === 'function') leaveK3();
+            if (typeof mrLeave === 'function') mrLeave();
             if (colourClashTimer) clearInterval(colourClashTimer);
             minesState = null;
             if (typeof leaveColourClashPage === 'function') leaveColourClashPage();
@@ -7598,74 +7680,96 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
         // Entries are kept permanently after settlement (not auto-deleted) so both the admin and the
         // player can review past entries. Only an admin action clears them — see the admin app.
 
+        // ---- Play Games hub v2: games are grouped by category and rendered as uniform cards ----
+        const GVH_META = {
+            mini_roulette: { cat:'casino', icon:'🎰', art:'linear-gradient(150deg,#12874a,#06210f 62%,#5c0f1c)', tag:'Spin the wheel • beat the house pockets', badge:'HOT', order:1 },
+            high_card:     { cat:'casino', icon:'🐉', art:'linear-gradient(150deg,#a23a2c,#210c16)', tag:'Dragon vs Tiger card duel', order:2 },
+            spin_wheel:    { cat:'casino', icon:'🎡', art:'linear-gradient(150deg,#c26a12,#2a1203)', tag:'Land on 🎉 to double your bet', order:3 },
+            coin_flip:     { cat:'casino', icon:'🪙', art:'linear-gradient(150deg,#b8890d,#241a03)', tag:'Heads or tails — call it', order:4 },
+            rocket_jump:   { cat:'skill',  icon:'🚀', art:'linear-gradient(150deg,#1a6bc0,#07172e)', tag:'Ride the multiplier, cash out before the crash', badge:'LIVE', order:1 },
+            mines:         { cat:'skill',  icon:'💣', art:'linear-gradient(150deg,#b02a3e,#2a0a12)', tag:'Reveal safe tiles and cash out', order:2 },
+            number_guess:  { cat:'skill',  icon:'🎯', art:'linear-gradient(150deg,#7a35d6,#1a0b3a)', tag:'Guess the secret number', order:3 }
+        };
+        let gvhGamesHandler = null, gvhPlayArgs = {};
+        function gvhEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m])); }
+        function gvhCard(o) {
+            return `<div class="gvh-card ${o.open ? '' : 'locked'}" data-name="${gvhEsc((o.name + ' ' + o.cat).toLowerCase())}">
+                <div class="gvh-art" style="background:${o.art}"><span class="gvh-emoji">${o.icon}</span>
+                    <span class="status-pill ${o.open ? 'active' : 'locked'}">${o.open ? 'OPEN' : 'LOCKED'}</span>${o.badge && o.open ? `<span class="gvh-badge">${o.badge}</span>` : ''}</div>
+                <div class="gvh-info">
+                    <div class="gvh-name">${gvhEsc(o.name)}</div>
+                    <div class="gvh-tag">${gvhEsc(o.tag)}</div>
+                    <div class="gvh-chips"><span>🏆 ${gvhEsc(o.reward)}</span><span style="${o.entryFree ? 'color:#6ee7b7' : ''}">🎟 ${gvhEsc(o.entry)}</span></div>
+                    <button type="button" onclick="gvhPlay('${o.id}')" class="gvh-play ${o.open ? '' : 'locked'}">${o.open ? '▶ Play Now' : '🔒 Locked'}</button>
+                </div></div>`;
+        }
+        function gvhPlay(id) { const a = gvhPlayArgs[id]; if (a) tryPlayGame.apply(null, a); }
+        let gvhFilter = 'all';
+        function gvhSetFilter(cat) {
+            gvhFilter = cat;
+            document.querySelectorAll('#gvhTabs button').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+            gvhApplyView();
+        }
+        function gvhApplyView() {
+            const qEl = document.getElementById('gvhSearch'); const q = (qEl ? qEl.value : '').trim().toLowerCase();
+            let shown = 0;
+            document.querySelectorAll('#gamesHub .gvh-sec').forEach(sec => {
+                let vis = 0;
+                sec.querySelectorAll('.gvh-card').forEach(c => { const ok = !q || (c.dataset.name || '').indexOf(q) !== -1; c.classList.toggle('gvh-off', !ok); if (ok) vis++; });
+                const catOk = gvhFilter === 'all' || sec.dataset.cat === gvhFilter;
+                sec.classList.toggle('gvh-off', !catOk || (q && vis === 0));
+                if (catOk && vis > 0 && !sec.classList.contains('hidden')) shown += vis;
+            });
+            const em = document.getElementById('gvhEmpty'); if (em) em.classList.toggle('hidden', shown > 0);
+        }
+
         function loadMiniGames() {
-            db.ref('games').on('value', snap => {
-                const games = snap.val();
-                const container = document.getElementById('gameList');
-                if(!container) return;
-                container.innerHTML = '';
+            if (gvhGamesHandler) { try { db.ref('games').off('value', gvhGamesHandler); } catch (e) {} }
+            gvhGamesHandler = snap => {
+                const games = snap.val() || {};
+                const grids = { casino: document.getElementById('gvCasinoGrid'), skill: document.getElementById('gvSkillGrid'), more: document.getElementById('gvMoreGrid') };
+                if (!grids.casino || !grids.skill || !grids.more) return;
+                const list = [];
+                gvhPlayArgs = {};
 
                 // Mines — config-driven via control/minesConfig, not stored in the games node
                 const minesActive = !globalGamesPaused && minesConfig.enabled;
-                container.innerHTML += `
-                    <div class="game-hub-card">
-                        <div class="gh-row">
-                            <div class="game-thumb mines">💣</div>
-                            <div class="gh-body">
-                                <div class="gh-top">
-                                    <span class="gh-title">Mines</span>
-                                    <span class="status-pill ${minesActive ? 'active' : 'locked'}">${minesActive ? 'OPEN' : 'LOCKED'}</span>
-                                </div>
-                                <div class="gh-meta" style="margin:0;">Reward: <b>Multiplied Payout</b><br>Bet: <b>₹${minesConfig.minBet} – ₹${minesConfig.maxBet}</b></div>
-                            </div>
-                        </div>
-                        <button onclick="tryPlayGame('mines', '${minesActive ? 'active' : 'locked'}', 'Mines', 0, 0, false)" class="${minesActive ? 'btn-green' : 'btn-gray'}" style="margin-top:10px; padding:10px;">${minesActive ? '▶ Play Now' : '🔒 Locked'}</button>
-                    </div>
-                `;
+                const mm = GVH_META.mines;
+                gvhPlayArgs.mines = ['mines', minesActive ? 'active' : 'locked', 'Mines', 0, 0, false];
+                list.push({ id:'mines', cat:mm.cat, icon:mm.icon, art:mm.art, tag:mm.tag, badge:mm.badge, order:mm.order, name:'Mines', open:minesActive, reward:'Multiplied payout', entry:`₹${minesConfig.minBet} – ₹${minesConfig.maxBet}`, entryFree:false });
 
-                if (!games) { return; }
-
-                for (let gameId in games) {
+                for (const gameId in games) {
                     if (gameId === 'colour_clash') continue;
-                    const g = games[gameId];
+                    const g = games[gameId] || {};
                     // Hide any stray/unknown "WINGO" game entry from the user-facing games list.
                     if (gameId.toLowerCase().includes('wingo') || (g.name || '').toLowerCase().includes('wingo')) continue;
                     const isActive = !globalGamesPaused && g.status === 'active';
                     const feeVal = Number(g.entryFee) || 0;
-                    const feeDisplay = g.allowUserAmount ? 'Custom Amount' : (feeVal === 0 ? 'Free' : `₹${feeVal}`);
+                    const entry = g.allowUserAmount ? 'Custom amount' : (feeVal === 0 ? 'Free' : `₹${feeVal}`);
                     const isDoubleOrNothing = (gameId === 'high_card' || gameId === 'coin_flip' || gameId === 'number_guess' || gameId === 'spin_wheel');
-                    const prizeDisplay = gameId === 'rocket_jump' ? 'Live rounds • cash out anytime' : (isDoubleOrNothing ? '2x Your Bet' : `₹${g.prize || 0}`);
-                    const gameTitleName = g.name || (gameId === 'rocket_jump' ? 'Rocket Jump' : gameId);
-                    const winChanceVal = Number(g.winChancePercent);
-                    const winChance = isNaN(winChanceVal) ? 50 : winChanceVal;
-                    const betScalingVal = Number(g.betScalingPercent);
-                    const betScaling = isNaN(betScalingVal) ? 0 : betScalingVal;
-                    const minBetINR = Number(g.minBetINR ?? g.minBet ?? 0);
-                    const maxBetINR = Number(g.maxBetINR ?? g.maxBet ?? 0);
-                    const minBetUSDT = Number(g.minBetUSDT ?? 0);
-                    const maxBetUSDT = Number(g.maxBetUSDT ?? 0);
-                    
-                    const icons = { rocket_jump:'🚀', high_card:'🐉', spin_wheel:'🎡', coin_flip:'🪙', number_guess:'🎯' };
-                    const thumbs = { rocket_jump:'rocket', high_card:'dragon', spin_wheel:'wheel', coin_flip:'coin', number_guess:'number' };
-                    const icon = icons[gameId] || '🎮';
-                    const thumb = thumbs[gameId] || 'rocket';
-                    container.innerHTML += `
-                        <div class="game-hub-card">
-                            <div class="gh-row">
-                                <div class="game-thumb ${thumb}">${icon}</div>
-                                <div class="gh-body">
-                                    <div class="gh-top">
-                                        <span class="gh-title">${gameTitleName}</span>
-                                        <span class="status-pill ${isActive ? 'active' : 'locked'}">${isActive ? 'OPEN' : 'LOCKED'}</span>
-                                    </div>
-                                    <div class="gh-meta" style="margin:0;">Reward: <b>${prizeDisplay}</b><br>Entry: <b style="color:${feeVal === 0 && !g.allowUserAmount ? '#34d399' : '#facc15'};">${feeDisplay}</b></div>
-                                </div>
-                            </div>
-                            <button onclick="tryPlayGame('${gameId}', '${g.status}', '${gameTitleName}', ${g.prize || 0}, ${feeVal}, ${g.allowUserAmount ? true : false}, ${winChance}, ${betScaling}, ${minBetINR}, ${maxBetINR}, ${minBetUSDT}, ${maxBetUSDT})" class="${isActive ? 'btn-green' : 'btn-gray'}" style="margin-top:10px; padding:10px;">${isActive ? '▶ Play Now' : '🔒 Locked'}</button>
-                        </div>
-                    `;
+                    const nm = Number(g.numberMultiplier) >= 1 ? Number(g.numberMultiplier) : 10;
+                    const reward = gameId === 'rocket_jump' ? 'Cash out anytime' : (gameId === 'mini_roulette' ? `Up to ${nm}x chip` : (isDoubleOrNothing ? '2x your bet' : `₹${g.prize || 0}`));
+                    const name = g.name || (gameId === 'rocket_jump' ? 'Rocket Jump' : gameId);
+                    const winChance = isNaN(Number(g.winChancePercent)) ? 50 : Number(g.winChancePercent);
+                    const betScaling = isNaN(Number(g.betScalingPercent)) ? 0 : Number(g.betScalingPercent);
+                    const minBetINR = Number(g.minBetINR ?? g.minBet ?? 0), maxBetINR = Number(g.maxBetINR ?? g.maxBet ?? 0);
+                    const minBetUSDT = Number(g.minBetUSDT ?? 0), maxBetUSDT = Number(g.maxBetUSDT ?? 0);
+                    const m = GVH_META[gameId] || { cat:'more', icon:'🎮', art:'linear-gradient(150deg,#3b4a6b,#0b1020)', tag:'Tap play to start', order:99 };
+                    gvhPlayArgs[gameId] = [gameId, g.status, name, g.prize || 0, feeVal, !!g.allowUserAmount, winChance, betScaling, minBetINR, maxBetINR, minBetUSDT, maxBetUSDT];
+                    list.push({ id:gameId, cat:m.cat, icon:m.icon, art:m.art, tag:m.tag, badge:m.badge, order:m.order, name, open:isActive, reward, entry, entryFree: feeVal === 0 && !g.allowUserAmount });
                 }
-            });
+
+                list.sort((a, b) => (a.open === b.open ? 0 : (a.open ? -1 : 1)) || a.order - b.order);   // open games first inside every category
+                Object.keys(grids).forEach(cat => { grids[cat].innerHTML = list.filter(x => x.cat === cat).map(gvhCard).join(''); });
+                const moreSec = document.getElementById('gvhMoreSec'); if (moreSec) moreSec.classList.toggle('hidden', !grids.more.innerHTML.trim());
+
+                let openCount = list.filter(x => x.open).length;
+                try { if (!globalGamesPaused && colourClashConfig && colourClashConfig.enabled) openCount++; } catch (e) {}
+                try { if (!globalGamesPaused && k3Config && k3Config.enabled) openCount++; } catch (e) {}
+                const oc = document.getElementById('gvhOpenCount'); if (oc) oc.innerText = `${openCount} Games Live`;
+                gvhApplyView();
+            };
+            db.ref('games').on('value', gvhGamesHandler);
         }
 
         function tryPlayGame(gameId, status, gameName, prize, entryFee, allowUserAmount, winChance, betScaling, minBetINR=0, maxBetINR=0, minBetUSDT=0, maxBetUSDT=0) {
@@ -7805,6 +7909,8 @@ button:hover{background:linear-gradient(135deg,#ffedb0,#fbbf24 55%,#bd7b10)!impo
                         <button id="actionBtn" onclick="initNumberGuess(${entryFee}, ${allowUserAmount}, ${winChance}, ${betScaling})" class="btn-green" style="margin-top:10px;">🎯 Lock In Guess</button>
                     </div>
                 `;
+            } else if (gameId === 'mini_roulette') {
+                renderMiniRoulette(contentBox);
             } else if (gameId === 'mines') {
                 renderMinesSetup();
             }
@@ -13723,6 +13829,551 @@ body .bottom-tab-bar .tab-btn.active .tab-label{color:#ffe7a3 !important;}
 body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(245,189,69,.75));}
 </style>
 
+<style id="gv-hub-v2">
+/* ===== Play Games hub v2 (royal theme): search, category tabs, grouped game cards ===== */
+.gvh-search{display:flex;align-items:center;gap:8px;padding:0 12px;margin:0 0 9px;border-radius:14px;border:1px solid rgba(215,177,91,.4);background:linear-gradient(145deg,#12132a,#070a16)}
+.gvh-search span{font-size:13px;opacity:.8}
+.gvh-search input{flex:1;min-width:0;margin:0;padding:11px 0;border:0;background:transparent;box-shadow:none;color:#f8fafc;font-size:12.5px;outline:none}
+.gvh-search input::placeholder{color:#7f8aa3}
+.gvh-tabs{display:flex;gap:6px;overflow-x:auto;padding:1px 1px 6px;margin-bottom:2px;scrollbar-width:none}
+.gvh-tabs::-webkit-scrollbar{display:none}
+.gvh-tabs button{flex:none;width:auto;margin:0;padding:8px 13px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;border:1px solid rgba(215,177,91,.35);background:rgba(255,255,255,.04);color:#c9bfa0;cursor:pointer;box-shadow:none}
+.gvh-tabs button.active{color:#1b1202;border-color:#f0cf78;background:linear-gradient(135deg,#ffe6a0,#e0a93b);box-shadow:0 4px 14px rgba(224,169,59,.3)}
+.gvh-sec{margin-top:12px}
+.gvh-sec.gvh-off{display:none}
+.gvh-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 8px;font-size:12px;font-weight:900;letter-spacing:.3px;color:#f4d990}
+.gvh-head small{font-size:8px;color:#c4a85d;font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+.gvh-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.gvh-grid.one{grid-template-columns:1fr}
+.gvh-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:18px;border:1px solid rgba(215,177,91,.45);background:radial-gradient(circle at 100% 0%,rgba(233,197,111,.10),transparent 40%),linear-gradient(160deg,#171426,#080b16);box-shadow:0 10px 24px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.05);transition:transform .18s,border-color .18s,box-shadow .18s}
+.gvh-card:hover{border-color:#f0cf78;box-shadow:0 14px 28px rgba(0,0,0,.42),0 0 18px rgba(216,174,75,.18)}
+.gvh-card:active{transform:scale(.98)}
+.gvh-card.gvh-off{display:none}
+.gvh-art{position:relative;height:88px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gvh-art::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.28),transparent 58%)}
+.gvh-art::after{content:"";position:absolute;left:0;right:0;bottom:0;height:36px;background:linear-gradient(180deg,transparent,rgba(8,11,22,.75))}
+.gvh-emoji{position:relative;z-index:1;font-size:40px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5));animation:gvhFloat 3.2s ease-in-out infinite}
+@keyframes gvhFloat{50%{transform:translateY(-4px) scale(1.04)}}
+.gvh-card .status-pill{position:absolute;top:8px;left:8px;z-index:2;margin:0;font-size:7.5px !important;padding:3px 7px !important}
+.gvh-badge{position:absolute;top:8px;right:8px;z-index:2;padding:3px 7px;border-radius:999px;font-size:7.5px;font-weight:900;letter-spacing:.6px;color:#1b1202;background:linear-gradient(135deg,#ffe6a0,#e0a93b);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.gvh-info{display:flex;flex-direction:column;flex:1;padding:9px 10px 10px;min-width:0}
+.gvh-name{font-size:13.5px;font-weight:900;color:#ffe6a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gvh-tag{margin-top:2px;font-size:9.5px;line-height:1.4;color:#aeb6c9;min-height:26px}
+.gvh-chips{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0 0}
+.gvh-chips span{padding:3px 7px;border-radius:999px;font-size:8.5px;font-weight:800;color:#e9dfc0;background:rgba(255,255,255,.06);border:1px solid rgba(215,177,91,.22);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.gvh-play{margin:auto 0 0;padding:9px 8px;width:100%;border-radius:11px;font-size:11.5px;font-weight:900;letter-spacing:.3px;color:#1b1202;border:1px solid #f0cf78;background:linear-gradient(135deg,#ffe6a0,#e0a93b);box-shadow:0 4px 12px rgba(224,169,59,.25);cursor:pointer}
+.gvh-card .gvh-chips + .gvh-play{margin-top:9px}
+.gvh-play.locked{color:#9aa3b8;border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06);box-shadow:none}
+.gvh-card.locked .gvh-art{filter:saturate(.3) brightness(.7)}
+.gvh-card.locked .gvh-name{color:#b9b3a0}
+.gvh-card.wide{flex-direction:row;align-items:stretch}
+.gvh-card.wide .gvh-art{height:auto;width:34%;min-height:132px;flex:none}
+.gvh-card.wide .gvh-emoji{font-size:46px}
+.gvh-card.wide .gvh-art::after{display:none}
+.gvh-card.wide .gvh-info{padding:11px 12px}
+.gvh-nameRow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gvh-card.wide .status-pill{position:static}
+.gvh-card.wide .gvh-name{font-size:16px}
+.gvh-card.wide .gvh-tag{font-size:10.5px;color:#d7dcec;min-height:0;margin:5px 0 0}
+.gvh-empty{margin:18px 0 6px;text-align:center;color:#9aacc7;font-size:12px}
+@media (max-width:340px){.gvh-art{height:76px}.gvh-emoji{font-size:34px}.gvh-name{font-size:12.5px}.gvh-card.wide .gvh-art{width:30%}}
+/* Mini Roulette: green house pockets */
+.gv-mr-loading{padding:46px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.75)}
+.gv-mr-dot.green{background:#0f9d58}
+.gv-mr-cell.num.green::before{background:#0f9d58}
+.gv-mr-zrow{display:grid;border-bottom:1px solid rgba(255,255,255,.7)}
+.gv-mr-zrow .gv-mr-cell{border-width:0 1px 0 0}
+.gv-mr-zrow .gv-mr-cell:last-child{border-right-width:0}
+</style>
+
+<script id="gv-mini-roulette-js">
+/* ===== MINI ROULETTE (12 numbers + house pockets) =====
+   Wheel = numbers 1-12 plus 0-3 green HOUSE pockets (0, 00, 000). Group bets (Red/Black, Odd/Even, 1-6, 7-12) always LOSE on a
+   house pocket, and the payouts are below the fair odds, so the house edge is built into the table (shown in the Paytable).
+   Every result is still random and is committed (SHA-256) BEFORE the chips go down, so the "Verify" line stays truthful.
+   Wallet flow, round logging (game_rounds) and limits reuse the same helpers as the other arcade games.
+   Admin settings live in games/mini_roulette (numberMultiplier, groupMultiplier, zeroMultiplier, zeroPockets, maxStraightBets,
+   maxPayoutINR/USDT, spinMs + shared bet limits). */
+(function () {
+  'use strict';
+  var GAME_ID = 'mini_roulette', GAME_NAME = 'Mini Roulette';
+  var BASE = [1, 9, 5, 4, 10, 6, 12, 2, 8, 7, 3, 11];          // number layout, clockwise from the top
+  var ZERO_IDS = [0, 13, 14], ZERO_LBL = { 0: '0', 13: '00', 14: '000' };
+  var RED = { 1: 1, 3: 1, 5: 1, 8: 1, 10: 1, 12: 1 };
+  var ROW1 = [2, 4, 6, 8, 10, 12], ROW2 = [1, 3, 5, 7, 9, 11];
+  var CHIPS = { INR: [1, 5, 10, 1000, 5000, 8000], USDT: [0.1, 0.5, 1, 10, 50, 100] };
+  var CHIP_CLS = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
+  var DEF = { numberMultiplier: 10, groupMultiplier: 1.8, zeroMultiplier: 10, zeroPockets: 2, maxStraightBets: 4, maxPayoutINR: 0, maxPayoutUSDT: 0, spinMs: 4200 };
+  var S = null;
+
+  function $(id) { return document.getElementById(id); }
+  function cur() { try { return gameCurrencyLabel(activeGameCurrency); } catch (e) { return 'INR'; } }
+  function dec() { return cur() === 'USDT' ? 4 : 2; }
+  function rnd(v) { return Number(Number(v).toFixed(dec())); }
+  function money(v) { try { return gameMoney(v, cur()); } catch (e) { return String(v); } }
+  function chipLabel(v) { return v >= 1000 ? (v / 1000) + 'K' : String(v); }
+  function isZero(n) { return n === 0 || n >= 13; }
+  function numLabel(n) { return isZero(n) ? ZERO_LBL[n] : String(n); }
+  function colorOf(n) { return isZero(n) ? 'green' : (RED[n] ? 'red' : 'black'); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+
+  function hit(key, n) {
+    if (key.charAt(0) === 'n') return Number(key.slice(1)) === n;
+    if (isZero(n)) return false;                                  // house pockets: every group bet loses
+    if (key === 'low') return n <= 6;
+    if (key === 'high') return n >= 7;
+    if (key === 'even') return n % 2 === 0;
+    if (key === 'odd') return n % 2 === 1;
+    if (key === 'red') return !!RED[n];
+    if (key === 'black') return !RED[n];
+    return false;
+  }
+  function payMult(key, cfg) {
+    if (key.charAt(0) === 'n') return isZero(Number(key.slice(1))) ? cfg.zeroMultiplier : cfg.numberMultiplier;
+    return cfg.groupMultiplier;
+  }
+  function keyLabel(key) {
+    if (key.charAt(0) === 'n') return 'No. ' + numLabel(Number(key.slice(1)));
+    return { low: '1-6', high: '7-12', even: 'Even', odd: 'Odd', red: 'Red', black: 'Black' }[key] || key;
+  }
+  function total() { var t = 0; for (var k in S.bets) t += S.bets[k]; return rnd(t); }
+  function straightCount() { var c = 0; for (var k in S.bets) if (k.charAt(0) === 'n') c++; return c; }
+
+  /* ---- wheel layout: house pockets are spread evenly between the numbers ---- */
+  function buildOrder(zp) {
+    zp = Math.max(0, Math.min(3, Math.floor(zp) || 0));
+    if (!zp) return BASE.slice();
+    var N = 12 + zp, slots = new Array(N), j = 0, i;
+    for (i = 0; i < zp; i++) slots[Math.round(i * N / zp) % N] = ZERO_IDS[i];
+    for (i = 0; i < N; i++) if (slots[i] === undefined) slots[i] = BASE[j++];
+    return slots;
+  }
+
+  /* ---- fair result + commit hash (hash is shown before the spin; salt is revealed after it) ---- */
+  function randIdx(N) {
+    try {
+      var a = new Uint32Array(1), lim = Math.floor(4294967296 / N) * N;
+      do { crypto.getRandomValues(a); } while (a[0] >= lim);
+      return a[0] % N;
+    } catch (e) { return Math.floor(Math.random() * N); }
+  }
+  function randHex(len) {
+    var s = '';
+    try { var a = new Uint8Array(len / 2); crypto.getRandomValues(a); a.forEach(function (b) { s += ('0' + b.toString(16)).slice(-2); }); }
+    catch (e) { while (s.length < len) s += Math.floor(Math.random() * 16).toString(16); }
+    return s;
+  }
+  function fallbackHash(str) {
+    var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (var i = 0; i < str.length; i++) { var c = str.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    var o = (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+    return (o + o + o + o).slice(0, 64);
+  }
+  function sha256(str) {
+    try {
+      if (window.crypto && crypto.subtle) {
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+          return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+        });
+      }
+    } catch (e) {}
+    return Promise.resolve(fallbackHash(str));
+  }
+  function newCommit() {
+    var c = { result: S.order[randIdx(S.N)], salt: randHex(16), hash: '' };
+    S.commit = c;
+    paintCommit();
+    return sha256(numLabel(c.result) + ':' + c.salt).then(function (h) { c.hash = h; if (S && S.commit === c) paintCommit(); });
+  }
+  function paintCommit() {
+    var el = $('mrEnc'); if (!el || !S) return;
+    var h = S.commit && S.commit.hash;
+    el.textContent = h ? h.slice(0, 22) + '…' : 'generating…';
+  }
+
+  /* ---- wheel ---- */
+  function pt(r, deg) { var a = deg * Math.PI / 180; return [150 + r * Math.sin(a), 150 - r * Math.cos(a)]; }
+  function arc(r0, r1, a0, a1) {
+    var p1 = pt(r1, a0), p2 = pt(r1, a1), p3 = pt(r0, a1), p4 = pt(r0, a0);
+    return 'M' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2) + ' A' + r1 + ' ' + r1 + ' 0 0 1 ' + p2[0].toFixed(2) + ' ' + p2[1].toFixed(2) +
+      ' L' + p3[0].toFixed(2) + ' ' + p3[1].toFixed(2) + ' A' + r0 + ' ' + r0 + ' 0 0 0 ' + p4[0].toFixed(2) + ' ' + p4[1].toFixed(2) + ' Z';
+  }
+  function wheelSvg() {
+    var segs = '', seg = S.seg;
+    S.order.forEach(function (n, i) {
+      var a = i * seg, z = isZero(n), red = !!RED[n], lbl = numLabel(n);
+      var outer = z ? '#0f9d58' : (red ? '#d3202f' : '#0b0b0d'), inner = z ? '#0a7a42' : (red ? '#a8111e' : '#1c1c20');
+      var tp = pt(118, a), fs = lbl.length >= 3 ? 12 : (lbl.length === 2 && z ? 16 : 19);
+      segs += '<path d="' + arc(98, 142, a - seg / 2, a + seg / 2) + '" fill="' + outer + '" stroke="#06361b" stroke-width="1.2"/>' +
+        '<path d="' + arc(66, 98, a - seg / 2, a + seg / 2) + '" fill="' + inner + '" stroke="#06361b" stroke-width="1.2"/>' +
+        '<text x="' + tp[0].toFixed(2) + '" y="' + tp[1].toFixed(2) + '" fill="#fff" font-size="' + fs + '" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(' + a.toFixed(2) + ' ' + tp[0].toFixed(2) + ' ' + tp[1].toFixed(2) + ')">' + lbl + '</text>';
+    });
+    return '<svg viewBox="0 0 300 300" class="gv-mr-svg" aria-label="Mini Roulette wheel">' +
+      '<defs><radialGradient id="mrBallGrad" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#e5e7eb"/><stop offset="1" stop-color="#9ca3af"/></radialGradient></defs>' +
+      '<circle cx="150" cy="150" r="149" fill="#0e6a35" stroke="#0a4d26" stroke-width="2"/>' +
+      '<circle cx="150" cy="150" r="146" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1" stroke-dasharray="2 5"/>' +
+      '<g id="mrWheel" class="gv-mr-wheelg">' + segs + '</g>' +
+      '<circle id="mrBall" class="gv-mr-ball" r="6.5" cx="150" cy="150" fill="url(#mrBallGrad)" style="display:none"/>' +
+      '<circle cx="150" cy="150" r="62" fill="#f4f1f4" stroke="#d9d4da" stroke-width="3"/>' +
+      '<g id="mrHubIcon" class="gv-mr-hubicon" stroke="#111" stroke-width="5" stroke-linecap="round" fill="#111"><line x1="150" y1="126" x2="150" y2="174"/><line x1="126" y1="150" x2="174" y2="150"/><circle cx="150" cy="150" r="9"/><circle cx="150" cy="124" r="6"/><circle cx="150" cy="176" r="6"/><circle cx="124" cy="150" r="6"/><circle cx="176" cy="150" r="6"/></g>' +
+      '<text id="mrHubNum" x="150" y="152" text-anchor="middle" dominant-baseline="central" font-size="54" font-weight="900" fill="#111" style="display:none"></text>' +
+      '<g id="mrPtr" class="gv-mr-ptr"><polygon points="150,2 139,-14 161,-14" fill="#facc15" stroke="#7a5a00" stroke-width="1.5" transform="translate(0 20)"/></g>' +
+      '</svg>';
+  }
+
+  /* ---- table + chips ---- */
+  function cellHtml(n) {
+    return '<button type="button" class="gv-mr-cell num ' + colorOf(n) + '" data-key="n' + n + '" onclick="mrPlace(\'n' + n + '\')">' + numLabel(n) + '<i class="gv-mr-stack" id="mrS_n' + n + '"></i></button>';
+  }
+  function outsideHtml(key, inner, cls) {
+    return '<button type="button" class="gv-mr-cell out ' + (cls || '') + '" data-key="' + key + '" onclick="mrPlace(\'' + key + '\')">' + inner + '<i class="gv-mr-stack" id="mrS_' + key + '"></i></button>';
+  }
+  function fmtAmt(v) { v = Number(v) || 0; return v >= 1000 ? (+(v / 1000).toFixed(1)) + 'K' : String(+v.toFixed(4)); }
+  function chipIdx(v) { var l = CHIPS[cur()]; for (var i = 0; i < l.length; i++) if (Math.abs(l[i] - v) < 1e-9) return i; return 1; }
+  function chipsHtml() {
+    var list = CHIPS[cur()];
+    return list.map(function (v, i) {
+      return '<button type="button" class="gv-mr-chip ' + CHIP_CLS[i] + (S.chip === v ? ' sel' : '') + '" data-v="' + v + '" onclick="mrChip(' + v + ')"><span>' + chipLabel(v) + '</span></button>';
+    }).join('');
+  }
+  function payRows() {
+    var c = S.cfg, zl = ZERO_IDS.slice(0, S.zp).map(numLabel).join(', ');
+    var h = '<div class="gv-mr-payrow"><span>Single number (1–12)</span><b>×' + c.numberMultiplier + '</b></div>';
+    if (S.zp) h += '<div class="gv-mr-payrow"><span>House pocket (' + zl + ')</span><b>×' + c.zeroMultiplier + '</b></div>';
+    h += '<div class="gv-mr-payrow"><span>Red / Black</span><b>×' + c.groupMultiplier + '</b></div>' +
+      '<div class="gv-mr-payrow"><span>Odd / Even</span><b>×' + c.groupMultiplier + '</b></div>' +
+      '<div class="gv-mr-payrow"><span>1–6 / 7–12</span><b>×' + c.groupMultiplier + '</b></div>';
+    var foot = 'Payout = chip × multiplier (stake included). Red: 1, 3, 5, 8, 10, 12 · Black: 2, 4, 6, 7, 9, 11. All your chips are settled by one spin.';
+    if (S.zp) foot += ' <b>House pockets (' + esc(zl) + '): Red, Black, Odd, Even, 1–6 and 7–12 all lose when the ball lands there.</b>';
+    if (c.maxStraightBets > 0) foot += ' Max ' + c.maxStraightBets + ' different single-number bets per spin.';
+    var cap = cur() === 'USDT' ? c.maxPayoutUSDT : c.maxPayoutINR;
+    if (cap > 0) foot += ' Max payout per spin: ' + esc(money(cap)) + '.';
+    return h + '<div class="gv-mr-payfoot">' + foot + '</div>';
+  }
+  function history() {
+    return S.results.slice(-10).reverse().map(function (n) { return '<i class="gv-mr-dot ' + colorOf(n) + '">' + numLabel(n) + '</i>'; }).join('') || '<small>No spins yet</small>';
+  }
+
+  function paint() {
+    if (!S || !S.ready) return;
+    var t = total();
+    var bt = $('mrBetTotal'); if (bt) bt.textContent = String(t);
+    document.querySelectorAll('.gv-mr-stack').forEach(function (e) { e.textContent = ''; e.className = 'gv-mr-stack'; });
+    var topChip = {};
+    S.stack.forEach(function (x) { topChip[x.key] = x.amt; });          // stack colour = last chip dropped on that cell
+    for (var k in S.bets) {
+      var e2 = $('mrS_' + k);
+      if (e2) { e2.textContent = fmtAmt(S.bets[k]); e2.className = 'gv-mr-stack on c' + (chipIdx(topChip[k] || S.chip) + 1); }
+    }
+    if (S.dropKey) { var dk = $('mrS_' + S.dropKey); if (dk) { void dk.offsetWidth; dk.classList.add('drop'); } S.dropKey = null; }
+    var ch = $('mrChips'); if (ch) ch.innerHTML = chipsHtml();
+    var bal = $('mrBal'); if (bal) { var v = 0; try { v = gameCurrencyAmount(); } catch (e) {} bal.textContent = (cur() === 'USDT' ? Number(v).toFixed(4) : Number(v).toFixed(2)) + ' ' + cur(); }
+    var hs = $('mrHist'); if (hs) hs.innerHTML = history();
+    var pay = $('mrPay'); if (pay) pay.innerHTML = payRows();
+    var dis = S.spinning;
+    ['mrBack', 'mrClear', 'mrRebet'].forEach(function (id) { var b = $(id); if (b) b.disabled = dis; });
+    var sp = $('mrSpin'); if (sp) { sp.disabled = dis; sp.classList.toggle('busy', dis); }
+    var rb = $('mrRebet'); if (rb) rb.style.visibility = (S.lastBets && !t) ? 'visible' : 'hidden';
+  }
+  function say(msg, cls) {
+    var el = $('mrMsg'); if (!el) return;
+    el.textContent = msg; el.className = 'gv-mr-msg' + (cls ? ' ' + cls : '');
+  }
+
+  /* ---- user actions (global so inline handlers can reach them) ---- */
+  window.mrChip = function (v) { if (!S || !S.ready || S.spinning) return; S.chip = Number(v); paint(); };
+  window.mrPlace = function (key) {
+    if (!S || !S.ready || S.spinning) return;
+    var add = S.chip, t = total(), next = rnd(t + add);
+    var lim = window.activeGameLimits || {};
+    var max = cur() === 'USDT' ? Number(lim.maxUSDT || 0) : Number(lim.maxINR || 0);
+    var have = 0; try { have = gameCurrencyAmount(); } catch (e) {}
+    if (key.charAt(0) === 'n' && !S.bets[key] && S.cfg.maxStraightBets > 0 && straightCount() >= S.cfg.maxStraightBets) {
+      say('You can bet on at most ' + S.cfg.maxStraightBets + ' different numbers per spin.', 'warn'); return;
+    }
+    if (next > have + 1e-9) { say('Insufficient ' + cur() + ' balance for this chip.', 'warn'); return; }
+    if (max > 0 && next > max) { say('Maximum total bet is ' + money(max) + '.', 'warn'); return; }
+    S.bets[key] = rnd((S.bets[key] || 0) + add);
+    S.stack.push({ key: key, amt: add });
+    S.dropKey = key;
+    say('Bet placed on ' + keyLabel(key) + '. Total ' + money(next) + '.');
+    paint();
+  };
+  window.mrBack = function () {
+    if (!S || !S.ready || S.spinning || !S.stack.length) return;
+    var last = S.stack.pop();
+    S.bets[last.key] = rnd((S.bets[last.key] || 0) - last.amt);
+    if (S.bets[last.key] <= 0) delete S.bets[last.key];
+    paint();
+  };
+  window.mrClear = function () { if (!S || !S.ready || S.spinning) return; S.bets = {}; S.stack = []; say('Bets cleared.'); paint(); };
+  window.mrRebet = function () {
+    if (!S || !S.ready || S.spinning || !S.lastBets) return;
+    S.bets = {}; S.stack = [];
+    for (var k in S.lastBets) { S.bets[k] = S.lastBets[k]; S.stack.push({ key: k, amt: S.lastBets[k] }); }
+    var have = 0; try { have = gameCurrencyAmount(); } catch (e) {}
+    if (total() > have + 1e-9) { S.bets = {}; S.stack = []; say('Insufficient ' + cur() + ' balance to repeat the last bets.', 'warn'); }
+    else if (S.cfg.maxStraightBets > 0 && straightCount() > S.cfg.maxStraightBets) { S.bets = {}; S.stack = []; say('Last bets exceed the ' + S.cfg.maxStraightBets + '-number limit.', 'warn'); }
+    else say('Last bets restored. Total ' + money(total()) + '.');
+    paint();
+  };
+  window.mrPaytable = function () { var p = $('mrPay'); if (p) p.classList.toggle('open'); };
+  window.mrCopy = function () {
+    if (!S || !S.commit || !S.commit.hash) return;
+    try { navigator.clipboard.writeText(S.commit.hash); say('Encrypted result copied.'); } catch (e) { say(S.commit.hash); }
+  };
+
+  function setBack(show) { var b = $('activeGameBackBtn'); if (b) b.classList.toggle('hidden', !show); }
+
+  window.mrSpin = function () {
+    if (!S || !S.ready || S.spinning) return;
+    var t = total();
+    if (t <= 0) { say('Place at least one chip first.', 'warn'); return; }
+    var lim = window.activeGameLimits || {};
+    var min = cur() === 'USDT' ? Number(lim.minUSDT || 0) : Number(lim.minINR || 0);
+    var max = cur() === 'USDT' ? Number(lim.maxUSDT || 0) : Number(lim.maxINR || 0);
+    if (min > 0 && t < min) { say('Minimum total bet is ' + money(min) + '.', 'warn'); return; }
+    if (max > 0 && t > max) { say('Maximum total bet is ' + money(max) + '.', 'warn'); return; }
+    // Same entry path as the other games: wallet check, global caps / cooldown, and an atomic deduction.
+    var fee = getDeductedFee(t, false);
+    if (fee === null || fee === undefined) return;
+    S.spinning = true; activeGameCurrentFee = fee;
+    setBack(false); say('Spinning…'); paint();
+    var round = { st: S, bets: JSON.parse(JSON.stringify(S.bets)), fee: fee, currency: cur(), commit: S.commit, cfg: S.cfg };
+    S.lastBets = JSON.parse(JSON.stringify(S.bets));
+    Promise.resolve(window.__gvRocketDeductionPromise).then(function () {
+      animate(round);
+    }).catch(function (err) {
+      S.spinning = false; activeGameCurrentFee = 0; setBack(true);
+      say((err && err.message) || 'Could not place the bet.', 'warn'); paint();
+    });
+  };
+
+  /* Wheel decelerates with a long tail while the ball whirls the opposite way on the rim, then drops inward,
+     bounces over the pockets and rides into the winning one. The pointer flicks as every pocket passes it. */
+  function norm180(d) { d = ((d % 360) + 540) % 360 - 180; return d; }
+  function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+  function ballXY(r, deg) { var a = deg * Math.PI / 180; return [150 + r * Math.sin(a), 150 - r * Math.cos(a)]; }
+  function setBall(r, deg) { var b = $('mrBall'); if (!b) return; var p = ballXY(r, deg); b.setAttribute('cx', p[0].toFixed(2)); b.setAttribute('cy', p[1].toFixed(2)); }
+  function clearWinMark() { var m = document.getElementById('mrWinSeg'); if (m && m.parentNode) m.parentNode.removeChild(m); }
+  function markWin(idx) {
+    var wheel = $('mrWheel'); if (!wheel || !S) return; clearWinMark();
+    var ns = 'http://www.w3.org/2000/svg', a = idx * S.seg, p = document.createElementNS(ns, 'path');
+    p.setAttribute('id', 'mrWinSeg'); p.setAttribute('d', arc(66, 142, a - S.seg / 2, a + S.seg / 2)); p.setAttribute('class', 'gv-mr-winseg');
+    wheel.appendChild(p);
+  }
+  function flick() {
+    var g = $('mrPtr'); if (!g) return;
+    g.style.transform = 'rotate(-20deg)';
+    setTimeout(function () { g.style.transform = 'rotate(0deg)'; }, 55);
+  }
+
+  function animate(round) {
+    var seg = S.seg, n = round.commit.result, idx = S.order.indexOf(n);
+    var wheel = $('mrWheel'), ball = $('mrBall'), hubIcon = $('mrHubIcon'), ms = round.cfg.spinMs;
+    var jitter = (Math.random() * (seg - 10)) - (seg - 10) / 2;
+    var startRot = S.rot;
+    var target = Math.ceil(startRot / 360) * 360 + 360 * 5 - idx * seg + jitter;
+    while (target <= startRot + 1080) target += 360;
+    S.rot = target;
+    var hub = $('mrHubNum'), icon = $('mrHubIcon');
+    if (hub) hub.style.display = 'none'; if (icon) icon.style.display = '';
+    document.querySelectorAll('.gv-mr-cell.win').forEach(function (e) { e.classList.remove('win'); });
+    clearWinMark();
+    var box = document.querySelector('.gv-mr'); if (box) box.classList.add('spinning');
+    var ballStart = (S.ballAng == null) ? (idx * seg + startRot) : S.ballAng;     // ball begins where it last came to rest
+    var startR = 120, ballTurns = 6 + Math.random() * 1.5;
+    if (ball) ball.style.display = '';
+    var t0 = performance.now(), lastSeg = Math.floor((startRot + seg / 2) / seg), finished = false, st = S;
+
+    function frame(now) {
+      if (finished) return;
+      var u = Math.min(1, (now - t0) / ms);
+      var e = 1 - Math.pow(1 - u, 3.2);
+      var rot = startRot + (target - startRot) * e;
+      if (wheel) wheel.style.transform = 'rotate(' + rot.toFixed(2) + 'deg)';
+      if (hubIcon) hubIcon.style.transform = 'rotate(' + (-rot * 0.35).toFixed(2) + 'deg)';
+      var segNow = Math.floor((rot + seg / 2) / seg);                            // pointer tick per pocket
+      if (segNow !== lastSeg && u < 0.97) { lastSeg = segNow; if (u > 0.04) flick(); }
+      // ball: counter-clockwise orbit on the rim, decelerating, blending into riding with the wheel
+      var free = ballStart - ballTurns * 360 * (1 - Math.pow(1 - u, 2.4));
+      var ride = idx * seg + rot;
+      var w = smooth((u - 0.74) / 0.26);
+      var ang = free + w * norm180(ride - free);
+      var r;
+      if (u < 0.08) r = startR + (146 - startR) * smooth(u / 0.08);
+      else if (u < 0.58) r = 146;
+      else {
+        var v = Math.min(1, (u - 0.58) / 0.42);
+        var drop = 146 - 26 * (1 - Math.pow(1 - v, 2));
+        var bounce = Math.abs(Math.sin(v * Math.PI * 5)) * 7 * Math.pow(1 - v, 1.6);
+        r = drop + bounce;
+      }
+      setBall(r, ang);
+      if (S === st) S.ballAng = ang;
+      if (u >= 1) { finished = true; finish(); return; }
+      requestAnimationFrame(frame);
+    }
+    function finish() {
+      if (st) st.ballAng = idx * seg + target;
+      setBall(120, idx * seg + target);
+      if (wheel) wheel.style.transform = 'rotate(' + target + 'deg)';
+      if (hubIcon) hubIcon.style.transform = '';
+      if (box) box.classList.remove('spinning');
+      markWin(idx);
+      setTimeout(function () { settle(round); }, 380);
+    }
+    requestAnimationFrame(frame);
+    // Safety net if the tab was in the background (animation frames paused): still settle the round.
+    setTimeout(function () { if (!finished) { finished = true; finish(); } }, ms + 1500);
+  }
+
+  function credit(win, cb) {
+    var field = cur() === 'USDT' ? 'usdtBalance' : 'balance';
+    db.ref('users/' + currentUid + '/' + field).transaction(function (b) { return Number((Number(b || 0) + win).toFixed(field === 'usdtBalance' ? 4 : 2)); })
+      .then(function (res) {
+        if (res.committed) { if (field === 'usdtBalance') currentUsdtBalance = Number(res.snapshot.val() || 0); else currentBalance = Number(res.snapshot.val() || 0); }
+        cb(null);
+      }).catch(cb);
+  }
+
+  function settle(round) {
+    var n = round.commit.result, d = round.currency === 'USDT' ? 4 : 2, win = 0, winKeys = [], capped = false;
+    for (var k in round.bets) {
+      if (hit(k, n)) { win += round.bets[k] * payMult(k, round.cfg); winKeys.push(k); }
+    }
+    win = Number(win.toFixed(d));
+    var cap = round.currency === 'USDT' ? Number(round.cfg.maxPayoutUSDT) || 0 : Number(round.cfg.maxPayoutINR) || 0;
+    if (cap > 0 && win > cap) { win = Number(cap.toFixed(d)); capped = true; }
+    var outcome = win > round.fee ? 'win' : (win === round.fee ? 'push' : 'loss');
+
+    function done() {
+      try { refreshGameWalletPanel(); } catch (e) {}
+      log(round, n, win, outcome);
+      activeGameCurrentFee = 0;
+      if (S && S === round.st) {
+        S.results.push(n); S.spinning = false; S.bets = {}; S.stack = [];
+        setBack(true);
+        var hub = $('mrHubNum'), icon = $('mrHubIcon'), lbl = numLabel(n);
+        if (hub) { hub.textContent = lbl; hub.style.fontSize = lbl.length >= 3 ? '30px' : (lbl.length === 2 ? '40px' : ''); hub.style.fill = isZero(n) ? '#0a7a42' : (RED[n] ? '#c1121f' : '#111'); hub.style.display = ''; }
+        if (icon) icon.style.display = 'none';
+        winKeys.forEach(function (k) { var c = document.querySelector('.gv-mr-cell[data-key="' + k + '"]'); if (c) c.classList.add('win'); });
+        var net = Number((win - round.fee).toFixed(d));
+        var reveal = '<small class="gv-mr-proof">Verify: SHA-256("' + esc(lbl) + ':' + esc(round.commit.salt) + '") = ' + esc(round.commit.hash.slice(0, 22)) + '…</small>';
+        var el = $('mrMsg');
+        if (el) {
+          el.className = 'gv-mr-msg ' + (win > 0 ? 'good' : 'bad');
+          el.innerHTML = '<b>Result ' + esc(lbl) + ' (' + (isZero(n) ? 'HOUSE POCKET' : colorOf(n).toUpperCase()) + ')</b> · ' +
+            (win > 0 ? 'You won ' + esc(money(win)) + ' (' + (net >= 0 ? '+' : '\u2212') + esc(money(Math.abs(net))) + ')' + (capped ? ' · payout capped' : '') : 'No winning bet — lost ' + esc(money(round.fee))) + '<br>' + reveal;
+        }
+        if (win > 0) { try { spawnConfetti(document.querySelector('.gv-mr')); } catch (e) {} }
+        newCommit();
+        paint();
+      }
+    }
+    if (win > 0) credit(win, function (err) { if (err) console.warn('[Mini Roulette] credit failed', err); done(); });
+    else done();
+  }
+
+  function log(round, n, win, outcome) {
+    try {
+      db.ref('game_rounds').push({
+        userId: currentUid, customUid: userCustomUid, gameId: GAME_ID, gameName: GAME_NAME,
+        betAmount: Number(round.fee) || 0, winAmount: Number(win) || 0, result: outcome, currency: round.currency,
+        resultNumber: n, resultLabel: numLabel(n), houseZero: isZero(n), bets: round.bets, resultHash: round.commit.hash, resultSalt: round.commit.salt, timestamp: Date.now()
+      });
+      if (typeof trackMissionEvent === 'function') {
+        trackMissionEvent('bet_placed', 1);
+        if (round.fee > 0) trackMissionEvent('wager_amount', round.fee);
+      }
+    } catch (e) { console.warn('[Mini Roulette] could not log round', e); }
+  }
+
+  /* ---- admin settings -> config ---- */
+  function parseCfg(d) {
+    d = d || {};
+    var f = function (v, def, lo, hi) { v = Number(v); return (isFinite(v) && v >= lo) ? Math.min(hi, v) : def; };
+    var zp = Number(d.zeroPockets), ms = Number(d.maxStraightBets);
+    return {
+      numberMultiplier: f(d.numberMultiplier, DEF.numberMultiplier, 1, 100),
+      groupMultiplier: f(d.groupMultiplier, DEF.groupMultiplier, 1, 50),
+      zeroMultiplier: f(d.zeroMultiplier != null ? d.zeroMultiplier : d.numberMultiplier, DEF.zeroMultiplier, 1, 100),
+      zeroPockets: (d.zeroPockets != null && isFinite(zp)) ? Math.max(0, Math.min(3, Math.floor(zp))) : DEF.zeroPockets,
+      maxStraightBets: (d.maxStraightBets != null && isFinite(ms)) ? Math.max(0, Math.min(12, Math.floor(ms))) : DEF.maxStraightBets,
+      maxPayoutINR: f(d.maxPayoutINR, 0, 0, 1e9),
+      maxPayoutUSDT: f(d.maxPayoutUSDT, 0, 0, 1e9),
+      spinMs: f(d.spinMs, DEF.spinMs, 1500, 10000)
+    };
+  }
+
+  function build() {
+    var body = $('mrBody'); if (!body || !S) return;
+    S.order = buildOrder(S.cfg.zeroPockets); S.N = S.order.length; S.seg = 360 / S.N; S.zp = S.N - 12;
+    var zrow = S.zp ? '<div class="gv-mr-zrow" style="grid-template-columns:repeat(' + S.zp + ',1fr)">' + ZERO_IDS.slice(0, S.zp).map(cellHtml).join('') + '</div>' : '';
+    body.className = '';
+    body.innerHTML =
+      '<div class="gv-mr-encrow"><span>Encrypted Result:</span><code id="mrEnc">generating…</code><button type="button" class="gv-mr-ico" onclick="mrCopy()" title="Copy">⧉</button></div>' +
+      '<div class="gv-mr-wheelwrap">' + wheelSvg() + '</div>' +
+      '<div class="gv-mr-hist" id="mrHist"></div>' +
+      '<div class="gv-mr-betrow"><span>Bet: <b id="mrBetTotal">0</b></span><a href="javascript:void(0)" onclick="mrPaytable()">Paytable</a></div>' +
+      '<div class="gv-mr-pay" id="mrPay"></div>' +
+      '<div class="gv-mr-table">' + zrow +
+        '<div class="gv-mr-grid">' + ROW1.map(cellHtml).join('') + ROW2.map(cellHtml).join('') +
+        outsideHtml('low', '1-6') + outsideHtml('even', 'Even') +
+        outsideHtml('black', '<span class="gv-mr-bubble black"></span>', 'bub') + outsideHtml('red', '<span class="gv-mr-bubble red"></span>', 'bub') +
+        outsideHtml('odd', 'Odd') + outsideHtml('high', '7-12') + '</div>' +
+      '</div>' +
+      '<div class="gv-mr-actions"><button type="button" class="gv-mr-act" id="mrBack" onclick="mrBack()">↶ Back</button><button type="button" class="gv-mr-act" id="mrClear" onclick="mrClear()">✕ Clear</button><button type="button" class="gv-mr-act" id="mrRebet" onclick="mrRebet()">↻ Rebet</button></div>' +
+      '<div id="mrMsg" class="gv-mr-msg">Pick a chip, tap the table to bet, then press the green button to spin.</div>' +
+      '<div class="gv-mr-bottom"><div class="gv-mr-chips" id="mrChips"></div><button type="button" class="gv-mr-spin" id="mrSpin" onclick="mrSpin()" aria-label="Spin">⟳</button></div>' +
+      '<div class="gv-mr-foot"><span id="mrBal">0 INR</span></div>';
+    S.ready = true;
+    paint(); newCommit();
+  }
+
+  /* ---- screen ---- */
+  window.renderMiniRoulette = function (contentBox) {
+    if (!contentBox) return;
+    var st = S = { cfg: Object.assign({}, DEF), chip: CHIPS[cur()][1], bets: {}, stack: [], lastBets: null, spinning: false, rot: 0, ballAng: null, results: [], commit: null, dropKey: null, ready: false, order: BASE.slice(), N: 12, seg: 30, zp: 0 };
+    contentBox.innerHTML =
+      gameCurrencySwitcherHtml() +
+      '<div class="gv-mr">' +
+        '<div class="gv-mr-title">MINI ROULETTE</div>' +
+        '<div id="mrBody" class="gv-mr-loading">Loading table…</div>' +
+      '</div>';
+    function apply(d) {
+      if (S !== st || st.ready) return;
+      st.cfg = parseCfg(d);
+      var num = function (v) { v = Number(v); return isFinite(v) && v > 0 ? v : 0; };
+      d = d || {};
+      // Bet limits come from the same admin fields as every other game (also covers opening from the Home tile).
+      window.activeGameLimits = { minINR: num(d.minBetINR != null ? d.minBetINR : d.minBet), maxINR: num(d.maxBetINR != null ? d.maxBetINR : d.maxBet), minUSDT: num(d.minBetUSDT), maxUSDT: num(d.maxBetUSDT) };
+      var info = $('activeGameInfo');
+      if (info) { info.dataset.baseInfo = 'Place chips on the table, then spin'; info.dataset.allowUserAmount = 'false'; try { refreshGameWalletPanel(); } catch (e) {} }
+      build();
+    }
+    db.ref('games/' + GAME_ID).once('value').then(function (snap) { apply(snap.val()); }).catch(function () { apply(null); });
+    setTimeout(function () { apply(null); }, 5000);          // never leave the player on the loading screen
+  };
+
+  window.mrLeave = function () { if (S && !S.spinning) S = null; };
+
+  // Keep the screen in step with wallet refreshes and wallet-currency switches.
+  var _rw = window.refreshGameWalletPanel;
+  if (typeof _rw === 'function') window.refreshGameWalletPanel = function () { var r = _rw.apply(this, arguments); try { if (S) paint(); } catch (e) {} return r; };
+  var _sc = window.setGameCurrency;
+  if (typeof _sc === 'function') window.setGameCurrency = function () {
+    var before = cur(), r = _sc.apply(this, arguments);
+    try {
+      if (S && S.ready && !S.spinning && cur() !== before) { S.bets = {}; S.stack = []; S.lastBets = null; S.chip = CHIPS[cur()][1]; say('Wallet switched to ' + cur() + '. Bets cleared.'); paint(); }
+    } catch (e) {}
+    return r;
+  };
+})();
+</script>
+
 <script id="gv-royal-home-js">
 /* ===== Royal Home page — driven by control/homeSettings (Admin > Home Settings) ===== */
 (function () {
@@ -13752,6 +14403,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
     { id: 'spin_wheel', icon: '🎡', name: 'Fortune Wheel', sub: 'Spin for rewards', bg: 'linear-gradient(150deg,#8a6414,#2b1d05)' },
     { id: 'coin_flip', icon: '🪙', name: 'Lucky Coin Flip', sub: 'Heads or tails', bg: 'linear-gradient(150deg,#22634f,#08251f)' },
     { id: 'number_guess', icon: '🎯', name: 'Number Master', sub: 'Guess the number', bg: 'linear-gradient(150deg,#394b9a,#111735)' },
+    { id: 'mini_roulette', icon: '🎰', name: 'Mini Roulette', sub: 'Spin & win up to 10x', bg: 'linear-gradient(150deg,#14663a,#2a0a12)' },
     { id: 'all',   icon: '🕹️', name: 'All Games', sub: 'Arcade & more', bg: 'linear-gradient(150deg,#8a6414,#2b1d05)' }
   ];
   var cfg = null, rewardCfg = {}, lastGamesSig = '', copyTimer = null, balHidden = loadHidden();
@@ -13771,7 +14423,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
       notice: { enabled: pick(r.notice, 'enabled', true) !== false, text: String(pick(r.notice, 'text', 'Welcome to Titan Game Verse — play smart, play royal!')), buttonLabel: String(pick(r.notice, 'buttonLabel', 'Detail')), title: String(pick(r.notice, 'title', '')), body: String(pick(r.notice, 'body', '')) },
       wallet: { tagline: String(pick(r.wallet, 'tagline', 'Your Winning Journey Begins!')), hideToggle: pick(r.wallet, 'hideToggle', true) !== false, quickActions: pick(r.wallet, 'quickActions', true) !== false },
       menu: { title: String(pick(r.menu, 'title', 'Royal Menu')), columns: Number(pick(r.menu, 'columns', 3)) === 4 ? 4 : 3, tiles: [] },
-      games: { enabled: pick(r.games, 'enabled', true) !== false, title: String(pick(r.games, 'title', 'Featured Games')), wingo: pick(r.games, 'wingo', true) !== false, k3: pick(r.games, 'k3', true) !== false, mines: pick(r.games, 'mines', true) !== false, rocket_jump: pick(r.games, 'rocket_jump', true) !== false, high_card: pick(r.games, 'high_card', true) !== false, spin_wheel: pick(r.games, 'spin_wheel', true) !== false, coin_flip: pick(r.games, 'coin_flip', true) !== false, number_guess: pick(r.games, 'number_guess', true) !== false, all: pick(r.games, 'all', true) !== false },
+      games: { enabled: pick(r.games, 'enabled', true) !== false, title: String(pick(r.games, 'title', 'Featured Games')), wingo: pick(r.games, 'wingo', true) !== false, k3: pick(r.games, 'k3', true) !== false, mines: pick(r.games, 'mines', true) !== false, rocket_jump: pick(r.games, 'rocket_jump', true) !== false, high_card: pick(r.games, 'high_card', true) !== false, spin_wheel: pick(r.games, 'spin_wheel', true) !== false, coin_flip: pick(r.games, 'coin_flip', true) !== false, number_guess: pick(r.games, 'number_guess', true) !== false, mini_roulette: pick(r.games, 'mini_roulette', true) !== false, all: pick(r.games, 'all', true) !== false },
       daily: { enabled: pick(r.daily, 'enabled', true) !== false, title: String(pick(r.daily, 'title', 'Daily Royal Reward')), sub: String(pick(r.daily, 'sub', 'Check in & spin the wheel every day')) },
       refer: { enabled: pick(r.refer, 'enabled', true) !== false, title: String(pick(r.refer, 'title', 'Invite Friends, Earn Rewards')), sub: String(pick(r.refer, 'sub', 'Share your link and get rewarded')) },
       footer: { enabled: pick(r.footer, 'enabled', true) !== false, text: String(pick(r.footer, 'text', 'Need help? Our royal support team is here for you.')) }
@@ -13837,6 +14489,7 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
       else if (id === 'spin_wheel') tryPlayGame('spin_wheel', 'active', 'Fortune Wheel', 0, 0, false);
       else if (id === 'coin_flip') tryPlayGame('coin_flip', 'active', 'Lucky Coin Flip', 0, 0, false);
       else if (id === 'number_guess') tryPlayGame('number_guess', 'active', 'Number Master', 0, 0, false);
+      else if (id === 'mini_roulette') tryPlayGame('mini_roulette', 'active', 'Mini Roulette', 0, 0, true);
     } catch (e) { console.warn('[Royal Home] could not open game', id, e); }
   }
 
@@ -13953,6 +14606,126 @@ body .bottom-tab-bar .tab-btn.active .tab-icon{filter:drop-shadow(0 0 6px rgba(2
     setInterval(function () { refreshUser(); renderGames(false); }, 2000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
+
+<script>
+/* ===== Enforcement of Admin: Global Game Settings + Advanced Rules ===== */
+(function(){
+'use strict';
+var G={},A={},lastBetAt=0;
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+try{
+  db.ref('control/globalGameSettings').on('value',function(s){G=s.val()||{};});
+  db.ref('control/advancedRules').on('value',function(s){A=s.val()||{};});
+}catch(e){}
+function ist(){var d=new Date(Date.now()+19800000);return {day:d.getUTCDay(),hour:d.getUTCHours()+d.getUTCMinutes()/60};}
+function inWin(s,e,h){s=Number(s)||0;e=e==null?24:Number(e);return s<e?(h>=s&&h<e):(h>=s||h<e);}
+function pop(r){if(typeof showRestrictionPopup==='function')showRestrictionPopup(r.title,r.body);else alert(String(r.body).replace(/<[^>]+>/g,''));}
+function cur(){return String(window.selectedWalletCurrency||(typeof selectedWalletCurrency!=='undefined'?selectedWalletCurrency:'INR')).toUpperCase()==='USDT'?'USDT':'INR';}
+function money(n,c){return c==='USDT'?'USDT '+Number(n).toFixed(4):'₹'+Number(n).toFixed(2);}
+function windowCheck(){
+  if(G.windowEnabled!==true)return null;
+  var h=ist().hour;
+  if(inWin(G.windowStartHour,G.windowEndHour,h))return null;
+  var p=function(x){return String(Math.floor(x)).padStart(2,'0')+':00';};
+  return {title:'Games Closed',body:esc(G.windowMessage||('Games are open daily from '+p(G.windowStartHour||0)+' to '+p(G.windowEndHour==null?24:G.windowEndHour)+' (IST).'))};
+}
+function betCheck(amount,c){
+  c=c||cur();var n=Number(amount)||0;
+  var w=windowCheck();if(w)return w;
+  if(n>0){
+    var mn=Number(c==='USDT'?G.minBetUSDT:G.minBetINR)||0,mx=Number(c==='USDT'?G.maxBetUSDT:G.maxBetINR)||0;
+    if(mn>0&&n<mn)return {title:'Minimum Bet',body:'The minimum bet for all games is <b>'+money(mn,c)+'</b>.'};
+    if(mx>0&&n>mx)return {title:'Maximum Bet',body:'The maximum bet for all games is <b>'+money(mx,c)+'</b>.'};
+    var pct=Number(G.maxWalletPercent)||0;
+    if(pct>0&&typeof gameCurrencyAmount==='function'){var bal=Number(gameCurrencyAmount(c))||0;if(bal>0&&n>bal*pct/100+1e-9)return {title:'Bet Too Large',body:'You can bet at most <b>'+pct+'%</b> of your wallet ('+money(bal*pct/100,c)+') per bet.'};}
+    var cap=Number(A.maxWageredPerDay)||0;
+    if(cap>0&&c==='INR'&&typeof safetyUserStats!=='undefined'){
+      var t=(typeof gvSafetyDayStart==='function'?gvSafetyDayStart():0),sum=0;
+      (safetyUserStats.bets||[]).forEach(function(b){if((Number(b.timestamp)||0)>=t&&String(b.currency||'INR').toUpperCase()!=='USDT')sum+=Number(b.betAmount!=null?b.betAmount:b.amount)||0;});
+      if(sum+n>cap)return {title:'Daily Wagering Limit',body:'Today you have wagered <b>₹'+sum.toFixed(2)+'</b>. This bet would pass your daily limit of <b>₹'+cap.toFixed(2)+'</b>.'};
+    }
+  }
+  var cd=Number(G.betCooldownSeconds)||0;
+  if(cd>0){var wait=Math.ceil((lastBetAt+cd*1000-Date.now())/1000);if(wait>0)return {title:'Please Wait',body:'Please wait <b>'+wait+'s</b> before placing another bet.'};}
+  return null;
+}
+/* K3, Rocket Jump and WINGO all call gvSafetyCheckCC(amount) before placing a bet */
+var _cc=window.gvSafetyCheckCC;
+if(typeof _cc==='function')window.gvSafetyCheckCC=function(a){var r=betCheck(a);if(r){pop(r);return false;}var ok=_cc.apply(this,arguments);if(ok)lastBetAt=Date.now();return ok;};
+/* Quick-play games (wheel, coin flip, dragon vs tiger, number master, mini roulette) */
+var _fee=window.getDeductedFee;
+if(typeof _fee==='function')window.getDeductedFee=function(defaultFee,allowUserAmount){
+  var amt=Number(defaultFee)||0;
+  if(allowUserAmount){var el=document.getElementById('rocketBetAmount')||document.getElementById('userCustomPlayAmount');amt=Number(el&&el.value)||0;}
+  var r=betCheck(amt,(typeof activeGameCurrency!=='undefined'?activeGameCurrency:cur()));
+  if(r){pop(r);return null;}
+  var f=_fee.apply(this,arguments);if(f!==null&&f!==undefined)lastBetAt=Date.now();return f;
+};
+/* Mines */
+var _mines=window.startMinesGame;
+if(typeof _mines==='function')window.startMinesGame=function(){
+  if(typeof minesState!=='undefined'&&minesState&&minesState.active)return _mines.apply(this,arguments);
+  var el=document.getElementById('minesBetInput'),c=(typeof activeGameCurrency!=='undefined'?activeGameCurrency:cur());
+  var r=betCheck(Number(el&&el.value)||0,String(c).toUpperCase()==='USDT'?'USDT':'INR');
+  if(r){pop(r);return;}
+  lastBetAt=Date.now();return _mines.apply(this,arguments);
+};
+/* Opening a game: custom pause message + play window */
+var _play=window.tryPlayGame;
+if(typeof _play==='function')window.tryPlayGame=function(){
+  if(typeof globalGamesPaused!=='undefined'&&globalGamesPaused&&G.maintenanceMessage){alert(G.maintenanceMessage);return;}
+  var w=windowCheck();if(w){pop(w);return;}
+  return _play.apply(this,arguments);
+};
+/* Withdrawals: schedule + % of wallet */
+var _wd=window.validateWithdrawalRestrictions;
+if(typeof _wd==='function')window.validateWithdrawalRestrictions=async function(amount,currency){
+  var base=await _wd.apply(this,arguments);if(base)return base;
+  var n=Number(amount)||0,c=String(currency||'INR').toUpperCase()==='USDT'?'USDT':'INR';
+  if(A.withdrawWindowEnabled===true){
+    var t=ist(),days=Array.isArray(A.withdrawDays)?A.withdrawDays.map(Number):[0,1,2,3,4,5,6];
+    var names=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    if(days.indexOf(t.day)<0||!inWin(A.withdrawStartHour,A.withdrawEndHour,t.hour)){
+      var p=function(x){return String(Math.floor(x||0)).padStart(2,'0')+':00';};
+      return {title:'Withdrawals Closed',body:esc(A.withdrawClosedMessage||'')||('Withdrawals are accepted on <b>'+days.slice().sort().map(function(d){return names[d];}).join(', ')+'</b> between <b>'+p(A.withdrawStartHour)+'</b> and <b>'+p(A.withdrawEndHour==null?24:A.withdrawEndHour)+'</b> (IST).')};
+    }
+  }
+  var pct=Number(A.maxWithdrawWalletPercent)||0;
+  if(pct>0){var bal=Number(c==='USDT'?currentUsdtBalance:currentBalance)||0;
+    if(n>bal*pct/100+1e-9)return {title:'Withdrawal Limit',body:'You can withdraw at most <b>'+pct+'%</b> of your wallet per request (<b>'+money(bal*pct/100,c)+'</b> right now).'};}
+  return null;
+};
+})();
+</script>
+<script>
+/* ===== Scheduled maintenance (Admin > Dashboard 2.0 > Scheduled Maintenance) ===== */
+(function(){
+'use strict';
+var M={};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+var fmt=function(ms){ms=Math.max(0,Math.floor(ms/1000));var h=Math.floor(ms/3600),m=Math.floor(ms%3600/60),s=ms%60,p=function(n){return String(n).padStart(2,'0');};return (h?h+'h ':'')+p(m)+'m '+p(s)+'s';};
+try{db.ref('control/maintenance').on('value',function(s){M=s.val()||{};tick();});}catch(e){}
+function el(id,css){var e=document.getElementById(id);if(!e){e=document.createElement('div');e.id=id;e.style.cssText=css;document.body.appendChild(e);}return e;}
+function tick(){
+  var now=Date.now(),on=M.enabled===true&&Number(M.startAt)>0,start=Number(M.startAt)||0,end=Number(M.endAt)||0;
+  var live=on&&now>=start&&(!end||now<end);
+  var ov=document.getElementById('gvMaintOverlay'),bn=document.getElementById('gvMaintBanner');
+  if(live){
+    ov=el('gvMaintOverlay','position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;background:radial-gradient(circle at 50% 20%,#1a1205,#050505 70%);color:#fff;font-family:inherit;');
+    ov.innerHTML='<div style="max-width:380px;"><div style="font-size:54px;">🛠</div><div style="font-size:20px;font-weight:900;color:#facc15;margin:10px 0 8px;">Under Maintenance</div><div style="font-size:13px;line-height:1.5;color:#d1d5db;">'+esc(M.message||'We are making improvements. Please come back shortly.')+'</div>'+(end?'<div style="margin-top:16px;font-size:12px;color:#9ca3af;">Back in</div><div style="font-size:22px;font-weight:900;color:#34d399;">'+fmt(end-now)+'</div>':'')+'</div>';
+    ov.style.display='flex';if(bn)bn.style.display='none';return;
+  }
+  if(ov)ov.style.display='none';
+  var warn=(Number(M.warnMinutes)||0)*60000;
+  if(on&&start>now&&warn>0&&start-now<=warn){
+    bn=el('gvMaintBanner','position:fixed;top:0;left:0;right:0;z-index:2147482000;padding:7px 12px;text-align:center;font-size:11px;font-weight:800;background:linear-gradient(90deg,#78350f,#b45309);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4);');
+    bn.innerHTML='🛠 Maintenance starts in <b>'+fmt(start-now)+'</b>'+(M.message?' — '+esc(M.message):'');bn.style.display='block';
+  }else if(bn)bn.style.display='none';
+}
+setInterval(tick,1000);
 })();
 </script>
 
